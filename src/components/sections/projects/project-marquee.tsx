@@ -175,17 +175,25 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
   const itemWidth = 280 // w-64 (256px) + mx-3 (24px) = 280px
 
   const duplicatedProjects = useMemo(
-    // Using 10 sets for an extremely robust, unbreakable loop
-    () => (projects.length > 0 ? Array.from({ length: 10 }, () => projects).flat() : []),
+    // Using 2 sets for seamless infinite loop
+    () => (projects.length > 0 ? [...projects, ...projects] : []),
     [projects],
   )
   const singleSetWidth = projects.length * itemWidth
 
-  // Start in the middle of the 10 sets for maximum buffer
-  const baseX = useMotionValue(-4 * singleSetWidth)
-  const springX = useSpring(baseX, { stiffness: 300, damping: 60, mass: 0.5 })
+  // Use a continuous position that never resets
+  const baseX = useMotionValue(0)
   const velocityFactor = useMotionValue(0)
   const baseVelocity = -0.96
+
+  // Create a display position that wraps seamlessly
+  const displayX = useTransform(baseX, (value) => {
+    if (singleSetWidth === 0) return 0
+    // Use modulo to create seamless wrapping
+    return ((value % singleSetWidth) + singleSetWidth) % singleSetWidth - singleSetWidth
+  })
+
+  const springX = useSpring(displayX, { stiffness: 300, damping: 60, mass: 0.5 })
 
   useAnimationFrame((t, delta) => {
     if (!singleSetWidth) return
@@ -194,18 +202,8 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
     let moveBy = baseVelocity * normalizedDelta
     moveBy += velocityFactor.get() * 6 * normalizedDelta
 
-    let newX = baseX.get() + moveBy
-
-    // The robust wrapping logic for 10 sets
-    if (newX <= -5 * singleSetWidth) {
-      // If we scroll past the start of the 6th set, jump back one set
-      newX += singleSetWidth
-    } else if (newX >= -3 * singleSetWidth) {
-      // If we scroll past the end of the 4th set, jump back one set
-      newX -= singleSetWidth
-    }
-
-    baseX.set(newX)
+    // Continuously update position without any resets
+    baseX.set(baseX.get() + moveBy)
   })
 
   return (
