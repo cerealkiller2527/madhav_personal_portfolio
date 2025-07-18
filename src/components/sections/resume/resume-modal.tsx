@@ -57,7 +57,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
 
   const handleDownload = () => {
     const link = document.createElement("a")
-    link.href = "/resume.pdf"
+    link.href = "/documents/resume.pdf"
     link.download = "Madhav_Lodha_Resume.pdf"
     document.body.appendChild(link)
     link.click()
@@ -97,7 +97,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
         <div className="flex-1 bg-muted/20 dark:bg-muted/40 overflow-y-auto p-2 sm:p-4" ref={containerRef}>
           {isClient ? (
             <Document
-              file="/resume.pdf" // This path points to the public directory
+              file="/documents/resume.pdf" // This path points to the public directory
               onLoadSuccess={onDocumentLoadSuccess}
               loading={
                 <div className="flex justify-center items-center h-full">

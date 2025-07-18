@@ -120,7 +120,7 @@ export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSe
 
               <div className="relative w-full h-full flex items-center justify-center p-4">
                 <Image
-                  src="/images/avatar-transparent.png"
+                  src="/assets/portfolio/avatar-transparent.png"
                   alt="Madhav Lodha"
                   width={280}
                   height={280}
