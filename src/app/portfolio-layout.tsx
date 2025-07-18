@@ -7,11 +7,10 @@ import { Footer } from "@/components/layout/footer"
 import { ResumeModal } from "@/components/sections/resume/resume-modal"
 
 /**
- * Shared layout for the main application pages.
- * This component provides a consistent Header and Footer,
- * and manages the state for the Resume modal.
+ * Portfolio layout component that provides Header, Footer, and Resume modal.
+ * This is a client component that manages the resume modal state.
  */
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export function PortfolioLayout({ children }: { children: React.ReactNode }) {
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
 
   return (
