@@ -9,18 +9,16 @@ import type { Project, Experience } from "@/lib/types"
 import { CursorGlow } from "@/components/common/cursor-glow"
 import { smoothScrollToElement } from "@/lib/utils"
 
-interface HomePageClientProps {
+interface HomePageProps {
   projects: Project[]
   experiences: Experience[]
 }
 
 /**
- * This is the client-side wrapper for the main page. It's co-located
- * with the page route using the `_components` convention to indicate
- * it's a private component, not meant for reuse elsewhere.
- * It handles all client-side state and interactivity for the homepage.
+ * The main homepage component that handles all client-side state and interactivity.
+ * Orchestrates the hero, experience, and projects sections with shared state management.
  */
-export default function HomePageClient({ projects, experiences }: HomePageClientProps) {
+export default function HomePage({ projects, experiences }: HomePageProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isGlowVisible, setIsGlowVisible] = useState(false)
   const [bounceTarget, setBounceTarget] = useState<string | null>(null)
