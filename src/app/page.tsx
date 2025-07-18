@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { projects, experiences } from "@/lib/data"
-import HomePageClient from "./_components/home-page-client"
+import HomePage from "@/components/pages/home-page"
 import Loading from "./loading"
 
 /**
@@ -12,7 +12,7 @@ import Loading from "./loading"
 export default function PortfolioPage() {
   return (
     <Suspense fallback={<Loading />}>
-      <HomePageClient projects={projects} experiences={experiences} />
+      <HomePage projects={projects} experiences={experiences} />
     </Suspense>
   )
 }
