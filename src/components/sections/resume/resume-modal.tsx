@@ -1,17 +1,25 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import dynamic from "next/dynamic"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Download, ChevronLeft, ChevronRight, Loader2, X } from "lucide-react"
-import { Document, Page, pdfjs } from "react-pdf"
 
-import "react-pdf/dist/Page/AnnotationLayer.css"
-import "react-pdf/dist/Page/TextLayer.css"
+// Dynamically import react-pdf components to avoid SSR issues
+const Document = dynamic(() => import("react-pdf").then(mod => ({ default: mod.Document })), { ssr: false })
+const Page = dynamic(() => import("react-pdf").then(mod => ({ default: mod.Page })), { ssr: false })
 
-// Set up the worker to load the PDF file.
-// This is a standard requirement for the react-pdf library.
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
+// Set up the worker and CSS client-side only
+if (typeof window !== 'undefined') {
+  import("react-pdf").then(({ pdfjs }) => {
+    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
+  })
+  
+  // Import CSS dynamically
+  import("react-pdf/dist/Page/AnnotationLayer.css")
+  import("react-pdf/dist/Page/TextLayer.css")
+}
 
 interface ResumeModalProps {
   isOpen: boolean
@@ -22,7 +30,13 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
   const [containerWidth, setContainerWidth] = useState(0)
+  const [isClient, setIsClient] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Ensure we're on the client side
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   // This effect ensures the PDF page resizes correctly when the window size changes.
   useEffect(() => {
@@ -81,30 +95,37 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
         </DialogHeader>
 
         <div className="flex-1 bg-muted/20 dark:bg-muted/40 overflow-y-auto p-2 sm:p-4" ref={containerRef}>
-          <Document
-            file="/resume.pdf" // This path points to the public directory
-            onLoadSuccess={onDocumentLoadSuccess}
-            loading={
-              <div className="flex justify-center items-center h-full">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <span className="ml-4 text-muted-foreground">Loading Resume...</span>
-              </div>
-            }
-            error={
-              <div className="flex justify-center items-center h-full text-destructive">
-                Failed to load PDF. Please try downloading it.
-              </div>
-            }
-            className="flex justify-center"
-          >
-            <Page
-              pageNumber={pageNumber}
-              width={containerWidth > 0 ? Math.min(containerWidth - 16, 800) : undefined}
-              renderTextLayer={true}
-              renderAnnotationLayer={true}
-              className="shadow-lg"
-            />
-          </Document>
+          {isClient ? (
+            <Document
+              file="/resume.pdf" // This path points to the public directory
+              onLoadSuccess={onDocumentLoadSuccess}
+              loading={
+                <div className="flex justify-center items-center h-full">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <span className="ml-4 text-muted-foreground">Loading Resume...</span>
+                </div>
+              }
+              error={
+                <div className="flex justify-center items-center h-full text-destructive">
+                  Failed to load PDF. Please try downloading it.
+                </div>
+              }
+              className="flex justify-center"
+            >
+              <Page
+                pageNumber={pageNumber}
+                width={containerWidth > 0 ? Math.min(containerWidth - 16, 800) : undefined}
+                renderTextLayer={true}
+                renderAnnotationLayer={true}
+                className="shadow-lg"
+              />
+            </Document>
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <span className="ml-4 text-muted-foreground">Loading PDF Viewer...</span>
+            </div>
+          )}
         </div>
 
         {numPages && numPages > 1 && (
