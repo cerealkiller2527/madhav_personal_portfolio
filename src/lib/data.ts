@@ -77,7 +77,7 @@ export const projects: Project[] = [
     tags: ["Robotics", "YOLOv5", "OpenCV", "Leadership"],
     liveLink: "#",
     githubLink: "#",
-    heroImage: "/images/rov-hero.png",
+    heroImage: "/assets/projects/rov-hero.png",
     vectaryEmbedUrl: "https://www.vectary.com/viewer/v1/?model=0533a863-7591-498c-b413-f0999634a043&env=studio3",
     gallery: [],
     detailedDescription:
@@ -123,7 +123,7 @@ export const projects: Project[] = [
     tags: ["Game Dev", "LLM", "Computer Vision", "Hackathon Winner"],
     liveLink: "#",
     githubLink: "#",
-    heroImage: "/images/tomo-hero.png",
+    heroImage: "/assets/projects/tomo-hero.png",
     gallery: [],
     detailedDescription:
       "To address the lack of adaptability in traditional games, we launched Tomo, a Space Invaders-inspired game featuring a self-evolving LLM-driven codebase. The game uses 3D hand-tracking controls via computer vision, achieving 99.7% grip strength accuracy for an adaptive shooting experience. This project secured 2nd place out of over 500 participants.",
@@ -164,7 +164,7 @@ export const projects: Project[] = [
     tags: ["AI/ML", "Flutter", "TensorFlow", "IoT"],
     liveLink: "#",
     githubLink: "#",
-    heroImage: "/images/frappe-hero.png",
+    heroImage: "/assets/projects/frappe-hero.png",
     gallery: [],
     detailedDescription:
       "To combat food waste from poor fridge organization, we built an AI-powered management system using TensorFlow, OpenCV, and the COCO model. The system uses a camera to automatically track items with 98% accuracy. A companion Flutter app with Firebase provides item tracking, expiry notifications, and recipe suggestions. The project won 1st place (€1000) at 'In Code We Trust' and Best Executed Hack ($50) at 'Owl Hacks.'",
@@ -206,7 +206,7 @@ export const projects: Project[] = [
     tags: ["Robotics", "CAD", "Pneumatics", "FRC"],
     liveLink: "#",
     githubLink: "#",
-    heroImage: "/images/frc-hero.png",
+    heroImage: "/assets/projects/frc-hero.png",
     gallery: [],
     detailedDescription:
       "As a team leader for our FIRST Robotics Competition team, I led a CAD team of 10 to design a 6-wheel-drive, hooded shooter robot. We evolved from a 50kg-capacity scissor lift to a 90kg-capacity spring-loaded telescoping lift capable of reaching 9ft. The robot featured autonomous navigation using encoders and an OpenCV targeting system, achieving 80% shooting accuracy. My contributions earned me a Dean's List Semi-Finalist nomination.",
@@ -242,7 +242,7 @@ export const projects: Project[] = [
     category: "Hardware",
     award: "3rd @ Singapore Challenge",
     tags: ["Aerospace", "Fusion 360", "Generative Design", "3D Printing"],
-    heroImage: "/images/rc-plane-hero.png",
+    heroImage: "/assets/projects/rc-plane-hero.png",
     gallery: [],
     detailedDescription:
       "Engineered a lightweight, stable, and maneuverable indoor RC plane with an easy-to-repair bi-wing structure, using Fusion 360's generative design and ANSYS Fluent simulations for optimal aerodynamics. The modular design, achieved with embedded magnets, made it hyper crash-resistant and easy to repair.",
@@ -257,7 +257,7 @@ export const projects: Project[] = [
       "An AI-enabled service that attaches to dash cams to automatically detect road accidents and alert authorities, using IBM Watson for vision recognition.",
     category: "Hybrid",
     tags: ["AI/ML", "IBM Watson", "IoT", "Public Safety"],
-    heroImage: "/images/ai-dashcam-hero.png",
+    heroImage: "/assets/projects/ai-dashcam-hero.png",
     gallery: [],
     detailedDescription:
       "An AI-enabled service that automatically detects road accidents and alerts the relevant authorities. This device attaches to any preexisting dash cam and sends data to the cloud to run deep learning models which detect crashes, achieving a 94% confidence level.",
@@ -272,7 +272,7 @@ export const projects: Project[] = [
       "Designed and fabricated a competitive, industrial-sized robot with a 6-wheel drive train and a 3-stage scissors lift capable of lifting 50kg.",
     category: "Hardware",
     tags: ["Robotics", "FRC", "Mechanical Design", "Pneumatics"],
-    heroImage: "/images/frc-recharge-hero.png",
+    heroImage: "/assets/projects/frc-recharge-hero.png",
     gallery: [],
     detailedDescription:
       "Designed and helped fabricate a competitive industrial-sized robot. The robot consists of a 6-wheel drive train, a 3-stage scissors lift and a ball bay to allow the robot to deposit balls and climb. The 3-stage scissors lift was able to lift 50 KG of weights.",
@@ -287,7 +287,7 @@ export const projects: Project[] = [
       "Engineered cost-effective micro audio playback tags and a bracelet to help the visually impaired identify objects and leave messages, enabling independent living.",
     category: "Hybrid",
     tags: ["Assistive Tech", "IoT", "PCB Design", "Social Impact"],
-    heroImage: "/images/echo-assist-hero.png",
+    heroImage: "/assets/projects/echo-assist-hero.png",
     gallery: [],
     detailedDescription:
       "Designed and fabricated a set of devices that assist blind people in navigating their surroundings better. Performed a needs analysis to initiate the design process and created a wirelessly activated location tag and audio note. The design fulfilled its purpose with a community member actively using it throughout his house.",
@@ -302,7 +302,7 @@ export const projects: Project[] = [
       "Prototyped a low-cost, 3D-printed elbow exoskeleton using EMG sensors to achieve a 40% increase in force and provide significant physical support.",
     category: "Hybrid",
     tags: ["Exoskeleton", "EMG Sensors", "Arduino", "Biomechanics"],
-    heroImage: "/images/exoskeleton-hero.png",
+    heroImage: "/assets/projects/exoskeleton-hero.png",
     gallery: [],
     detailedDescription:
       "Prototyped a low-cost, 3D-printed elbow exoskeleton using EMG sensors, stepper motors, and Arduino, achieving a 40% increase in force and significant physical support. Developed a detailed business proposal for custom exoskeleton solutions utilizing photogrammetry and 3D printing.",
@@ -317,7 +317,7 @@ export const projects: Project[] = [
       "Developed a low-cost, 3D-printed ventilator with a motorized Ambu-Bag mechanism for rapid deployment during the COVID-19 crisis.",
     category: "Hybrid",
     tags: ["Medical Device", "3D Printing", "Arduino", "Social Impact"],
-    heroImage: "/images/ventilator-hero.png",
+    heroImage: "/assets/projects/ventilator-hero.png",
     gallery: [],
     detailedDescription:
       "Developed a low-cost, 3D-printed ventilator with a motorized Ambu-Bag mechanism for rapid manufacturing and deployment during critical COVID-19 situations. Prototyped a ventilator with adjustable airflow and oxygen levels, integrating temperature and humidity sensors for data logging, and implemented a Raspberry Pi server for hospitals to monitor performance.",
