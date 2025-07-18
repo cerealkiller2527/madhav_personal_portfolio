@@ -1,4 +1,4 @@
-import { getProjectById, getProjects } from "@/lib/api"
+import { projects } from "@/lib/data"
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
@@ -14,23 +14,23 @@ const sections = [
   { id: "gallery", label: "Gallery" },
 ]
 
-async function getProjectData(id: string) {
-  const [project, allProjects] = await Promise.all([getProjectById(id), getProjects()])
+function getProjectData(id: string) {
+  const project = projects.find((p) => p.id === id)
 
   if (!project) {
     notFound()
   }
 
-  const currentIndex = allProjects.findIndex((p) => p.id === project.id)
+  const currentIndex = projects.findIndex((p) => p.id === project.id)
   const previousProject =
-    allProjects.length > 1 ? allProjects[(currentIndex - 1 + allProjects.length) % allProjects.length] : null
-  const nextProject = allProjects.length > 1 ? allProjects[(currentIndex + 1) % allProjects.length] : null
+    projects.length > 1 ? projects[(currentIndex - 1 + projects.length) % projects.length] : null
+  const nextProject = projects.length > 1 ? projects[(currentIndex + 1) % projects.length] : null
 
   return { project, previousProject, nextProject }
 }
 
-export default async function ProjectDetailPage({ params }: { params: { id: string } }) {
-  const { project, previousProject, nextProject } = await getProjectData(params.id)
+export default function ProjectDetailPage({ params }: { params: { id: string } }) {
+  const { project, previousProject, nextProject } = getProjectData(params.id)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28">

@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { Roboto_Mono } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/common/theme-provider"
-import { PortfolioLayout } from "./portfolio-layout"
+import { LayoutClient } from "./layout-client"
 
 const robotoMono = Roboto_Mono({
   subsets: ["latin"],
@@ -58,7 +58,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange // Disable transitions on theme change to prevent flashes
         >
-          <PortfolioLayout>{children}</PortfolioLayout>
+          <LayoutClient>{children}</LayoutClient>
         </ThemeProvider>
       </body>
     </html>
