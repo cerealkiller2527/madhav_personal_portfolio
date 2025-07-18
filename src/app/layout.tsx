@@ -49,9 +49,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    // suppressHydrationWarning is required when using next-themes
+    // suppressHydrationWarning is required when using next-themes and to prevent
+    // hydration mismatches from browser extensions (e.g., Grammarly, password managers)
     <html lang="en" suppressHydrationWarning>
-      <body className={robotoMono.className}>
+      <body className={robotoMono.className} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
