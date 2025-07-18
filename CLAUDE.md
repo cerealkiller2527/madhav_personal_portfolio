@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a Next.js 15 portfolio website built with TypeScript, React 19, and Tailwind CSS. The architecture follows a modern src/ structure with organized component hierarchy:
 
 ### Key Structure
-- **App Router**: Uses Next.js 15 App Router with the main page at `src/app/(main)/page.tsx`
+- **App Router**: Uses Next.js 15 App Router with the main page at `src/app/page.tsx`
 - **Server-Side Data**: Portfolio data is fetched server-side in `src/lib/data.ts` and passed to client components
 - **Component Architecture**: 
   - `src/components/sections/` - Page section components (hero, projects, experience)
