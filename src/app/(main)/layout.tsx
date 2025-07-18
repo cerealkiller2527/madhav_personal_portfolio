@@ -4,7 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
-import { ResumeModal } from "@/components/features/resume/resume-modal"
+import { ResumeModal } from "@/components/sections/resume/resume-modal"
 
 /**
  * Shared layout for the main application pages.

@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import { Home, Briefcase, Code, Mail, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { ThemeToggle } from "@/components/common/theme-toggle"
 import { smoothScrollToElement } from "@/lib/utils"
 
 const navItems = [
