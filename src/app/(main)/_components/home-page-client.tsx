@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { HeroSection } from "@/components/features/hero/hero-section"
-import { ExperienceSection } from "@/components/features/experience/experience-section"
-import { ProjectsSection } from "@/components/features/projects/projects-section"
-import { ProjectModal } from "@/components/features/projects/project-modal"
+import { HeroSection } from "@/components/sections/hero/hero-section"
+import { ExperienceSection } from "@/components/sections/experience/experience-section"
+import { ProjectsSection } from "@/components/sections/projects/projects-section"
+import { ProjectModal } from "@/components/sections/projects/project-modal"
 import type { Project, Experience } from "@/lib/types"
-import { CursorGlow } from "@/components/core/cursor-glow"
+import { CursorGlow } from "@/components/common/cursor-glow"
 import { smoothScrollToElement } from "@/lib/utils"
 
 interface HomePageClientProps {

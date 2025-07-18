@@ -2,7 +2,7 @@
 import type React from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { GridBackground } from "@/components/core/grid-background"
+import { GridBackground } from "@/components/common/grid-background"
 
 interface SectionProps {
   children: React.ReactNode

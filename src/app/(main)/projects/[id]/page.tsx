@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { TableOfContents } from "@/components/ui/table-of-contents"
-import { ProjectNavigation } from "@/components/features/projects/project-navigation"
+import { ProjectNavigation } from "@/components/sections/projects/project-navigation"
 import { BackButton } from "@/components/ui/back-button"
 import { ArrowLeft } from "lucide-react"
 
