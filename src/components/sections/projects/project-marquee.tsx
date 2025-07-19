@@ -1,5 +1,5 @@
 "use client"
-import { useMemo } from "react"
+import { useMemo, useRef, useEffect } from "react"
 import type React from "react"
 
 import Image from "next/image"
@@ -174,36 +174,34 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
   const mouseX = useMotionValue(Number.POSITIVE_INFINITY)
   const itemWidth = 280 // w-64 (256px) + mx-3 (24px) = 280px
 
-  const duplicatedProjects = useMemo(
-    // Using 2 sets for seamless infinite loop
-    () => (projects.length > 0 ? [...projects, ...projects] : []),
+  // Triple the projects for seamless infinite scroll
+  const extendedProjects = useMemo(
+    () => (projects.length > 0 ? [...projects, ...projects, ...projects] : []),
     [projects],
   )
   const singleSetWidth = projects.length * itemWidth
 
-  // Use a continuous position that never resets
-  const baseX = useMotionValue(0)
+  // Animation values
+  const x = useMotionValue(0)
   const velocityFactor = useMotionValue(0)
-  const baseVelocity = -0.96
+  const baseVelocity = -120 // Base scrolling speed
 
-  // Create a display position that wraps seamlessly
-  const displayX = useTransform(baseX, (value) => {
-    if (singleSetWidth === 0) return 0
-    // Use modulo to create seamless wrapping
-    return ((value % singleSetWidth) + singleSetWidth) % singleSetWidth - singleSetWidth
-  })
-
-  const springX = useSpring(displayX, { stiffness: 300, damping: 60, mass: 0.5 })
-
-  useAnimationFrame((t, delta) => {
+  useAnimationFrame((time, delta) => {
     if (!singleSetWidth) return
 
-    const normalizedDelta = delta / 16.67
-    let moveBy = baseVelocity * normalizedDelta
-    moveBy += velocityFactor.get() * 6 * normalizedDelta
+    const deltaInSeconds = delta / 1000
+    let moveBy = baseVelocity * deltaInSeconds
+    moveBy += velocityFactor.get() * 200 * deltaInSeconds // Velocity from mouse position
 
-    // Continuously update position without any resets
-    baseX.set(baseX.get() + moveBy)
+    const currentX = x.get()
+    const newX = currentX + moveBy
+
+    // When we've scrolled one full set width, jump back seamlessly
+    if (newX <= -singleSetWidth) {
+      x.set(newX + singleSetWidth)
+    } else {
+      x.set(newX)
+    }
   })
 
   return (
@@ -230,14 +228,14 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
 
           <motion.div
             className="flex py-8"
-            style={{ x: springX, willChange: "transform", transformStyle: "preserve-3d" }}
+            style={{ x, willChange: "transform", transformStyle: "preserve-3d" }}
           >
-            {duplicatedProjects.map((project, index) => (
+            {extendedProjects.map((project, index) => (
               <InteractiveMarqueeItem
                 key={`${project.id}-${index}`}
                 project={project}
                 mouseX={mouseX}
-                springX={springX}
+                springX={x}
                 index={index}
                 itemWidth={itemWidth}
                 onProjectSelect={onProjectSelect}
