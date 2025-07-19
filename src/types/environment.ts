@@ -4,9 +4,13 @@ export interface EnvironmentVariables {
   readonly NEXT_PUBLIC_SITE_URL?: string
   readonly NOTION_TOKEN?: string
   readonly NOTION_DATABASE_ID?: string
+  readonly NOTION_PROJECTS_DATABASE_ID?: string
   readonly BLOG_REVALIDATE_TIME?: string
+  readonly PROJECTS_REVALIDATE_TIME?: string
   readonly ENABLE_BLOG_CACHE?: string
+  readonly ENABLE_PROJECTS_CACHE?: string
   readonly CACHE_MAX_SIZE?: string
+  readonly PROJECTS_CACHE_MAX_SIZE?: string
   readonly ANALYTICS_ID?: string
   readonly VERCEL_URL?: string
 }
@@ -18,12 +22,22 @@ export interface EnvironmentConfig {
   readonly isTest: boolean
   readonly siteUrl: string
   readonly blog: BlogEnvironmentConfig
+  readonly projects: ProjectsEnvironmentConfig
   readonly analytics: AnalyticsConfig
 }
 
 export interface BlogEnvironmentConfig {
   readonly notionToken?: string
   readonly notionDatabaseId?: string
+  readonly revalidateTime: number
+  readonly enableCache: boolean
+  readonly cacheMaxSize: number
+  readonly isConfigured: boolean
+}
+
+export interface ProjectsEnvironmentConfig {
+  readonly notionToken?: string
+  readonly projectsDatabaseId?: string
   readonly revalidateTime: number
   readonly enableCache: boolean
   readonly cacheMaxSize: number

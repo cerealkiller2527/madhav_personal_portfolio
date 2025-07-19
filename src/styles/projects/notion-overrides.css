@@ -1,0 +1,396 @@
+/* React-Notion-X Core Styles Import */
+@import 'react-notion-x/src/styles.css';
+
+/* Project-specific overrides to match portfolio design */
+.notion-project-page {
+  padding: 0;
+  font-family: inherit;
+  line-height: 1.65;
+  color: hsl(var(--foreground));
+  background: transparent;
+  font-size: 0.95rem; /* Slightly smaller for modal content */
+}
+
+.notion-project-body {
+  background: transparent;
+}
+
+/* Typography overrides - adapted for project modal */
+.notion-project-page .notion-title {
+  font-size: 2rem; /* Smaller than blog for modal */
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: hsl(var(--foreground));
+}
+
+.notion-project-page .notion-h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: hsl(var(--foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  padding-bottom: 0.5rem;
+}
+
+.notion-project-page .notion-h2 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--foreground));
+}
+
+.notion-project-page .notion-h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--foreground));
+}
+
+.notion-project-page .notion-text {
+  color: hsl(var(--foreground));
+  margin-bottom: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Links - consistent with portfolio theme */
+.notion-project-page .notion-link {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--primary) / 0.3);
+  text-underline-offset: 2px;
+  transition: all 0.2s;
+}
+
+.notion-project-page .notion-link:hover {
+  text-decoration-color: hsl(var(--primary));
+  color: hsl(var(--primary));
+}
+
+/* Code blocks - compact for project content */
+.notion-project-page .notion-code {
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+}
+
+.notion-project-page .notion-code-block {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  margin: 0.75rem 0;
+  overflow: hidden;
+}
+
+.notion-project-page .notion-code-block pre {
+  padding: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Lists - more compact */
+.notion-project-page .notion-list {
+  margin: 0.75rem 0;
+  padding-left: 1.25rem;
+}
+
+.notion-project-page .notion-list-item {
+  margin: 0.125rem 0;
+  color: hsl(var(--foreground));
+}
+
+/* Quotes - styled for project content */
+.notion-project-page .notion-quote {
+  border-left: 3px solid hsl(var(--primary));
+  background: hsl(var(--muted) / 0.3);
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 0.25rem 0.25rem 0;
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+}
+
+/* Callouts - prominent for project highlights */
+.notion-project-page .notion-callout {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.notion-project-page .notion-callout-text {
+  color: hsl(var(--foreground));
+  font-size: 0.9rem;
+}
+
+/* Tables - compact for technical specs */
+.notion-project-page .notion-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin: 0.75rem 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  overflow: hidden;
+  font-size: 0.85rem;
+}
+
+.notion-project-page .notion-table th,
+.notion-project-page .notion-table td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.notion-project-page .notion-table th {
+  background: hsl(var(--muted));
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.notion-project-page .notion-table td {
+  color: hsl(var(--foreground));
+}
+
+/* Images - optimized for project gallery */
+.notion-project-page .notion-image {
+  border-radius: 0.375rem;
+  overflow: hidden;
+  margin: 1rem 0;
+  max-height: 400px; /* Limit height in modal */
+}
+
+.notion-project-page .notion-image img {
+  border-radius: 0.375rem;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Dividers */
+.notion-project-page .notion-hr {
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+  margin: 1.5rem 0;
+}
+
+/* Toggle blocks - compact */
+.notion-project-page .notion-toggle {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.25rem;
+  margin: 0.5rem 0;
+  background: hsl(var(--card));
+}
+
+.notion-project-page .notion-toggle summary {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  font-size: 0.9rem;
+}
+
+.notion-project-page .notion-toggle-content {
+  padding: 0 0.75rem 0.5rem;
+  border-top: 1px solid hsl(var(--border));
+}
+
+/* Project-specific enhancements */
+.notion-project-page .notion-collection-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+/* Embed blocks for demos/videos */
+.notion-project-page .notion-embed {
+  margin: 1rem 0;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+}
+
+/* Responsive adjustments for project modal */
+@media (max-width: 768px) {
+  .notion-project-page .notion-title {
+    font-size: 1.75rem;
+  }
+  
+  .notion-project-page .notion-h1 {
+    font-size: 1.5rem;
+  }
+  
+  .notion-project-page .notion-h2 {
+    font-size: 1.25rem;
+  }
+  
+  .notion-project-page .notion-table {
+    font-size: 0.75rem;
+  }
+  
+  .notion-project-page .notion-table th,
+  .notion-project-page .notion-table td {
+    padding: 0.375rem;
+  }
+  
+  .notion-project-page .notion-code-block pre {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Dark mode specific adjustments */
+[data-theme="dark"] .notion-project-page {
+  color: hsl(var(--foreground));
+}
+
+[data-theme="dark"] .notion-project-page .notion-code-block {
+  background: hsl(var(--muted));
+}
+
+[data-theme="dark"] .notion-project-page .notion-callout {
+  background: hsl(var(--muted) / 0.8);
+}
+
+/* Modal project styling */
+.notion-project-modal {
+  /* Optimize for modal viewing */
+  max-width: none;
+  width: 100%;
+}
+
+.notion-project-modal .notion-project-page {
+  font-size: 0.9rem; /* Slightly smaller for modal */
+  line-height: 1.6;
+}
+
+.notion-project-modal .notion-title {
+  font-size: 1.75rem; /* Smaller title for modal */
+  margin-bottom: 1rem;
+}
+
+.notion-project-modal .notion-h1 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.notion-project-modal .notion-h2 {
+  font-size: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.notion-project-modal .notion-image {
+  margin: 1rem 0;
+  max-height: 300px; /* Constrain images in modal */
+}
+
+.notion-project-modal .notion-code-block {
+  margin: 1rem 0;
+}
+
+.notion-project-modal .notion-quote {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+.notion-project-modal .notion-callout {
+  margin: 1rem 0;
+  padding: 0.75rem;
+}
+
+.notion-project-modal .notion-table {
+  margin: 1rem 0;
+  font-size: 0.8rem;
+}
+
+/* Full-page project styling */
+.notion-project-full-page {
+  /* Remove any constraints for full page viewing */
+  max-width: none;
+  width: 100%;
+}
+
+.notion-project-full-page .notion-project-page {
+  font-size: 1rem; /* Larger for full page */
+  line-height: 1.7;
+}
+
+.notion-project-full-page .notion-title {
+  font-size: 2.5rem; /* Larger title for full page */
+  margin-bottom: 2rem;
+}
+
+.notion-project-full-page .notion-h1 {
+  font-size: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.notion-project-full-page .notion-h2 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.notion-project-full-page .notion-image {
+  margin: 2rem 0;
+  max-height: 600px; /* Larger images for full page */
+}
+
+.notion-project-full-page .notion-code-block {
+  margin: 1.5rem 0;
+}
+
+.notion-project-full-page .notion-quote {
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+}
+
+.notion-project-full-page .notion-callout {
+  margin: 1.5rem 0;
+  padding: 1rem;
+}
+
+.notion-project-full-page .notion-table {
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+/* Scrollbar styling for project content */
+.notion-project-page *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.notion-project-page *::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 3px;
+}
+
+.notion-project-page *::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+.notion-project-page *::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}

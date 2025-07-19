@@ -3,6 +3,7 @@ import { BlogPost, BlogPostPreview } from "@/types/blog"
 import { NotionPage, NotionPropertyValue } from "@/types/notion"
 import { BlogErrorHandler } from "@/lib/errors/server-error-handlers"
 import { BlogErrorCode } from "@/types/blog"
+import { notionBlogClient } from "@/lib/notion/blog-client"
 
 function createSlugFromTitle(title: string): string {
   return title
@@ -11,6 +12,23 @@ function createSlugFromTitle(title: string): string {
     .trim()
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
+}
+
+function extractCoverImageFromPage(page: any): string | undefined {
+  try {
+    if (page.cover) {
+      if (page.cover.type === "external" && page.cover.external?.url) {
+        return normalizeNotionImageUrl(page.cover.external.url)
+      }
+      if (page.cover.type === "file" && page.cover.file?.url) {
+        return normalizeNotionImageUrl(page.cover.file.url)
+      }
+    }
+    return undefined
+  } catch (error) {
+    console.warn("Error extracting cover image from page:", error)
+    return undefined
+  }
 }
 
 function extractPropertyValue(properties: Record<string, NotionPropertyValue>, propertyName: string): string | string[] | boolean | null {
@@ -31,9 +49,25 @@ function extractPropertyValue(properties: Record<string, NotionPropertyValue>, p
         return property.multi_select?.map(tag => tag.name) || []
       case "select":
         return property.select?.name || null
+      case "url":
+        return property.url ? normalizeNotionImageUrl(property.url) : null
       case "files":
-        return property.files?.[0]?.file?.url || property.files?.[0]?.external?.url || null
+        const file = property.files?.[0]
+        if (file?.file?.url) return normalizeNotionImageUrl(file.file.url)
+        if (file?.external?.url) return normalizeNotionImageUrl(file.external.url)
+        return null
+      case "rich_text":
+        // Sometimes URLs are stored as rich text
+        const richText = property.rich_text?.[0]?.plain_text
+        if (richText && (richText.startsWith('http') || richText.includes('.'))) {
+          return normalizeNotionImageUrl(richText)
+        }
+        return richText || null
       default:
+        // Debug: Log unknown property types for Cover property specifically
+        if (propertyName === "Cover") {
+          console.log(`COVER PROPERTY - Unknown type "${property.type}":`, property)
+        }
         return null
     }
   } catch (error) {
@@ -46,13 +80,52 @@ export function transformNotionPageToBlogPreview(page: NotionPage): BlogPostPrev
   try {
     const properties = page.properties
     
+    // Property extraction for blog post preview
+    
     const title = extractPropertyValue(properties, "Name") || extractPropertyValue(properties, "Title")
     const description = extractPropertyValue(properties, "Description") || extractPropertyValue(properties, "Summary")
     const publishedAt = extractPropertyValue(properties, "Published Date") || extractPropertyValue(properties, "Date")
     const rawTags = extractPropertyValue(properties, "Tags")
     const tags = Array.isArray(rawTags) ? rawTags : []
     const category = extractPropertyValue(properties, "Category")
-    const coverImage = extractPropertyValue(properties, "Cover") || extractPropertyValue(properties, "Image")
+    
+    // Try multiple possible property names for cover image
+    let coverImage = extractPropertyValue(properties, "Cover") || 
+                     extractPropertyValue(properties, "Image") || 
+                     extractPropertyValue(properties, "cover") ||
+                     extractPropertyValue(properties, "Featured Image") ||
+                     extractPropertyValue(properties, "Cover Image") ||
+                     extractPropertyValue(properties, "image") ||
+                     extractPropertyValue(properties, "URL") ||
+                     extractPropertyValue(properties, "url")
+    
+    // If we still don't have a cover image, try to find any property that might contain an image URL
+    if (!coverImage) {
+      for (const [key, property] of Object.entries(properties)) {
+        const lowerKey = key.toLowerCase()
+        if ((lowerKey.includes('image') || lowerKey.includes('cover') || lowerKey.includes('url') || lowerKey.includes('pic')) 
+            && (property.type === 'url' || property.type === 'files' || property.type === 'rich_text')) {
+          const value = extractPropertyValue(properties, key)
+          if (value && typeof value === 'string') {
+            console.log(`Found potential cover image in property "${key}":`, value)
+            coverImage = value
+            break
+          }
+        }
+      }
+    }
+    
+    // Debug: Focus on the Cover property specifically
+    const coverProperty = properties["Cover"]
+    console.log("=== COVER DEBUG ===")
+    console.log("Cover property exists:", !!coverProperty)
+    if (coverProperty) {
+      console.log("Cover property type:", coverProperty.type)
+      console.log("Cover property full data:", coverProperty)
+      console.log("Extracted Cover value:", extractPropertyValue(properties, "Cover"))
+    }
+    console.log("Final cover image result:", coverImage)
+    console.log("=== END COVER DEBUG ===")
     
     if (!title || typeof title !== "string" || !publishedAt || typeof publishedAt !== "string") {
       console.warn("Missing required fields for blog post preview:", { title, publishedAt })
@@ -79,10 +152,72 @@ export function transformNotionPageToBlogPreview(page: NotionPage): BlogPostPrev
   }
 }
 
+export async function transformNotionPageToBlogPreviewWithCover(page: NotionPage): Promise<BlogPostPreview | null> {
+  try {
+    // First get the basic preview
+    const preview = transformNotionPageToBlogPreview(page)
+    if (!preview) return null
+    
+    // Try to get cover image from official API
+    try {
+      const pageWithCover = await notionBlogClient.getPageWithCover(page.id)
+      const coverImageFromAPI = extractCoverImageFromPage(pageWithCover)
+      
+      return {
+        ...preview,
+        coverImage: coverImageFromAPI || preview.coverImage
+      }
+    } catch (error) {
+      console.warn(`Could not fetch cover image for page ${page.id}:`, error)
+      return preview // Return preview without cover if API call fails
+    }
+  } catch (error) {
+    const blogError = BlogErrorHandler.handleBlogError(error, "transform-blog-preview-with-cover")
+    console.error("Error transforming Notion page to blog preview with cover:", blogError)
+    return null
+  }
+}
+
+function normalizeNotionImageUrl(url: string): string {
+  // If it's already a full URL (external URL), return as is
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
+  
+  // Handle relative URLs by converting them to full Notion URLs
+  if (url.startsWith('/')) {
+    return `https://www.notion.so${url}`
+  }
+  
+  // If it doesn't start with protocol or slash, assume it's a relative path
+  if (!url.includes('://') && url.length > 0) {
+    return `https://www.notion.so/${url}`
+  }
+  
+  return url
+}
+
+function getCoverImageFromRecordMap(recordMap: ExtendedRecordMap, pageId: string): string | undefined {
+  try {
+    const block = recordMap.block?.[pageId]?.value
+    if (block?.format?.page_cover) {
+      const coverUrl = block.format.page_cover
+      return normalizeNotionImageUrl(coverUrl)
+    }
+    return undefined
+  } catch (error) {
+    console.warn("Error extracting cover image from recordMap:", error)
+    return undefined
+  }
+}
+
 export function transformNotionPageToBlogPost(
   preview: BlogPostPreview, 
   recordMap: ExtendedRecordMap
 ): BlogPost {
+  // Extract cover image from recordMap (this is more reliable than database properties)
+  const coverImageFromRecordMap = getCoverImageFromRecordMap(recordMap, preview.id)
+  
   return {
     id: preview.id,
     slug: preview.slug,
@@ -92,7 +227,7 @@ export function transformNotionPageToBlogPost(
     updatedAt: preview.publishedAt, // Use published date as fallback
     tags: preview.tags,
     category: preview.category,
-    coverImage: preview.coverImage,
+    coverImage: coverImageFromRecordMap || preview.coverImage, // Prefer recordMap cover over database property
     published: true,
     recordMap,
   }

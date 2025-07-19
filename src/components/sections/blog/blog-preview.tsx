@@ -1,9 +1,10 @@
 import Link from "next/link"
-import { ArrowRight, Calendar, Clock } from "lucide-react"
+import { ArrowRight, Calendar, Clock, FileText } from "lucide-react"
 import { BlogPostPreview } from "@/lib/types/blog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Section } from "@/components/common/section"
+import { BlogImage } from "@/components/blog/shared/blog-image"
 
 interface BlogPreviewProps {
   posts: BlogPostPreview[]
@@ -35,6 +36,22 @@ export function BlogPreview({ posts }: BlogPreviewProps) {
             href={`/blog/${post.slug}`}
             className="group block bg-card border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300"
           >
+            <div className="relative h-40 overflow-hidden">
+              {post.coverImage ? (
+                <BlogImage
+                  src={post.coverImage}
+                  alt={post.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  fallbackIcon={<FileText className="h-8 w-8 text-muted-foreground/50" />}
+                />
+              ) : (
+                <div className="relative h-40 bg-muted flex items-center justify-center group-hover:bg-muted/80 transition-colors duration-300">
+                  <FileText className="h-8 w-8 text-muted-foreground/50" />
+                </div>
+              )}
+            </div>
+            
             <div className="p-6">
               <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3">
                 <div className="flex items-center gap-1">

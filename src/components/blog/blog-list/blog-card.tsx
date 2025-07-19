@@ -1,8 +1,8 @@
 import Link from "next/link"
-import Image from "next/image"
-import { Calendar, Clock } from "lucide-react"
+import { Calendar, Clock, FileText } from "lucide-react"
 import { BlogPostPreview } from "@/lib/types/blog"
 import { Badge } from "@/components/ui/badge"
+import { BlogImage } from "@/components/blog/shared/blog-image"
 
 interface BlogCardProps {
   post: BlogPostPreview
@@ -22,16 +22,21 @@ export function BlogCard({ post }: BlogCardProps) {
       href={`/blog/${post.slug}`}
       className="group block bg-card border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300"
     >
-      {post.coverImage && (
-        <div className="relative h-48 overflow-hidden">
-          <Image
+      <div className="relative h-48 overflow-hidden">
+        {post.coverImage ? (
+          <BlogImage
             src={post.coverImage}
             alt={post.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
+            fallbackIcon={<FileText className="h-12 w-12 text-muted-foreground/50" />}
           />
-        </div>
-      )}
+        ) : (
+          <div className="relative h-48 bg-muted flex items-center justify-center group-hover:bg-muted/80 transition-colors duration-300">
+            <FileText className="h-12 w-12 text-muted-foreground/50" />
+          </div>
+        )}
+      </div>
       
       <div className="p-6">
         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
@@ -47,12 +52,12 @@ export function BlogCard({ post }: BlogCardProps) {
           )}
         </div>
 
-        <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+        <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
           {post.title}
         </h3>
         
         {post.description && (
-          <p className="text-muted-foreground mb-4 line-clamp-2">
+          <p className="text-muted-foreground mb-4 line-clamp-3 text-sm leading-relaxed">
             {post.description}
           </p>
         )}

@@ -1,3 +1,6 @@
+// Import Notion project types for compatibility
+import type { NotionProject, NotionProjectPreview } from "./projects"
+
 // Core Portfolio Types
 export interface Experience {
   readonly id: string
@@ -195,6 +198,14 @@ export interface ThemeConfig {
 // Data Loading Types
 export interface PortfolioData {
   readonly projects: readonly Project[]
+  readonly experiences: readonly Experience[]
+  readonly personalInfo: PersonalInfo
+  readonly socialLinks: readonly SocialLink[]
+}
+
+// Notion-enhanced portfolio data
+export interface NotionPortfolioData {
+  readonly projects: readonly NotionProjectPreview[]
   readonly experiences: readonly Experience[]
   readonly personalInfo: PersonalInfo
   readonly socialLinks: readonly SocialLink[]
