@@ -63,14 +63,9 @@ function extractPropertyValue(properties: Record<string, NotionPropertyValue>, p
         }
         return richText || null
       default:
-        // Debug: Log unknown property types for Cover property specifically
-        if (propertyName === "Cover") {
-          console.log(`COVER PROPERTY - Unknown type "${property.type}":`, property)
-        }
         return null
     }
   } catch (error) {
-    console.warn(`Failed to extract property ${propertyName}:`, error)
     return null
   }
 }
@@ -106,7 +101,6 @@ export function transformNotionPageToBlogPreview(page: NotionPage): BlogPostPrev
             && (property.type === 'url' || property.type === 'files' || property.type === 'rich_text')) {
           const value = extractPropertyValue(properties, key)
           if (value && typeof value === 'string') {
-            console.log(`Found potential cover image in property "${key}":`, value)
             coverImage = value
             break
           }
@@ -114,20 +108,7 @@ export function transformNotionPageToBlogPreview(page: NotionPage): BlogPostPrev
       }
     }
     
-    // Debug: Focus on the Cover property specifically
-    const coverProperty = properties["Cover"]
-    console.log("=== COVER DEBUG ===")
-    console.log("Cover property exists:", !!coverProperty)
-    if (coverProperty) {
-      console.log("Cover property type:", coverProperty.type)
-      console.log("Cover property full data:", coverProperty)
-      console.log("Extracted Cover value:", extractPropertyValue(properties, "Cover"))
-    }
-    console.log("Final cover image result:", coverImage)
-    console.log("=== END COVER DEBUG ===")
-    
     if (!title || typeof title !== "string" || !publishedAt || typeof publishedAt !== "string") {
-      console.warn("Missing required fields for blog post preview:", { title, publishedAt })
       return null
     }
 
@@ -146,7 +127,6 @@ export function transformNotionPageToBlogPreview(page: NotionPage): BlogPostPrev
     }
   } catch (error) {
     const blogError = BlogErrorHandler.handleBlogError(error, "transform-blog-preview")
-    console.error("Error transforming Notion page to blog preview:", blogError)
     return null
   }
 }
@@ -167,12 +147,10 @@ export async function transformNotionPageToBlogPreviewWithCover(page: NotionPage
         coverImage: coverImageFromAPI || preview.coverImage
       }
     } catch (error) {
-      console.warn(`Could not fetch cover image for page ${page.id}:`, error)
       return preview // Return preview without cover if API call fails
     }
   } catch (error) {
     const blogError = BlogErrorHandler.handleBlogError(error, "transform-blog-preview-with-cover")
-    console.error("Error transforming Notion page to blog preview with cover:", blogError)
     return null
   }
 }
@@ -205,7 +183,6 @@ function getCoverImageFromRecordMap(recordMap: ExtendedRecordMap, pageId: string
     }
     return undefined
   } catch (error) {
-    console.warn("Error extracting cover image from recordMap:", error)
     return undefined
   }
 }

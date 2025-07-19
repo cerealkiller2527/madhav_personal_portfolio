@@ -1,4 +1,10 @@
-import { BlogPost, BlogPostPreview, CacheEntry } from "@/types/blog"
+import { BlogPost, BlogPostPreview } from "@/types/blog"
+import { 
+  getCacheKey as getSharedCacheKey,
+  getCachedData,
+  invalidateCache,
+  getCacheStats
+} from "@/lib/cache/shared-cache"
 
 // Cache configuration
 const CACHE_DURATION = {
@@ -7,51 +13,10 @@ const CACHE_DURATION = {
   SITEMAP: 60 * 60, // 1 hour
 } as const
 
-// In-memory cache (for serverless environments)
-const cache = new Map<string, CacheEntry<unknown>>()
+const NAMESPACE = "blog"
 
 export function getCacheKey(type: string, identifier?: string): string {
-  return identifier ? `${type}:${identifier}` : type
-}
-
-export function setCache<T>(key: string, data: T, ttlSeconds: number): void {
-  cache.set(key, {
-    key,
-    data,
-    timestamp: Date.now(),
-    ttl: ttlSeconds * 1000,
-  })
-}
-
-export function getCache<T>(key: string): T | null {
-  const entry = cache.get(key) as CacheEntry<T> | undefined
-  
-  if (!entry) {
-    return null
-  }
-  
-  const now = Date.now()
-  const isExpired = now - entry.timestamp > entry.ttl
-  
-  if (isExpired) {
-    cache.delete(key)
-    return null
-  }
-  
-  return entry.data
-}
-
-export function clearCache(pattern?: string): void {
-  if (!pattern) {
-    cache.clear()
-    return
-  }
-  
-  for (const key of cache.keys()) {
-    if (key.includes(pattern)) {
-      cache.delete(key)
-    }
-  }
+  return getSharedCacheKey(NAMESPACE, type, identifier)
 }
 
 // Cached wrapper functions
@@ -59,20 +24,7 @@ export async function getCachedBlogPosts(
   fetcher: () => Promise<BlogPostPreview[]>
 ): Promise<BlogPostPreview[]> {
   const cacheKey = getCacheKey("posts_list")
-  const cached = getCache<BlogPostPreview[]>(cacheKey)
-  
-  if (cached) {
-    return cached
-  }
-  
-  try {
-    const posts = await fetcher()
-    setCache(cacheKey, posts, CACHE_DURATION.POSTS_LIST)
-    return posts
-  } catch (error) {
-    console.error("Error fetching cached blog posts:", error)
-    return []
-  }
+  return getCachedData(cacheKey, fetcher, CACHE_DURATION.POSTS_LIST, [])
 }
 
 export async function getCachedBlogPost(
@@ -80,22 +32,7 @@ export async function getCachedBlogPost(
   fetcher: (slug: string) => Promise<BlogPost | null>
 ): Promise<BlogPost | null> {
   const cacheKey = getCacheKey("single_post", slug)
-  const cached = getCache<BlogPost>(cacheKey)
-  
-  if (cached) {
-    return cached
-  }
-  
-  try {
-    const post = await fetcher(slug)
-    if (post) {
-      setCache(cacheKey, post, CACHE_DURATION.SINGLE_POST)
-    }
-    return post
-  } catch (error) {
-    console.error(`Error fetching cached blog post ${slug}:`, error)
-    return null
-  }
+  return getCachedData(cacheKey, () => fetcher(slug), CACHE_DURATION.SINGLE_POST, null)
 }
 
 // Cache warming utilities
@@ -104,26 +41,16 @@ export async function warmCache(
   getPost: (slug: string) => Promise<BlogPost | null>
 ): Promise<void> {
   try {
-    console.log("Warming blog cache...")
-    
     // Warm posts list cache
-    const posts = await getAllPosts()
-    const cacheKey = getCacheKey("posts_list")
-    setCache(cacheKey, posts, CACHE_DURATION.POSTS_LIST)
+    const posts = await getCachedBlogPosts(getAllPosts)
     
     // Warm recent posts cache
     const recentPosts = posts.slice(0, 3)
     for (const post of recentPosts) {
-      const fullPost = await getPost(post.slug)
-      if (fullPost) {
-        const postCacheKey = getCacheKey("single_post", post.slug)
-        setCache(postCacheKey, fullPost, CACHE_DURATION.SINGLE_POST)
-      }
+      await getCachedBlogPost(post.slug, getPost)
     }
-    
-    console.log(`Blog cache warmed with ${posts.length} posts`)
   } catch (error) {
-    console.error("Error warming cache:", error)
+    // Silently fail warming
   }
 }
 
@@ -135,15 +62,16 @@ export function getRevalidateTime(): number {
 
 // Cache invalidation on demand
 export function invalidateBlogCache(slug?: string): void {
+  const keysToInvalidate = [getCacheKey("posts_list")]
+  
   if (slug) {
-    // Invalidate specific post
-    const postKey = getCacheKey("single_post", slug)
-    cache.delete(postKey)
+    keysToInvalidate.push(getCacheKey("single_post", slug))
   }
   
-  // Always invalidate posts list when any post changes
-  const listKey = getCacheKey("posts_list")
-  cache.delete(listKey)
-  
-  console.log(`Cache invalidated for ${slug || "all posts"}`)
+  invalidateCache(keysToInvalidate)
+}
+
+// Cache statistics
+export function getBlogCacheStats() {
+  return getCacheStats(NAMESPACE)
 }
