@@ -10,6 +10,7 @@ interface SectionProps {
   title: string
   id: string
   hasBackground?: boolean
+  description?: string
 }
 
 /**
@@ -17,7 +18,7 @@ interface SectionProps {
  * throughout the application. It includes optional backgrounds and
  * standardized animations.
  */
-export function Section({ children, className, title, id, hasBackground = false }: SectionProps) {
+export function Section({ children, className, title, id, hasBackground = false, description }: SectionProps) {
   return (
     <motion.section
       id={id}
@@ -29,7 +30,12 @@ export function Section({ children, className, title, id, hasBackground = false 
     >
       {hasBackground && <GridBackground />}
       <div className="w-full max-w-7xl mx-auto px-6 md:px-10">
-        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-foreground">{title}</h2>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">{title}</h2>
+          {description && (
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{description}</p>
+          )}
+        </div>
         {children}
       </div>
     </motion.section>
