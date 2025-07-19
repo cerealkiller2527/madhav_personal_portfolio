@@ -160,7 +160,7 @@ export interface NotionDatabaseQueryResponse {
   next_cursor: string | null
   has_more: boolean
   type: "page_or_database"
-  page_or_database: Record<string, unknown>
+  page_or_database: Record<string, string | number | boolean | null>
 }
 
 // Notion Client Types

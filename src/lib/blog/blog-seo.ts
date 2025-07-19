@@ -1,4 +1,4 @@
-import { BlogPost, BlogPostPreview } from "@/lib/types/blog"
+import { BlogPost, BlogPostPreview } from "@/types/blog"
 
 interface SEOData {
   title: string

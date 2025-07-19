@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import type { Project } from "@/lib/types"
+import type { Project } from "@/types"
 import { ProjectGridCard } from "@/components/sections/projects/project-grid-card"
 import { Section } from "@/components/common/section"
 import { Button } from "@/components/ui/button"

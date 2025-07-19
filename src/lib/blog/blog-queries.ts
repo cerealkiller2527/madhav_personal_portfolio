@@ -12,12 +12,10 @@ export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
     // Validate environment first
     const envValidation = validateBlogEnvironment()
     if (!envValidation.isValid) {
-      console.warn("Blog environment validation failed:", envValidation.errors)
       return []
     }
 
     if (!notionBlogClient.isConfigured()) {
-      console.warn("Notion not configured, returning empty blog posts")
       return []
     }
 
@@ -31,16 +29,13 @@ export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
             const preview = transformNotionPageToBlogPreview(page)
             return sanitizeBlogPostPreview(preview)
           } catch (error) {
-            console.error("Error transforming blog post preview:", error)
             return null
           }
         })
         .filter(Boolean) as BlogPostPreview[]
 
-      console.log(`Successfully fetched ${blogPosts.length} blog posts`)
       return blogPosts
     } catch (error) {
-      console.error("Error fetching blog posts:", error)
       throw new Error("Failed to fetch blog posts from Notion")
     }
   }),
@@ -57,7 +52,6 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
   return withServerErrorHandling(
     () => getCachedBlogPost(slug, async (slug: string) => {
     if (!notionBlogClient.isConfigured()) {
-      console.warn("Notion not configured, returning null for blog post")
       return null
     }
 
@@ -66,17 +60,14 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
       const postPreview = allPosts.find(post => post.slug === slug)
       
       if (!postPreview) {
-        console.warn(`Blog post with slug "${slug}" not found`)
         return null
       }
 
       const recordMap = await notionBlogClient.getPage(postPreview.id)
       const blogPost = transformNotionPageToBlogPost(postPreview, recordMap)
       
-      console.log(`Successfully fetched blog post: ${slug}`)
       return blogPost
     } catch (error) {
-      console.error(`Error fetching blog post with slug ${slug}:`, error)
       throw new Error(`Failed to fetch blog post: ${slug}`)
     }
   }),

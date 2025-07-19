@@ -22,18 +22,14 @@ export default async function PortfolioPage() {
       // First get the project previews
       const notionProjects = await getAllProjects()
       if (notionProjects && notionProjects.length > 0) {
-        console.log(`Successfully fetched ${notionProjects.length} projects`)
-        
         // Now fetch full project data with recordMap for each project
         const fullProjects = await Promise.all(
           notionProjects.map(async (preview) => {
             try {
               const fullProject = await getProjectById(preview.id)
               if (fullProject) {
-                console.log(`Successfully fetched project: ${preview.id}`)
                 return fullProject
               } else {
-                console.log(`❌ Failed to fetch full project data for: ${preview.id}`)
                 // Fallback to preview data
                 return {
                   ...preview,
@@ -46,7 +42,6 @@ export default async function PortfolioPage() {
                 }
               }
             } catch (error) {
-              console.warn(`Error fetching full project ${preview.id}:`, error)
               // Fallback to preview data
               return {
                 ...preview,
@@ -62,15 +57,10 @@ export default async function PortfolioPage() {
         )
         
         projects = fullProjects
-        console.log(`Loaded ${projects.length} projects from Notion`)
-      } else {
-        console.log("No Notion projects found, using local data")
       }
     } catch (error) {
-      console.warn("Failed to fetch Notion projects, using local data:", error)
+      // Failed to fetch Notion projects, fallback to local data
     }
-  } else {
-    console.log("Notion projects not configured, using local data")
   }
 
   return (

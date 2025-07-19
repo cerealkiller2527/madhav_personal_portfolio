@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import type { Experience } from "@/lib/types"
+import type { Experience } from "@/types"
 import { Section } from "@/components/common/section"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"

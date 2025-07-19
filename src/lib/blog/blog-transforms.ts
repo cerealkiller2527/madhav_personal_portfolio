@@ -14,7 +14,7 @@ function createSlugFromTitle(title: string): string {
     .replace(/-+/g, "-")
 }
 
-function extractCoverImageFromPage(page: any): string | undefined {
+function extractCoverImageFromPage(page: NotionPage): string | undefined {
   try {
     if (page.cover) {
       if (page.cover.type === "external" && page.cover.external?.url) {
@@ -26,7 +26,6 @@ function extractCoverImageFromPage(page: any): string | undefined {
     }
     return undefined
   } catch (error) {
-    console.warn("Error extracting cover image from page:", error)
     return undefined
   }
 }

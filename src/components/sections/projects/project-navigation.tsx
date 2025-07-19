@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft, ArrowRight } from "lucide-react"
-import type { Project } from "@/lib/types"
+import type { Project } from "@/types"
 
 interface ProjectNavigationProps {
   nextProject?: Project | null
