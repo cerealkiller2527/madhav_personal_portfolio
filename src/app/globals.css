@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Blog-specific styles */
+@import '../styles/blog/notion-overrides.css';
+@import '../styles/blog/blog-layout.css';
+@import '../styles/blog/blog-components.css';
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

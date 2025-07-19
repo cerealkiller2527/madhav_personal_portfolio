@@ -1,0 +1,226 @@
+/* React-Notion-X Core Styles Import */
+@import 'react-notion-x/src/styles.css';
+
+/* Custom overrides to match portfolio design */
+.notion-page {
+  padding: 0;
+  font-family: inherit;
+  line-height: 1.65;
+  color: hsl(var(--foreground));
+  background: transparent;
+}
+
+.notion-page-body {
+  background: transparent;
+}
+
+/* Typography overrides */
+.notion-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: hsl(var(--foreground));
+}
+
+.notion-h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: hsl(var(--foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  padding-bottom: 0.5rem;
+}
+
+.notion-h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: hsl(var(--foreground));
+}
+
+.notion-h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: hsl(var(--foreground));
+}
+
+.notion-text {
+  color: hsl(var(--foreground));
+  margin-bottom: 1rem;
+}
+
+/* Links */
+.notion-link {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--primary) / 0.3);
+  text-underline-offset: 2px;
+  transition: all 0.2s;
+}
+
+.notion-link:hover {
+  text-decoration-color: hsl(var(--primary));
+}
+
+/* Code blocks */
+.notion-code {
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.25rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.875rem;
+}
+
+.notion-code-block {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.notion-code-block pre {
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Lists */
+.notion-list {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.notion-list-item {
+  margin: 0.25rem 0;
+  color: hsl(var(--foreground));
+}
+
+/* Quotes */
+.notion-quote {
+  border-left: 4px solid hsl(var(--primary));
+  background: hsl(var(--muted) / 0.5);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.375rem 0.375rem 0;
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Callouts */
+.notion-callout {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.notion-callout-text {
+  color: hsl(var(--foreground));
+}
+
+/* Tables */
+.notion-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin: 1rem 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.notion-table th,
+.notion-table td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.notion-table th {
+  background: hsl(var(--muted));
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.notion-table td {
+  color: hsl(var(--foreground));
+}
+
+/* Images */
+.notion-image {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.notion-image img {
+  border-radius: 0.5rem;
+}
+
+/* Dividers */
+.notion-hr {
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+  margin: 2rem 0;
+}
+
+/* Toggle blocks */
+.notion-toggle {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  margin: 0.5rem 0;
+  background: hsl(var(--card));
+}
+
+.notion-toggle summary {
+  padding: 0.75rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+
+.notion-toggle-content {
+  padding: 0 0.75rem 0.75rem;
+  border-top: 1px solid hsl(var(--border));
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .notion-page {
+  color: hsl(var(--foreground));
+}
+
+[data-theme="dark"] .notion-code-block {
+  background: hsl(var(--muted));
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .notion-title {
+    font-size: 2rem;
+  }
+  
+  .notion-h1 {
+    font-size: 1.75rem;
+  }
+  
+  .notion-h2 {
+    font-size: 1.375rem;
+  }
+  
+  .notion-table {
+    font-size: 0.875rem;
+  }
+}
