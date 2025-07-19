@@ -279,7 +279,6 @@ export function sanitizeProjectPreview(data: unknown): NotionProjectPreview | nu
   const validation = validateProjectPreview(data)
   
   if (!validation.isValid || !validation.data) {
-    console.warn("Invalid project preview data:", validation.errors)
     return null
   }
 
@@ -290,7 +289,6 @@ export function sanitizeProject(data: unknown): NotionProject | null {
   const validation = validateProject(data)
   
   if (!validation.isValid || !validation.data) {
-    console.warn("Invalid project data:", validation.errors)
     return null
   }
 
