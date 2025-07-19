@@ -1,5 +1,8 @@
 import { ExtendedRecordMap } from "notion-types"
-import { BlogPost, BlogPostPreview } from "@/lib/types/blog"
+import { BlogPost, BlogPostPreview } from "@/types/blog"
+import { NotionPage, NotionPropertyValue } from "@/types/notion"
+import { BlogErrorHandler } from "@/lib/errors/error-handlers"
+import { BlogErrorCode } from "@/types/blog"
 
 function createSlugFromTitle(title: string): string {
   return title
@@ -10,42 +13,48 @@ function createSlugFromTitle(title: string): string {
     .replace(/-+/g, "-")
 }
 
-function extractPropertyValue(properties: any, propertyName: string): any {
+function extractPropertyValue(properties: Record<string, NotionPropertyValue>, propertyName: string): string | string[] | boolean | null {
   const property = properties[propertyName]
   if (!property) return null
 
-  switch (property.type) {
-    case "title":
-      return property.title?.[0]?.plain_text || ""
-    case "rich_text":
-      return property.rich_text?.[0]?.plain_text || ""
-    case "date":
-      return property.date?.start || null
-    case "checkbox":
-      return property.checkbox || false
-    case "multi_select":
-      return property.multi_select?.map((tag: any) => tag.name) || []
-    case "select":
-      return property.select?.name || null
-    case "files":
-      return property.files?.[0]?.file?.url || property.files?.[0]?.external?.url || null
-    default:
-      return null
+  try {
+    switch (property.type) {
+      case "title":
+        return property.title?.[0]?.plain_text || ""
+      case "rich_text":
+        return property.rich_text?.[0]?.plain_text || ""
+      case "date":
+        return property.date?.start || null
+      case "checkbox":
+        return property.checkbox
+      case "multi_select":
+        return property.multi_select?.map(tag => tag.name) || []
+      case "select":
+        return property.select?.name || null
+      case "files":
+        return property.files?.[0]?.file?.url || property.files?.[0]?.external?.url || null
+      default:
+        return null
+    }
+  } catch (error) {
+    console.warn(`Failed to extract property ${propertyName}:`, error)
+    return null
   }
 }
 
-export function transformNotionPageToBlogPreview(page: any): BlogPostPreview | null {
+export function transformNotionPageToBlogPreview(page: NotionPage): BlogPostPreview | null {
   try {
     const properties = page.properties
     
     const title = extractPropertyValue(properties, "Name") || extractPropertyValue(properties, "Title")
     const description = extractPropertyValue(properties, "Description") || extractPropertyValue(properties, "Summary")
     const publishedAt = extractPropertyValue(properties, "Published Date") || extractPropertyValue(properties, "Date")
-    const tags = extractPropertyValue(properties, "Tags") || []
+    const rawTags = extractPropertyValue(properties, "Tags")
+    const tags = Array.isArray(rawTags) ? rawTags : []
     const category = extractPropertyValue(properties, "Category")
     const coverImage = extractPropertyValue(properties, "Cover") || extractPropertyValue(properties, "Image")
     
-    if (!title || !publishedAt) {
+    if (!title || typeof title !== "string" || !publishedAt || typeof publishedAt !== "string") {
       console.warn("Missing required fields for blog post preview:", { title, publishedAt })
       return null
     }
@@ -56,15 +65,16 @@ export function transformNotionPageToBlogPreview(page: any): BlogPostPreview | n
       id: page.id,
       slug,
       title,
-      description,
+      description: typeof description === "string" ? description : undefined,
       publishedAt,
       tags,
-      category,
-      coverImage,
+      category: typeof category === "string" ? category : undefined,
+      coverImage: typeof coverImage === "string" ? coverImage : undefined,
       readingTime: Math.ceil(Math.random() * 10 + 2), // Placeholder reading time
     }
   } catch (error) {
-    console.error("Error transforming Notion page to blog preview:", error)
+    const blogError = BlogErrorHandler.handleBlogError(error, "transform-blog-preview")
+    console.error("Error transforming Notion page to blog preview:", blogError)
     return null
   }
 }

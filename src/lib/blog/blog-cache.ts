@@ -1,4 +1,4 @@
-import { BlogPost, BlogPostPreview } from "@/lib/types/blog"
+import { BlogPost, BlogPostPreview, CacheEntry } from "@/types/blog"
 
 // Cache configuration
 const CACHE_DURATION = {
@@ -8,7 +8,7 @@ const CACHE_DURATION = {
 } as const
 
 // In-memory cache (for serverless environments)
-const cache = new Map<string, { data: any; timestamp: number; ttl: number }>()
+const cache = new Map<string, CacheEntry<unknown>>()
 
 export function getCacheKey(type: string, identifier?: string): string {
   return identifier ? `${type}:${identifier}` : type
@@ -16,6 +16,7 @@ export function getCacheKey(type: string, identifier?: string): string {
 
 export function setCache<T>(key: string, data: T, ttlSeconds: number): void {
   cache.set(key, {
+    key,
     data,
     timestamp: Date.now(),
     ttl: ttlSeconds * 1000,
@@ -23,7 +24,7 @@ export function setCache<T>(key: string, data: T, ttlSeconds: number): void {
 }
 
 export function getCache<T>(key: string): T | null {
-  const entry = cache.get(key)
+  const entry = cache.get(key) as CacheEntry<T> | undefined
   
   if (!entry) {
     return null
@@ -37,7 +38,7 @@ export function getCache<T>(key: string): T | null {
     return null
   }
   
-  return entry.data as T
+  return entry.data
 }
 
 export function clearCache(pattern?: string): void {

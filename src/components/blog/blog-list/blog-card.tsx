@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Calendar, Clock, Tag } from "lucide-react"
+import { Calendar, Clock } from "lucide-react"
 import { BlogPostPreview } from "@/lib/types/blog"
 import { Badge } from "@/components/ui/badge"
 

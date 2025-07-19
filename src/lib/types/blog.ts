@@ -1,41 +1,12 @@
-import { ExtendedRecordMap } from "notion-types"
-
-export interface BlogPost {
-  id: string
-  slug: string
-  title: string
-  description?: string
-  publishedAt: string
-  updatedAt: string
-  tags: string[]
-  category?: string
-  coverImage?: string
-  published: boolean
-  recordMap: ExtendedRecordMap
-}
-
-export interface BlogPostPreview {
-  id: string
-  slug: string
-  title: string
-  description?: string
-  publishedAt: string
-  tags: string[]
-  category?: string
-  coverImage?: string
-  readingTime?: number
-}
-
-export interface BlogConfig {
-  revalidateTime: number
-  postsPerPage: number
-  enableComments: boolean
-}
-
-export interface BlogMetadata {
-  title: string
-  description: string
-  author: string
-  siteUrl: string
-  ogImage?: string
-}
+// Re-export types from the new types directory for backward compatibility
+export type {
+  BlogPost,
+  BlogPostPreview,
+  BlogConfig,
+  BlogMetadata,
+  ValidationResult,
+  BlogError,
+  BlogErrorCode,
+  CacheEntry,
+  CacheConfig
+} from "@/types/blog"
