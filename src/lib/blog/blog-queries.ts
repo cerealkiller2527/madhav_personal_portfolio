@@ -1,7 +1,7 @@
 import { BlogPost, BlogPostPreview } from "@/types/blog"
 import { NotionPage } from "@/types/notion"
 import { withServerErrorHandling } from "@/lib/errors/server-error-handlers"
-import { notionClient } from "./notion-client"
+import { notionBlogClient } from "@/lib/notion/blog-client"
 import { transformNotionPageToBlogPost, transformNotionPageToBlogPreview } from "./blog-transforms"
 import { validateBlogEnvironment, sanitizeBlogPostPreview } from "./blog-validation"
 import { getCachedBlogPosts, getCachedBlogPost } from "./blog-cache"
@@ -16,14 +16,14 @@ export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
       return []
     }
 
-    if (!notionClient.isConfigured()) {
+    if (!notionBlogClient.isConfigured()) {
       console.warn("Notion not configured, returning empty blog posts")
       return []
     }
 
     try {
       const databaseId = process.env.NOTION_DATABASE_ID!
-      const pages = await notionClient.getDatabasePages(databaseId)
+      const pages = await notionBlogClient.getBlogPosts(databaseId)
       
       const blogPosts = pages
         .map((page: NotionPage) => {
@@ -56,7 +56,7 @@ export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   return withServerErrorHandling(
     () => getCachedBlogPost(slug, async (slug: string) => {
-    if (!notionClient.isConfigured()) {
+    if (!notionBlogClient.isConfigured()) {
       console.warn("Notion not configured, returning null for blog post")
       return null
     }
@@ -70,7 +70,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
         return null
       }
 
-      const recordMap = await notionClient.getPage(postPreview.id)
+      const recordMap = await notionBlogClient.getPage(postPreview.id)
       const blogPost = transformNotionPageToBlogPost(postPreview, recordMap)
       
       console.log(`Successfully fetched blog post: ${slug}`)

@@ -103,6 +103,7 @@ class EnvironmentManager {
     // Validate blog configuration
     const notionToken = process.env.NOTION_TOKEN
     const notionDatabaseId = process.env.NOTION_DATABASE_ID
+    const notionProjectsId = process.env.NOTION_PROJECTS_DATABASE_ID
     
     if (notionToken && !notionDatabaseId) {
       errors.push({
@@ -120,12 +121,30 @@ class EnvironmentManager {
       })
     }
 
+    // Validate projects configuration
+    if (notionProjectsId && !notionToken) {
+      errors.push({
+        variable: "NOTION_TOKEN",
+        message: "NOTION_TOKEN is required when NOTION_PROJECTS_DATABASE_ID is provided",
+        severity: "error"
+      })
+    }
+
     // Validate numeric values
     const revalidateTime = process.env.BLOG_REVALIDATE_TIME
     if (revalidateTime && !isValidNumber(revalidateTime)) {
       errors.push({
         variable: "BLOG_REVALIDATE_TIME",
         message: "BLOG_REVALIDATE_TIME must be a valid number",
+        severity: "error"
+      })
+    }
+
+    const projectsRevalidateTime = process.env.PROJECTS_REVALIDATE_TIME
+    if (projectsRevalidateTime && !isValidNumber(projectsRevalidateTime)) {
+      errors.push({
+        variable: "PROJECTS_REVALIDATE_TIME",
+        message: "PROJECTS_REVALIDATE_TIME must be a valid number",
         severity: "error"
       })
     }
@@ -139,12 +158,30 @@ class EnvironmentManager {
       })
     }
 
+    const projectsCacheMaxSize = process.env.PROJECTS_CACHE_MAX_SIZE
+    if (projectsCacheMaxSize && !isValidNumber(projectsCacheMaxSize)) {
+      errors.push({
+        variable: "PROJECTS_CACHE_MAX_SIZE",
+        message: "PROJECTS_CACHE_MAX_SIZE must be a valid number",
+        severity: "error"
+      })
+    }
+
     // Validate boolean values
     const enableCache = process.env.ENABLE_BLOG_CACHE
     if (enableCache && !isValidBoolean(enableCache)) {
       errors.push({
         variable: "ENABLE_BLOG_CACHE",
         message: "ENABLE_BLOG_CACHE must be a boolean value",
+        severity: "error"
+      })
+    }
+
+    const enableProjectsCache = process.env.ENABLE_PROJECTS_CACHE
+    if (enableProjectsCache && !isValidBoolean(enableProjectsCache)) {
+      errors.push({
+        variable: "ENABLE_PROJECTS_CACHE",
+        message: "ENABLE_PROJECTS_CACHE must be a boolean value",
         severity: "error"
       })
     }
@@ -206,6 +243,14 @@ class EnvironmentManager {
         enableCache: this.parseBoolean(this.getVariable("ENABLE_BLOG_CACHE", "true")),
         cacheMaxSize: Number(this.getVariable("CACHE_MAX_SIZE", "100")),
         isConfigured: !!(this.getVariable("NOTION_TOKEN") && this.getVariable("NOTION_DATABASE_ID"))
+      },
+      projects: {
+        notionToken: this.getVariable("NOTION_TOKEN"),
+        projectsDatabaseId: this.getVariable("NOTION_PROJECTS_DATABASE_ID"),
+        revalidateTime: Number(this.getVariable("PROJECTS_REVALIDATE_TIME", "60")),
+        enableCache: this.parseBoolean(this.getVariable("ENABLE_PROJECTS_CACHE", "true")),
+        cacheMaxSize: Number(this.getVariable("PROJECTS_CACHE_MAX_SIZE", "50")),
+        isConfigured: !!(this.getVariable("NOTION_TOKEN") && this.getVariable("NOTION_PROJECTS_DATABASE_ID"))
       },
       analytics: {
         id: this.getVariable("ANALYTICS_ID"),

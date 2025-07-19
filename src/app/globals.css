@@ -7,6 +7,9 @@
 @import '../styles/blog/blog-layout.css';
 @import '../styles/blog/blog-components.css';
 
+/* Project-specific styles */
+@import '../styles/projects/notion-overrides.css';
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

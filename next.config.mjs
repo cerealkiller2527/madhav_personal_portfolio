@@ -10,9 +10,12 @@ const nextConfig = {
     unoptimized: true,
     domains: [
       'www.notion.so',
+      'notion.so',
       's3.us-west-2.amazonaws.com',
       'prod-files-secure.s3.us-west-2.amazonaws.com',
       'images.unsplash.com',
+      's3.amazonaws.com',
+      'file.notion.so',
     ],
   },
   // Enable experimental features for better blog performance

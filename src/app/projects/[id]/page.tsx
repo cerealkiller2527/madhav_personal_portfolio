@@ -1,0 +1,161 @@
+import { Suspense } from "react"
+import { notFound } from "next/navigation"
+import { Metadata } from "next"
+import { projects as localProjects } from "@/lib/data"
+import { getAllProjects, getProjectById } from "@/lib/projects/project-queries"
+import ProjectDetailPage from "./project-detail"
+
+// Add revalidation for ISR
+export const revalidate = 60
+
+interface ProjectPageProps {
+  params: Promise<{
+    id: string
+  }>
+}
+
+async function getProjectData(id: string) {
+  // First try to get project from Notion
+  const useNotionProjects = process.env.NOTION_TOKEN && process.env.NOTION_PROJECTS_DATABASE_ID
+  
+  if (useNotionProjects) {
+    try {
+      // Try to get full Notion project with content
+      const notionProject = await getProjectById(id)
+      if (notionProject) {
+        console.log(`Loaded Notion project: ${id}`)
+        return { project: notionProject, isNotion: true }
+      }
+      
+      // If not found by ID, try to get from projects list (in case of slug mismatch)
+      const allNotionProjects = await getAllProjects()
+      const foundProject = allNotionProjects.find(p => p.id === id || p.slug === id)
+      if (foundProject) {
+        const fullProject = await getProjectById(foundProject.id)
+        if (fullProject) {
+          console.log(`Loaded Notion project by slug: ${id}`)
+          return { project: fullProject, isNotion: true }
+        }
+      }
+    } catch (error) {
+      console.warn(`Failed to fetch Notion project ${id}, trying local data:`, error)
+    }
+  }
+  
+  // Fallback to local project data
+  const localProject = localProjects.find((p) => p.id === id)
+  if (localProject) {
+    console.log(`Using local project data: ${id}`)
+    return { project: localProject, isNotion: false }
+  }
+  
+  return null
+}
+
+export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
+  const { id } = await params
+  const projectData = await getProjectData(id)
+  
+  if (!projectData) {
+    return {
+      title: "Project Not Found - Madhav Lodha",
+      description: "The requested project could not be found.",
+    }
+  }
+
+  const { project } = projectData
+  
+  return {
+    title: `${project.title} - Projects - Madhav Lodha`,
+    description: project.description || project.subtitle || "Project by Madhav Lodha",
+    openGraph: {
+      title: project.title,
+      description: project.description || project.subtitle || "Project by Madhav Lodha",
+      type: "article",
+      ...(project.heroImage && { images: [project.heroImage] }),
+    },
+  }
+}
+
+// Generate static params for ISR
+export async function generateStaticParams() {
+  try {
+    // Try to get Notion projects first
+    const useNotionProjects = process.env.NOTION_TOKEN && process.env.NOTION_PROJECTS_DATABASE_ID
+    
+    if (useNotionProjects) {
+      try {
+        const notionProjects = await getAllProjects()
+        if (notionProjects && notionProjects.length > 0) {
+          return notionProjects.map((project) => ({
+            id: project.id,
+          }))
+        }
+      } catch (error) {
+        console.warn("Failed to generate static params from Notion, using local data:", error)
+      }
+    }
+    
+    // Fallback to local projects
+    return localProjects.map((project) => ({
+      id: project.id,
+    }))
+  } catch (error) {
+    console.error("Error generating static params:", error)
+    return []
+  }
+}
+
+async function getAllProjectsWithOrder() {
+  // Check if Notion projects should be used (environment flag)
+  const useNotionProjects = process.env.NOTION_TOKEN && process.env.NOTION_PROJECTS_DATABASE_ID
+  
+  if (useNotionProjects) {
+    try {
+      const notionProjects = await getAllProjects()
+      if (notionProjects && notionProjects.length > 0) {
+        return notionProjects
+      }
+    } catch (error) {
+      console.warn("Failed to fetch Notion projects for navigation, using local data:", error)
+    }
+  }
+  
+  // Fallback to local projects
+  return localProjects
+}
+
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { id } = await params
+  const [projectData, allProjects] = await Promise.all([
+    getProjectData(id),
+    getAllProjectsWithOrder()
+  ])
+  
+  if (!projectData) {
+    notFound()
+  }
+  
+  // Find previous and next projects
+  const currentIndex = allProjects.findIndex(p => p.id === id)
+  const previousProject = currentIndex > 0 ? allProjects[currentIndex - 1] : undefined
+  const nextProject = currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : undefined
+  
+  return (
+    <Suspense fallback={
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28">
+        <div className="flex items-center justify-center py-32">
+          <div className="text-center">
+            <div className="animate-pulse">Loading project...</div>
+          </div>
+        </div>
+      </div>
+    }>
+      <ProjectDetailPage 
+        projectData={projectData}
+        previousProject={previousProject}
+        nextProject={nextProject}
+      />
+    </Suspense>
+  )
+}

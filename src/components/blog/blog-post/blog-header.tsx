@@ -3,6 +3,7 @@ import { Calendar, Clock, User, Tag } from "lucide-react"
 import { BlogPost } from "@/lib/types/blog"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { BlogImage } from "@/components/blog/shared/blog-image"
 
 interface BlogHeaderProps {
   post: BlogPost
@@ -26,12 +27,13 @@ export function BlogHeader({ post, author, readingTime }: BlogHeaderProps) {
     <header className="mb-8">
       {post.coverImage && (
         <div className="relative h-64 md:h-80 mb-8 -mx-4 md:mx-0 rounded-none md:rounded-lg overflow-hidden">
-          <Image
+          <BlogImage
             src={post.coverImage}
             alt={post.title}
             fill
             className="object-cover"
             priority
+            showFallback={false}
           />
         </div>
       )}

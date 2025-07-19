@@ -13,7 +13,7 @@ interface ProjectNavigationProps {
 const NavCard = ({ project, direction }: { project: Project; direction: "left" | "right" }) => (
   <Link
     href={`/projects/${project.id}`}
-    className="group flex items-center w-full max-w-sm md:w-96 p-6 gap-6 rounded-2xl border border-black/10 dark:border-white/10 bg-black/10 dark:bg-white/5 backdrop-blur-lg shadow-lg transition-all duration-300 hover:border-primary/30 hover:bg-primary/5 hover:shadow-primary/10"
+    className="group flex items-center w-full max-w-sm md:w-96 p-6 gap-6 rounded-2xl border border-orange-200/20 dark:border-orange-400/20 bg-orange-50/10 dark:bg-orange-900/10 backdrop-blur-lg shadow-lg transition-all duration-300 hover:border-orange-400/40 hover:bg-orange-100/20 dark:hover:bg-orange-800/20 hover:shadow-orange-200/20 dark:hover:shadow-orange-400/20"
   >
     {direction === "left" ? (
       <>
