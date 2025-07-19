@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
-import type { Project } from "@/lib/types"
+import type { Project } from "@/types"
 import type { NotionProject } from "@/types/projects"
 import { Badge } from "@/components/ui/badge"
 import { EnhancedTableOfContents } from "@/components/ui/enhanced-table-of-contents"

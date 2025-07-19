@@ -30,7 +30,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...blogUrls,
     ]
   } catch (error) {
-    console.error('Error generating sitemap:', error)
     // Return basic sitemap if blog fails
     return [
       {

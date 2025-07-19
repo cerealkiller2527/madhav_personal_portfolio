@@ -23,7 +23,6 @@ async function getProjectData(id: string) {
       // Try to get full Notion project with content
       const notionProject = await getProjectById(id)
       if (notionProject) {
-        console.log(`Loaded Notion project: ${id}`)
         return { project: notionProject, isNotion: true }
       }
       
@@ -33,19 +32,17 @@ async function getProjectData(id: string) {
       if (foundProject) {
         const fullProject = await getProjectById(foundProject.id)
         if (fullProject) {
-          console.log(`Loaded Notion project by slug: ${id}`)
           return { project: fullProject, isNotion: true }
         }
       }
     } catch (error) {
-      console.warn(`Failed to fetch Notion project ${id}, trying local data:`, error)
+      // Failed to fetch Notion project, will try local data
     }
   }
   
   // Fallback to local project data
   const localProject = localProjects.find((p) => p.id === id)
   if (localProject) {
-    console.log(`Using local project data: ${id}`)
     return { project: localProject, isNotion: false }
   }
   
@@ -92,7 +89,7 @@ export async function generateStaticParams() {
           }))
         }
       } catch (error) {
-        console.warn("Failed to generate static params from Notion, using local data:", error)
+        // Failed to generate static params from Notion, using local data
       }
     }
     
@@ -101,7 +98,6 @@ export async function generateStaticParams() {
       id: project.id,
     }))
   } catch (error) {
-    console.error("Error generating static params:", error)
     return []
   }
 }
@@ -117,7 +113,7 @@ async function getAllProjectsWithOrder() {
         return notionProjects
       }
     } catch (error) {
-      console.warn("Failed to fetch Notion projects for navigation, using local data:", error)
+      // Failed to fetch Notion projects for navigation, using local data
     }
   }
   

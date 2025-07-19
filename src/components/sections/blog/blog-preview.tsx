@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ArrowRight, Calendar, Clock, FileText } from "lucide-react"
-import { BlogPostPreview } from "@/lib/types/blog"
+import { BlogPostPreview } from "@/types/blog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Section } from "@/components/common/section"

@@ -5,7 +5,7 @@ import { HeroSection } from "@/components/sections/hero/hero-section"
 import { ExperienceSection } from "@/components/sections/experience/experience-section"
 import { ProjectsSection } from "@/components/sections/projects/projects-section"
 import { ProjectModal } from "@/components/sections/projects/project-modal"
-import type { Project, Experience } from "@/lib/types"
+import type { Project, Experience } from "@/types"
 import { CursorGlow } from "@/components/common/cursor-glow"
 import { smoothScrollToElement } from "@/lib/utils"
 

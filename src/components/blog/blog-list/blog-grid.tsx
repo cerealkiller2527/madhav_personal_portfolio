@@ -1,4 +1,4 @@
-import { BlogPostPreview } from "@/lib/types/blog"
+import { BlogPostPreview } from "@/types/blog"
 import { BlogCard } from "./blog-card"
 import { BlogLoading } from "../shared/blog-loading"
 import { BlogError } from "../shared/blog-error"

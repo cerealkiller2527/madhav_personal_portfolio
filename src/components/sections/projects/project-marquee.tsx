@@ -5,7 +5,7 @@ import type React from "react"
 import Image from "next/image"
 import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame } from "framer-motion"
 import { Trophy, ChevronLeft, ChevronRight } from "lucide-react"
-import type { Project } from "@/lib/types"
+import type { Project } from "@/types"
 import { cn } from "@/lib/utils"
 
 interface ProjectMarqueeProps {

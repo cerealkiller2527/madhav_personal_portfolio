@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { BlogPostPreview } from "@/lib/types/blog"
+import { BlogPostPreview } from "@/types/blog"
 
 interface BlogNavigationProps {
   previousPost?: BlogPostPreview
