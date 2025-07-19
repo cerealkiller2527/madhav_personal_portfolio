@@ -3,6 +3,8 @@ import { Metadata } from "next"
 import { getAllBlogPosts } from "@/lib/blog/blog-queries"
 import { BlogGrid } from "@/components/blog/blog-list/blog-grid"
 import { BlogLoading } from "@/components/blog/shared/blog-loading"
+import { BlogErrorBoundary } from "@/components/blog/shared/blog-error-boundary"
+import { BlogFallback } from "@/components/blog/shared/blog-fallback"
 
 export const metadata: Metadata = {
   title: "Blog - Madhav Lodha",
@@ -12,42 +14,73 @@ export const metadata: Metadata = {
 export const revalidate = 60 // Revalidate every 60 seconds
 
 async function BlogContent() {
-  const posts = await getAllBlogPosts()
+  try {
+    const posts = await getAllBlogPosts()
 
-  return (
-    <div className="min-h-screen bg-background pt-20">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Thoughts on software engineering, web development, and technology.
-            </p>
-          </div>
-          
-          <BlogGrid posts={posts} />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default function BlogPage() {
-  return (
-    <Suspense fallback={
+    return (
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <div className="h-12 bg-muted rounded w-1/3 mx-auto mb-4"></div>
-              <div className="h-6 bg-muted rounded w-2/3 mx-auto"></div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Thoughts on software engineering, web development, and technology.
+              </p>
             </div>
-            <BlogLoading variant="card" count={6} />
+            
+            <BlogErrorBoundary>
+              <BlogGrid posts={posts} />
+            </BlogErrorBoundary>
           </div>
         </div>
       </div>
-    }>
-      <BlogContent />
-    </Suspense>
+    )
+  } catch (error) {
+    console.error("Error in BlogContent:", error)
+    return (
+      <div className="min-h-screen bg-background pt-20">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-6xl mx-auto">
+            <BlogFallback 
+              type="error" 
+              title="Unable to load blog posts"
+              description="There was an error loading the blog content. Please try again later."
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+export default function BlogPage() {
+  return (
+    <BlogErrorBoundary
+      fallback={
+        <div className="min-h-screen bg-background pt-20">
+          <div className="container mx-auto px-4 py-8">
+            <div className="max-w-6xl mx-auto">
+              <BlogFallback type="error" />
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <Suspense fallback={
+        <div className="min-h-screen bg-background pt-20">
+          <div className="container mx-auto px-4 py-8">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-12">
+                <div className="h-12 bg-muted rounded w-1/3 mx-auto mb-4"></div>
+                <div className="h-6 bg-muted rounded w-2/3 mx-auto"></div>
+              </div>
+              <BlogLoading variant="card" count={6} />
+            </div>
+          </div>
+        </div>
+      }>
+        <BlogContent />
+      </Suspense>
+    </BlogErrorBoundary>
   )
 }

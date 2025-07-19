@@ -1,50 +1,74 @@
 import { BlogPost, BlogPostPreview } from "@/lib/types/blog"
 import { notionClient } from "./notion-client"
 import { transformNotionPageToBlogPost, transformNotionPageToBlogPreview } from "./blog-transforms"
+import { validateBlogEnvironment, sanitizeBlogPostPreview } from "./blog-validation"
+import { getCachedBlogPosts, getCachedBlogPost } from "./blog-cache"
 
 export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
-  if (!notionClient.isConfigured()) {
-    console.warn("Notion not configured, returning empty blog posts")
-    return []
-  }
+  return getCachedBlogPosts(async () => {
+    // Validate environment first
+    const envValidation = validateBlogEnvironment()
+    if (!envValidation.isValid) {
+      console.warn("Blog environment validation failed:", envValidation.errors)
+      return []
+    }
 
-  try {
-    const databaseId = process.env.NOTION_DATABASE_ID!
-    const pages = await notionClient.getDatabasePages(databaseId)
-    
-    const blogPosts = await Promise.all(
-      pages.map(async (page: any) => {
-        return transformNotionPageToBlogPreview(page)
-      })
-    )
+    if (!notionClient.isConfigured()) {
+      console.warn("Notion not configured, returning empty blog posts")
+      return []
+    }
 
-    return blogPosts.filter(Boolean) as BlogPostPreview[]
-  } catch (error) {
-    console.error("Error fetching blog posts:", error)
-    return []
-  }
+    try {
+      const databaseId = process.env.NOTION_DATABASE_ID!
+      const pages = await notionClient.getDatabasePages(databaseId)
+      
+      const blogPosts = pages
+        .map((page: any) => {
+          try {
+            const preview = transformNotionPageToBlogPreview(page)
+            return sanitizeBlogPostPreview(preview)
+          } catch (error) {
+            console.error("Error transforming blog post preview:", error)
+            return null
+          }
+        })
+        .filter(Boolean) as BlogPostPreview[]
+
+      console.log(`Successfully fetched ${blogPosts.length} blog posts`)
+      return blogPosts
+    } catch (error) {
+      console.error("Error fetching blog posts:", error)
+      throw new Error("Failed to fetch blog posts from Notion")
+    }
+  })
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  if (!notionClient.isConfigured()) {
-    console.warn("Notion not configured, returning null for blog post")
-    return null
-  }
-
-  try {
-    const allPosts = await getAllBlogPosts()
-    const postPreview = allPosts.find(post => post.slug === slug)
-    
-    if (!postPreview) {
+  return getCachedBlogPost(slug, async (slug: string) => {
+    if (!notionClient.isConfigured()) {
+      console.warn("Notion not configured, returning null for blog post")
       return null
     }
 
-    const recordMap = await notionClient.getPage(postPreview.id)
-    return transformNotionPageToBlogPost(postPreview, recordMap)
-  } catch (error) {
-    console.error(`Error fetching blog post with slug ${slug}:`, error)
-    return null
-  }
+    try {
+      const allPosts = await getAllBlogPosts()
+      const postPreview = allPosts.find(post => post.slug === slug)
+      
+      if (!postPreview) {
+        console.warn(`Blog post with slug "${slug}" not found`)
+        return null
+      }
+
+      const recordMap = await notionClient.getPage(postPreview.id)
+      const blogPost = transformNotionPageToBlogPost(postPreview, recordMap)
+      
+      console.log(`Successfully fetched blog post: ${slug}`)
+      return blogPost
+    } catch (error) {
+      console.error(`Error fetching blog post with slug ${slug}:`, error)
+      throw new Error(`Failed to fetch blog post: ${slug}`)
+    }
+  })
 }
 
 export async function getRecentBlogPosts(limit: number = 3): Promise<BlogPostPreview[]> {
