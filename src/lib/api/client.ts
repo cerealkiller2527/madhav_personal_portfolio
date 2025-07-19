@@ -9,7 +9,7 @@ import {
   TimeoutError,
   ValidationError,
   RetryConfig
-} from "@/types/api"
+} from "@/types/apiTypes"
 
 // Type-safe API Client
 export class APIClient {

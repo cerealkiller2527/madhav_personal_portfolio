@@ -8,7 +8,7 @@ import {
   isValidUrl,
   isValidNumber,
   isValidBoolean
-} from "@/types/environment"
+} from "@/types/environmentTypes"
 
 // Type-safe environment variable access
 class EnvironmentManager {

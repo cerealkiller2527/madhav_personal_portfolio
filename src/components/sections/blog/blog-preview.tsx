@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { BlogPostPreview } from "@/types/blog"
+import { BlogPostPreview } from "@/types/blogTypes"
 import { Button } from "@/components/ui/button"
 import { Section } from "@/components/common/section"
 import { BlogPostCard } from "@/components/blog/shared/blog-post-card"

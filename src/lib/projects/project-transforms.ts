@@ -1,6 +1,6 @@
 import { ExtendedRecordMap } from "notion-types"
-import { NotionProject, NotionProjectPreview, ProjectCategory, TechCategory, ProjectStatistic, ProjectGalleryItem, ProjectFeature, ProjectTechStackItem } from "@/types/projects"
-import { NotionPage, NotionPropertyValue } from "@/types/notion"
+import { NotionProject, NotionProjectPreview, ProjectCategory, TechCategory, ProjectStatistic, ProjectGalleryItem, ProjectFeature, ProjectTechStackItem } from "@/types/projectTypes"
+import { NotionPage, NotionPropertyValue } from "@/types/notionTypes"
 import { withServerErrorHandling } from "@/lib/errors/server-error-handlers"
 
 function createSlugFromTitle(title: string): string {

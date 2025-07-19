@@ -1,6 +1,6 @@
 import React from "react"
-import { Project, Experience } from "./portfolio"
-import { BlogPost, BlogPostPreview } from "./blog"
+import { Project, Experience } from "./portfolioTypes"
+import { BlogPost, BlogPostPreview } from "./blogTypes"
 
 // Base component props
 export interface BaseComponentProps {

@@ -1,4 +1,4 @@
-import { CacheEntry } from "@/types/blog"
+import { CacheEntry } from "@/types/blogTypes"
 
 // Generic cache implementation for both blog and projects
 const cache = new Map<string, CacheEntry<unknown>>()

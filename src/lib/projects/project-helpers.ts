@@ -1,5 +1,5 @@
 import type { Project } from "@/types"
-import type { NotionProject } from "@/types/projects"
+import type { NotionProject } from "@/types/projectTypes"
 
 export interface ProjectSection {
   id: string

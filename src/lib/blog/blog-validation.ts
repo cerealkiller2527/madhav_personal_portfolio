@@ -1,4 +1,4 @@
-import { BlogPost, BlogPostPreview, ValidationResult } from "@/types/blog"
+import { BlogPost, BlogPostPreview, ValidationResult } from "@/types/blogTypes"
 import { 
   validateRequiredString,
   validateOptionalString,

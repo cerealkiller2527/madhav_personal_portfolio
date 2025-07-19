@@ -1,5 +1,5 @@
-import { BlogPost, BlogPostPreview } from "@/types/blog"
-import { NotionPage } from "@/types/notion"
+import { BlogPost, BlogPostPreview } from "@/types/blogTypes"
+import { NotionPage } from "@/types/notionTypes"
 import { withServerErrorHandling } from "@/lib/errors/server-error-handlers"
 import { notionBlogClient } from "@/lib/notion/blog-client"
 import { transformNotionPageToBlogPost, transformNotionPageToBlogPreview } from "./blog-transforms"
