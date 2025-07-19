@@ -1,13 +1,13 @@
 import { BlogPost, BlogPostPreview } from "@/types/blog"
 import { NotionPage } from "@/types/notion"
-import { withErrorHandling } from "@/lib/errors/error-handlers"
+import { withServerErrorHandling } from "@/lib/errors/server-error-handlers"
 import { notionClient } from "./notion-client"
 import { transformNotionPageToBlogPost, transformNotionPageToBlogPreview } from "./blog-transforms"
 import { validateBlogEnvironment, sanitizeBlogPostPreview } from "./blog-validation"
 import { getCachedBlogPosts, getCachedBlogPost } from "./blog-cache"
 
 export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
-  return withErrorHandling(
+  return withServerErrorHandling(
     () => getCachedBlogPosts(async () => {
     // Validate environment first
     const envValidation = validateBlogEnvironment()
@@ -54,7 +54,7 @@ export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  return withErrorHandling(
+  return withServerErrorHandling(
     () => getCachedBlogPost(slug, async (slug: string) => {
     if (!notionClient.isConfigured()) {
       console.warn("Notion not configured, returning null for blog post")

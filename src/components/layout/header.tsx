@@ -10,7 +10,6 @@ import { Home, Briefcase, Code, Mail, Eye, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/common/theme-toggle"
 import { smoothScrollToElement } from "@/lib/utils"
-import { useActiveSection } from "@/hooks/use-active-section"
 
 const navItems = [
   { name: "Home", id: "home", icon: <Home className="h-4 w-4" />, href: "/" },
@@ -23,7 +22,6 @@ const navItems = [
 export function Header({ onResumeOpen }: HeaderProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const activeSection = useActiveSection()
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: typeof navItems[0]) => {
     e.preventDefault()
@@ -86,13 +84,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
                 key={item.id}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item)}
-                className={`flex items-center justify-center gap-1.5 rounded-lg px-2 sm:px-3 py-1.5 text-xs font-medium transition-colors duration-200 hover:text-white hover:bg-white/10 cursor-pointer ${
-                  // Blog is active on blog pages, sections are active based on scroll position
-                  (item.id === "blog" && pathname.startsWith("/blog")) ||
-                  (pathname === "/" && activeSection === item.id)
-                    ? "text-white bg-white/10" 
-                    : "text-white/70"
-                }`}
+                className="flex items-center justify-center gap-1.5 rounded-lg px-2 sm:px-3 py-1.5 text-xs font-medium transition-colors duration-200 hover:text-white hover:bg-white/10 cursor-pointer text-white/70"
               >
                 {item.icon}
                 <span className="hidden sm:inline">{item.name}</span>

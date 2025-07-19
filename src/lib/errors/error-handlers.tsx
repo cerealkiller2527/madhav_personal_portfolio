@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react"
 import { BlogError, BlogErrorCode } from "@/types/blog"
 import { NotionError } from "@/types/notion"

@@ -1,7 +1,7 @@
 import { ExtendedRecordMap } from "notion-types"
 import { BlogPost, BlogPostPreview } from "@/types/blog"
 import { NotionPage, NotionPropertyValue } from "@/types/notion"
-import { BlogErrorHandler } from "@/lib/errors/error-handlers"
+import { BlogErrorHandler } from "@/lib/errors/server-error-handlers"
 import { BlogErrorCode } from "@/types/blog"
 
 function createSlugFromTitle(title: string): string {
