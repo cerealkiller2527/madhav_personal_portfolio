@@ -1,4 +1,4 @@
-import { NotionProject, NotionProjectPreview } from "@/types/projects"
+import { NotionProject, NotionProjectPreview } from "@/types/projectTypes"
 import { 
   getCacheKey as getSharedCacheKey,
   getCachedData,

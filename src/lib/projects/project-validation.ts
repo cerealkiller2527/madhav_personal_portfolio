@@ -1,4 +1,4 @@
-import { NotionProject, NotionProjectPreview, ProjectValidationResult, ProjectCategory, TechCategory, ProjectStatistic, ProjectGalleryItem, ProjectFeature, ProjectTechStackItem } from "@/types/projects"
+import { NotionProject, NotionProjectPreview, ProjectValidationResult, ProjectCategory, TechCategory, ProjectStatistic, ProjectGalleryItem, ProjectFeature, ProjectTechStackItem } from "@/types/projectTypes"
 
 // Runtime validation for project content
 export function validateProjectPreview(data: unknown): ProjectValidationResult<NotionProjectPreview> {

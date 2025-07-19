@@ -1,5 +1,5 @@
 // Import Notion project types for compatibility
-import type { NotionProject, NotionProjectPreview } from "./projects"
+import type { NotionProject, NotionProjectPreview } from "./projectTypes"
 
 // Core Portfolio Types
 export interface Experience {

@@ -6,7 +6,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ArrowDown } from "lucide-react"
 import { ProjectMarquee } from "@/components/sections/projects/project-marquee"
-import type { HeroSectionProps } from "@/types/components"
+import type { HeroSectionProps } from "@/types/componentTypes"
 import { smoothScrollToElement } from "@/lib/utils"
 
 const containerVariants = {

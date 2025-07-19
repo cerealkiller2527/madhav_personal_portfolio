@@ -1,4 +1,4 @@
-import { BlogPost, BlogPostPreview } from "@/types/blog"
+import { BlogPost, BlogPostPreview } from "@/types/blogTypes"
 import { 
   getCacheKey as getSharedCacheKey,
   getCachedData,

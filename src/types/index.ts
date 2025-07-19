@@ -1,10 +1,11 @@
 // Core Types
-export * from "./portfolio"
-export * from "./blog"
-export * from "./notion"
-export * from "./environment"
-export * from "./api"
-export * from "./components"
+export * from "./portfolioTypes"
+export * from "./blogTypes"
+export * from "./notionTypes"
+export * from "./environmentTypes"
+export * from "./apiTypes"
+export * from "./componentTypes"
+export * from "./projectTypes"
 
 // Re-export commonly used types for convenience
 export type {
@@ -13,7 +14,7 @@ export type {
   ProjectCategory,
   TechCategory,
   ProficiencyLevel
-} from "./portfolio"
+} from "./portfolioTypes"
 
 export type {
   BlogPost,
@@ -21,26 +22,26 @@ export type {
   BlogConfig,
   BlogMetadata,
   ValidationResult
-} from "./blog"
+} from "./blogTypes"
 
 export type {
   NotionPage,
   NotionPropertyValue,
   NotionClientInterface
-} from "./notion"
+} from "./notionTypes"
 
 export type {
   EnvironmentConfig,
   EnvironmentVariables,
   EnvironmentValidationResult
-} from "./environment"
+} from "./environmentTypes"
 
 export type {
   APIResponse,
   APIError,
   HTTPMethod,
   HTTPStatusCode
-} from "./api"
+} from "./apiTypes"
 
 export type {
   BaseComponentProps,
@@ -50,4 +51,16 @@ export type {
   BlogCardProps,
   ButtonProps,
   CursorGlowProps
-} from "./components"
+} from "./componentTypes"
+
+// Project types for convenience
+export type {
+  NotionProject,
+  NotionProjectPreview,
+  ProjectValidationResult,
+  ProjectCacheEntry,
+  ProjectTechStackItem,
+  ProjectStatistic,
+  ProjectGalleryItem,
+  ProjectFeature
+} from "./projectTypes"

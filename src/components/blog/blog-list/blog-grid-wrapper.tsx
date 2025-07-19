@@ -2,7 +2,7 @@
 
 import { BlogGrid } from "./blog-grid"
 import { BlogErrorBoundary } from "../shared/blog-error-boundary"
-import { BlogPostPreview } from "@/types/blog"
+import { BlogPostPreview } from "@/types/blogTypes"
 
 interface BlogGridWrapperProps {
   posts: readonly BlogPostPreview[]

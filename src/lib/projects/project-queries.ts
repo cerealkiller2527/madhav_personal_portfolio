@@ -1,5 +1,5 @@
-import { NotionProject, NotionProjectPreview } from "@/types/projects"
-import { NotionPage } from "@/types/notion"
+import { NotionProject, NotionProjectPreview } from "@/types/projectTypes"
+import { NotionPage } from "@/types/notionTypes"
 import { withServerErrorHandling } from "@/lib/errors/server-error-handlers"
 import { notionProjectsClient } from "./notion-client"
 import { transformNotionPageToProject, transformNotionPageToProjectPreview } from "./project-transforms"

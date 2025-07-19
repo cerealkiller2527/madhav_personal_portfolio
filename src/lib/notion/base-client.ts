@@ -1,7 +1,7 @@
 import { Client } from "@notionhq/client"
 import { NotionAPI } from "notion-client"
 import { ExtendedRecordMap } from "notion-types"
-import { NotionClientInterface } from "@/types/notion"
+import { NotionClientInterface } from "@/types/notionTypes"
 
 const notion = new NotionAPI()
 

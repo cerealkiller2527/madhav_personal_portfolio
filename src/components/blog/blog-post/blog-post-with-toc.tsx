@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-import type { NotionBlogPost } from "@/types/blog"
+import type { NotionBlogPost } from "@/types/blogTypes"
 import { BlogRenderer } from "./blog-renderer"
 import { BlogHeader } from "./blog-header"
 import { BlogNavigation } from "./blog-navigation"

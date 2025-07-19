@@ -4,7 +4,7 @@ import { Component } from 'react'
 import Link from 'next/link'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import type { BlogErrorBoundaryProps, BlogErrorFallbackProps } from '@/types/components'
+import type { BlogErrorBoundaryProps, BlogErrorFallbackProps } from '@/types/componentTypes'
 import { ServerErrorHandler } from '@/lib/errors/server-error-handlers'
 
 interface State {

@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import Image from "next/image"
 import type { Project } from "@/types"
-import type { NotionProject } from "@/types/projects"
+import type { NotionProject } from "@/types/projectTypes"
 import { Badge } from "@/components/ui/badge"
 import { EnhancedTableOfContents } from "@/components/ui/enhanced-table-of-contents"
 import { ProjectNavigation } from "@/components/sections/projects/project-navigation"

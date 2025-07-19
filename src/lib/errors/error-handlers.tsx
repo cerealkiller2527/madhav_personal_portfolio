@@ -1,9 +1,9 @@
 "use client"
 
 import React from "react"
-import { BlogError, BlogErrorCode } from "@/types/blog"
-import { NotionError } from "@/types/notion"
-import { APIClientError, NetworkError, TimeoutError } from "@/types/api"
+import { BlogError, BlogErrorCode } from "@/types/blogTypes"
+import { NotionError } from "@/types/notionTypes"
+import { APIClientError, NetworkError, TimeoutError } from "@/types/apiTypes"
 
 // Generic Error Handler
 export class ErrorHandler {
