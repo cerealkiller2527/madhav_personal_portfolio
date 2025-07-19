@@ -6,7 +6,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ArrowDown } from "lucide-react"
 import { ProjectMarquee } from "@/components/sections/projects/project-marquee"
-import type { Project } from "@/lib/types"
+import type { HeroSectionProps } from "@/types/components"
 import { smoothScrollToElement } from "@/lib/utils"
 
 const containerVariants = {
@@ -43,12 +43,6 @@ const letter = {
       ease: "easeOut",
     },
   },
-}
-
-interface HeroSectionProps {
-  projects: Project[]
-  onHoverChange: (isHovering: boolean) => void
-  onProjectSelect: (projectId: string) => void
 }
 
 export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSectionProps) {

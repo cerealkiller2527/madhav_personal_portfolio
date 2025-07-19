@@ -49,9 +49,43 @@ This is a Next.js 15 portfolio website built with TypeScript, React 19, and Tail
 - `public/assets/placeholders/` - Placeholder images for development
 - `public/documents/` - PDF documents (resume, etc.)
 
+### Blog Architecture
+- **Blog System**: Integrated Notion CMS with react-notion-x for content rendering
+- **Data Layer**: 
+  - `src/lib/blog/` - Blog data fetching, caching, and transformation utilities
+  - `src/lib/types/blog.ts` - TypeScript types for blog content
+- **Components**: 
+  - `src/components/blog/blog-list/` - Blog listing and card components
+  - `src/components/blog/blog-post/` - Individual post rendering and navigation
+  - `src/components/blog/shared/` - Shared utilities, loading states, error handling
+  - `src/components/sections/blog/` - Homepage blog preview section
+- **Styling**: 
+  - `src/styles/blog/` - Blog-specific CSS for Notion content and layouts
+  - Custom CSS overrides for react-notion-x to match portfolio design
+- **Routes**: 
+  - `/blog` - Blog listing page with ISR (60s revalidation)
+  - `/blog/[slug]` - Individual blog posts with dynamic metadata
+  - `/blog/sitemap.xml` - Blog-specific sitemap generation
+  - `/blog/rss.xml` - RSS feed for blog content
+
+### Blog Configuration
+- **Environment Variables**:
+  - `NOTION_TOKEN` - Notion integration token for API access
+  - `NOTION_DATABASE_ID` - Notion database ID for blog posts
+  - `BLOG_REVALIDATE_TIME` - ISR revalidation interval (default: 60s)
+  - `NEXT_PUBLIC_SITE_URL` - Site URL for SEO and RSS feeds
+  - `AUTHOR_EMAIL` - Author email for RSS feed
+- **Notion Database Structure**:
+  - Required properties: Name/Title, Published Date, Published (checkbox)
+  - Optional properties: Description/Summary, Tags, Category, Cover/Image
+  - Posts are filtered by Published=true and sorted by Published Date descending
+
 ### Important Notes
 - Build errors and TypeScript errors are ignored in production (`next.config.mjs`)
 - Images are unoptimized for deployment flexibility
 - Uses `src/` directory structure for better organization
 - Uses absolute imports with `@/` prefix pointing to `src/` directory
 - All components are properly typed with TypeScript interfaces
+- Blog functionality gracefully degrades if Notion is not configured
+- ISR ensures blog content updates automatically without rebuilds
+- Comprehensive error handling and fallback UI for blog features

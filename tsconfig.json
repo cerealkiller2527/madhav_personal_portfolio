@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/blog/*": ["./src/lib/blog/*"],
+      "@/components/blog/*": ["./src/components/blog/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

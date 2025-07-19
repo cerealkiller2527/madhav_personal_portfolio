@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import dynamic from "next/dynamic"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Download, ChevronLeft, ChevronRight, Loader2, X, Code, Bot, Settings, Zap, ZoomIn, ZoomOut, RotateCcw, Printer, Maximize2, Minimize2 } from "lucide-react"
