@@ -1,22 +1,19 @@
 'use client'
 
-import { Component, ReactNode } from 'react'
+import { Component } from 'react'
+import Link from 'next/link'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
-interface Props {
-  children: ReactNode
-  fallback?: ReactNode
-  onError?: (error: Error, errorInfo: any) => void
-}
+import type { BlogErrorBoundaryProps, BlogErrorFallbackProps } from '@/types/components'
+import { ErrorHandler } from '@/lib/errors/error-handlers'
 
 interface State {
   hasError: boolean
   error?: Error
 }
 
-export class BlogErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
+export class BlogErrorBoundary extends Component<BlogErrorBoundaryProps, State> {
+  constructor(props: BlogErrorBoundaryProps) {
     super(props)
     this.state = { hasError: false }
   }
@@ -25,8 +22,9 @@ export class BlogErrorBoundary extends Component<Props, State> {
     return { hasError: true, error }
   }
 
-  componentDidCatch(error: Error, errorInfo: any) {
-    console.error('Blog Error Boundary caught an error:', error, errorInfo)
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Use centralized error handler
+    ErrorHandler.getInstance().handleError(error, 'Blog Error Boundary')
     
     // Call the optional error handler
     if (this.props.onError) {
@@ -57,7 +55,7 @@ export class BlogErrorBoundary extends Component<Props, State> {
               Try again
             </Button>
             <Button asChild variant="default">
-              <a href="/blog">Go to Blog</a>
+              <Link href="/blog">Go to Blog</Link>
             </Button>
           </div>
           {process.env.NODE_ENV === 'development' && this.state.error && (

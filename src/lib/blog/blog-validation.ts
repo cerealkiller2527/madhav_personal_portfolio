@@ -1,147 +1,170 @@
-import { BlogPost, BlogPostPreview } from "@/lib/types/blog"
+import { BlogPost, BlogPostPreview, ValidationResult, BlogErrorCode } from "@/types/blog"
 
-// Validation schemas using runtime validation
-export interface ValidationResult {
-  isValid: boolean
-  errors: string[]
-}
-
-export function validateBlogPostPreview(data: any): ValidationResult {
+// Runtime validation for blog content
+export function validateBlogPostPreview(data: unknown): ValidationResult<BlogPostPreview> {
   const errors: string[] = []
+  let validatedData: Partial<BlogPostPreview> = {}
 
-  if (!data || typeof data !== "object") {
+  if (!data || typeof data !== "object" || data === null) {
     return { isValid: false, errors: ["Invalid data structure"] }
   }
 
+  const record = data as Record<string, unknown>
+
   // Required fields
-  if (!data.id || typeof data.id !== "string") {
+  if (!record.id || typeof record.id !== "string") {
     errors.push("Missing or invalid id")
+  } else {
+    validatedData.id = record.id
   }
 
-  if (!data.slug || typeof data.slug !== "string") {
+  if (!record.slug || typeof record.slug !== "string") {
     errors.push("Missing or invalid slug")
+  } else {
+    validatedData.slug = record.slug
   }
 
-  if (!data.title || typeof data.title !== "string") {
+  if (!record.title || typeof record.title !== "string") {
     errors.push("Missing or invalid title")
+  } else {
+    validatedData.title = record.title
   }
 
-  if (!data.publishedAt || typeof data.publishedAt !== "string") {
+  if (!record.publishedAt || typeof record.publishedAt !== "string") {
     errors.push("Missing or invalid publishedAt")
   } else {
     // Validate date format
-    const date = new Date(data.publishedAt)
+    const date = new Date(record.publishedAt)
     if (isNaN(date.getTime())) {
       errors.push("Invalid publishedAt date format")
+    } else {
+      validatedData.publishedAt = record.publishedAt
     }
   }
 
   // Optional fields validation
-  if (data.description && typeof data.description !== "string") {
-    errors.push("Invalid description type")
-  }
-
-  if (data.tags && !Array.isArray(data.tags)) {
-    errors.push("Invalid tags type - must be array")
-  } else if (data.tags) {
-    const invalidTags = data.tags.filter((tag: any) => typeof tag !== "string")
-    if (invalidTags.length > 0) {
-      errors.push("All tags must be strings")
+  if (record.description !== undefined) {
+    if (typeof record.description !== "string") {
+      errors.push("Invalid description type")
+    } else {
+      validatedData.description = record.description
     }
   }
 
-  if (data.category && typeof data.category !== "string") {
-    errors.push("Invalid category type")
+  if (record.tags !== undefined) {
+    if (!Array.isArray(record.tags)) {
+      errors.push("Invalid tags type - must be array")
+    } else {
+      const invalidTags = record.tags.filter((tag: unknown) => typeof tag !== "string")
+      if (invalidTags.length > 0) {
+        errors.push("All tags must be strings")
+      } else {
+        validatedData.tags = record.tags as string[]
+      }
+    }
+  } else {
+    validatedData.tags = []
   }
 
-  if (data.coverImage && typeof data.coverImage !== "string") {
-    errors.push("Invalid coverImage type")
+  if (record.category !== undefined) {
+    if (typeof record.category !== "string") {
+      errors.push("Invalid category type")
+    } else {
+      validatedData.category = record.category
+    }
   }
 
-  if (data.readingTime && typeof data.readingTime !== "number") {
-    errors.push("Invalid readingTime type")
+  if (record.coverImage !== undefined) {
+    if (typeof record.coverImage !== "string") {
+      errors.push("Invalid coverImage type")
+    } else {
+      validatedData.coverImage = record.coverImage
+    }
   }
 
+  if (record.readingTime !== undefined) {
+    if (typeof record.readingTime !== "number") {
+      errors.push("Invalid readingTime type")
+    } else {
+      validatedData.readingTime = record.readingTime
+    }
+  }
+
+  const isValid = errors.length === 0
   return {
-    isValid: errors.length === 0,
+    isValid,
     errors,
+    data: isValid ? validatedData as BlogPostPreview : undefined
   }
 }
 
-export function validateBlogPost(data: any): ValidationResult {
+export function validateBlogPost(data: unknown): ValidationResult<BlogPost> {
   const previewValidation = validateBlogPostPreview(data)
   
-  if (!previewValidation.isValid) {
-    return previewValidation
-  }
-
-  const errors: string[] = []
-
-  if (!data.updatedAt || typeof data.updatedAt !== "string") {
-    errors.push("Missing or invalid updatedAt")
-  } else {
-    const date = new Date(data.updatedAt)
-    if (isNaN(date.getTime())) {
-      errors.push("Invalid updatedAt date format")
+  if (!previewValidation.isValid || !previewValidation.data) {
+    return {
+      isValid: false,
+      errors: previewValidation.errors
     }
   }
 
-  if (data.published !== undefined && typeof data.published !== "boolean") {
+  const record = data as Record<string, unknown>
+  const errors: string[] = []
+  let validatedData: Partial<BlogPost> = {
+    ...previewValidation.data
+  }
+
+  if (!record.updatedAt || typeof record.updatedAt !== "string") {
+    errors.push("Missing or invalid updatedAt")
+  } else {
+    const date = new Date(record.updatedAt)
+    if (isNaN(date.getTime())) {
+      errors.push("Invalid updatedAt date format")
+    } else {
+      validatedData.updatedAt = record.updatedAt
+    }
+  }
+
+  if (record.published !== undefined && typeof record.published !== "boolean") {
     errors.push("Invalid published type - must be boolean")
+  } else {
+    validatedData.published = record.published ?? true
   }
 
-  if (!data.recordMap || typeof data.recordMap !== "object") {
+  if (!record.recordMap || typeof record.recordMap !== "object") {
     errors.push("Missing or invalid recordMap")
+  } else {
+    validatedData.recordMap = record.recordMap as any // ExtendedRecordMap type is complex
   }
 
+  const isValid = errors.length === 0
   return {
-    isValid: errors.length === 0,
+    isValid,
     errors,
+    data: isValid ? validatedData as BlogPost : undefined
   }
 }
 
-export function sanitizeBlogPostPreview(data: any): BlogPostPreview | null {
+export function sanitizeBlogPostPreview(data: unknown): BlogPostPreview | null {
   const validation = validateBlogPostPreview(data)
   
-  if (!validation.isValid) {
+  if (!validation.isValid || !validation.data) {
     console.warn("Invalid blog post preview data:", validation.errors)
     return null
   }
 
-  return {
-    id: data.id,
-    slug: data.slug,
-    title: data.title.trim(),
-    description: data.description?.trim() || undefined,
-    publishedAt: data.publishedAt,
-    tags: Array.isArray(data.tags) ? data.tags.filter(Boolean) : [],
-    category: data.category?.trim() || undefined,
-    coverImage: data.coverImage?.trim() || undefined,
-    readingTime: typeof data.readingTime === "number" ? data.readingTime : undefined,
-  }
+  return validation.data
 }
 
-export function sanitizeBlogPost(data: any): BlogPost | null {
+export function sanitizeBlogPost(data: unknown): BlogPost | null {
   const validation = validateBlogPost(data)
   
-  if (!validation.isValid) {
+  if (!validation.isValid || !validation.data) {
     console.warn("Invalid blog post data:", validation.errors)
     return null
   }
 
-  return {
-    id: data.id,
-    slug: data.slug,
-    title: data.title.trim(),
-    description: data.description?.trim() || undefined,
-    publishedAt: data.publishedAt,
-    updatedAt: data.updatedAt,
-    tags: Array.isArray(data.tags) ? data.tags.filter(Boolean) : [],
-    category: data.category?.trim() || undefined,
-    coverImage: data.coverImage?.trim() || undefined,
-    published: data.published ?? true,
-    recordMap: data.recordMap,
-  }
+  return validation.data
 }
 
 // URL slug validation
@@ -151,12 +174,15 @@ export function validateSlug(slug: string): boolean {
 }
 
 // Content safety validation
-export function validateContent(content: string): ValidationResult {
-  const errors: string[] = []
-  
+export function validateContent(content: string): ValidationResult<string> {
   if (typeof content !== "string") {
-    return { isValid: false, errors: ["Content must be a string"] }
+    return { 
+      isValid: false, 
+      errors: ["Content must be a string"] 
+    }
   }
+  
+  const errors: string[] = []
   
   // Check for potentially malicious content
   const dangerousPatterns = [
@@ -173,14 +199,16 @@ export function validateContent(content: string): ValidationResult {
     }
   }
   
+  const isValid = errors.length === 0
   return {
-    isValid: errors.length === 0,
+    isValid,
     errors,
+    data: isValid ? content : undefined
   }
 }
 
 // Environment validation
-export function validateBlogEnvironment(): ValidationResult {
+export function validateBlogEnvironment(): ValidationResult<boolean> {
   const errors: string[] = []
   
   if (!process.env.NOTION_TOKEN && !process.env.NOTION_DATABASE_ID) {
@@ -195,8 +223,10 @@ export function validateBlogEnvironment(): ValidationResult {
     errors.push("NOTION_TOKEN is required when NOTION_DATABASE_ID is provided")
   }
   
+  const isValid = errors.length === 0
   return {
-    isValid: errors.length === 0,
+    isValid,
     errors,
+    data: isValid ? true : undefined
   }
 }

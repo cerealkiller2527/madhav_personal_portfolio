@@ -1,11 +1,14 @@
-import { BlogPost, BlogPostPreview } from "@/lib/types/blog"
+import { BlogPost, BlogPostPreview } from "@/types/blog"
+import { NotionPage } from "@/types/notion"
+import { withErrorHandling } from "@/lib/errors/error-handlers"
 import { notionClient } from "./notion-client"
 import { transformNotionPageToBlogPost, transformNotionPageToBlogPreview } from "./blog-transforms"
 import { validateBlogEnvironment, sanitizeBlogPostPreview } from "./blog-validation"
 import { getCachedBlogPosts, getCachedBlogPost } from "./blog-cache"
 
 export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
-  return getCachedBlogPosts(async () => {
+  return withErrorHandling(
+    () => getCachedBlogPosts(async () => {
     // Validate environment first
     const envValidation = validateBlogEnvironment()
     if (!envValidation.isValid) {
@@ -23,7 +26,7 @@ export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
       const pages = await notionClient.getDatabasePages(databaseId)
       
       const blogPosts = pages
-        .map((page: any) => {
+        .map((page: NotionPage) => {
           try {
             const preview = transformNotionPageToBlogPreview(page)
             return sanitizeBlogPostPreview(preview)
@@ -40,11 +43,19 @@ export async function getAllBlogPosts(): Promise<BlogPostPreview[]> {
       console.error("Error fetching blog posts:", error)
       throw new Error("Failed to fetch blog posts from Notion")
     }
-  })
+  }),
+    "fetch-all-blog-posts",
+    {
+      maxRetries: 2,
+      baseDelay: 1000,
+      shouldRetry: (error) => !error.message.includes("configuration")
+    }
+  )
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  return getCachedBlogPost(slug, async (slug: string) => {
+  return withErrorHandling(
+    () => getCachedBlogPost(slug, async (slug: string) => {
     if (!notionClient.isConfigured()) {
       console.warn("Notion not configured, returning null for blog post")
       return null
@@ -68,7 +79,13 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
       console.error(`Error fetching blog post with slug ${slug}:`, error)
       throw new Error(`Failed to fetch blog post: ${slug}`)
     }
-  })
+  }),
+    `fetch-blog-post-${slug}`,
+    {
+      maxRetries: 2,
+      baseDelay: 1000
+    }
+  )
 }
 
 export async function getRecentBlogPosts(limit: number = 3): Promise<BlogPostPreview[]> {
