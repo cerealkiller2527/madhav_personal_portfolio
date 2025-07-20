@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useRef, useCallback } from "react"
-import { motion, useMotionValue, useSpring, MotionValue } from "framer-motion"
+import { motion, useMotionValue, useSpring } from "framer-motion"
 
 interface CursorGlowProps {
   readonly isVisible: boolean
@@ -12,11 +12,6 @@ interface CursorPosition {
   readonly time: number
 }
 
-interface SpringConfig {
-  readonly stiffness: number
-  readonly damping: number
-  readonly mass: number
-}
 
 // Constants
 const SPRING_CONFIGS = {

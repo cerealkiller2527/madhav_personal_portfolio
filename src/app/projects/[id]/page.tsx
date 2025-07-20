@@ -5,7 +5,7 @@ import { projects as localProjects } from "@/lib/data"
 import { getAllProjects, getProjectById } from "@/lib/notion"
 import ProjectDetailPage from "./project-detail"
 import type { Project } from "@/types/portfolioTypes"
-import type { NotionProject } from "@/types/projectTypes"
+import type { ProjectContent as NotionProject } from "@/types/notion-unified"
 import { LogoSpinner } from "@/components/ui/logo-spinner"
 
 // Add revalidation for ISR

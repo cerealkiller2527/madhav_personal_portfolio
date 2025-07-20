@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { LogoSpinnerInline } from "@/components/ui/logo-spinner"
-import { Download, ChevronLeft, ChevronRight, Loader2, X, Code, Bot, Settings, Zap, ZoomIn, ZoomOut, RotateCcw, Printer, Maximize2, Minimize2 } from "lucide-react"
+import { Download, ChevronLeft, ChevronRight, X, Code, Bot, Settings, Zap, ZoomIn, ZoomOut, RotateCcw, Printer, Maximize2, Minimize2 } from "lucide-react"
 
 // Dynamically import react-pdf components to avoid SSR issues
 const Document = dynamic(() => import("react-pdf").then(mod => ({ default: mod.Document })), { ssr: false })

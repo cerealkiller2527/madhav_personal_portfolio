@@ -22,7 +22,7 @@ async function handleProjectsRequest() {
       count: projects?.length || 0
     })
     
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch projects" },
       { status: 500 }

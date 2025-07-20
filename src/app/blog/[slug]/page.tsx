@@ -1,14 +1,8 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { Metadata } from "next"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
 import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/notion"
-import { BlogRenderer } from "@/components/blog/blog-renderer"
-import { BlogHeader } from "@/components/blog/blog-header"
-import { BlogNavigation } from "@/components/blog/blog-navigation"
 import { BlogLoading } from "@/components/blog/blog-loading"
-import { Button } from "@/components/ui/button"
 import { BlogPostWithTOC } from "@/components/blog/blog-post-with-toc"
 
 interface BlogPostPageProps {

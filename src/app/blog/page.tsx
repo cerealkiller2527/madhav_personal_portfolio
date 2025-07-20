@@ -4,7 +4,6 @@ import { getAllBlogPosts } from "@/lib/notion"
 import { BlogGridWrapper } from "@/components/blog/blog-grid-wrapper"
 import { BlogLoading } from "@/components/blog/blog-loading"
 import { BlogServerError } from "@/components/blog/blog-server-error"
-import { BlogFallback } from "@/components/blog/blog-fallback"
 
 export const metadata: Metadata = {
   title: "Blog - Madhav Lodha",

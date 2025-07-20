@@ -1,5 +1,6 @@
 import type { Project } from "@/types"
-import type { NotionProject } from "@/types/projectTypes"
+import type { ProjectContent as NotionProject } from "@/types/notion-unified"
+import { createSlugFromTitle } from "@/lib/notion-transforms"
 
 export interface ProjectSection {
   id: string
@@ -19,13 +20,14 @@ export function isNotionProject(project: Project): project is NotionProject {
 }
 
 // Extract headings from Notion recordMap to generate TOC
-export function extractNotionHeadings(recordMap: any): NotionHeading[] {
+export function extractNotionHeadings(recordMap: unknown): NotionHeading[] {
   const headings: NotionHeading[] = []
   
-  if (!recordMap?.block) return headings
+  const recordMapObj = recordMap as { block?: Record<string, { value?: unknown }> }
+  if (!recordMapObj?.block) return headings
 
-  for (const [blockId, block] of Object.entries(recordMap.block)) {
-    const blockValue = (block as any)?.value
+  for (const [blockId, block] of Object.entries(recordMapObj.block || {})) {
+    const blockValue = block?.value
     if (!blockValue) continue
 
     const { type, properties } = blockValue
@@ -49,15 +51,8 @@ export function extractNotionHeadings(recordMap: any): NotionHeading[] {
   return headings
 }
 
-// Generate URL-friendly ID from title
-export function createSlugFromTitle(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-}
+// Use createSlugFromTitle from transforms for consistency
+export { createSlugFromTitle }
 
 // Get numeric heading level from Notion type
 function getHeadingLevel(type: string): number {

@@ -1,4 +1,4 @@
-import { LogoSpinner, LogoSpinnerInline } from "@/components/ui/logo-spinner"
+import { LogoSpinner } from "@/components/ui/logo-spinner"
 
 interface BlogLoadingProps {
   variant?: 'card' | 'page' | 'list' | 'spinner'
