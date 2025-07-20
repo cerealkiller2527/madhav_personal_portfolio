@@ -9,6 +9,7 @@ export interface NotionProject {
   readonly description: string
   readonly category: ProjectCategory
   readonly award?: string
+  readonly awardRank?: string
   readonly stats: readonly ProjectStatistic[]
   readonly tags: readonly string[]
   readonly liveLink?: string
@@ -32,6 +33,7 @@ export interface NotionProjectPreview {
   readonly description: string
   readonly category: ProjectCategory
   readonly award?: string
+  readonly awardRank?: string
   readonly stats: readonly ProjectStatistic[]
   readonly tags: readonly string[]
   readonly liveLink?: string

@@ -75,6 +75,14 @@ export function validateProjectPreview(data: unknown): ProjectValidationResult<N
     }
   }
 
+  if (record.awardRank !== undefined) {
+    if (typeof record.awardRank !== "string") {
+      errors.push("Invalid awardRank type")
+    } else {
+      validatedData.awardRank = record.awardRank
+    }
+  }
+
   // Validate stats array
   if (record.stats !== undefined) {
     if (!Array.isArray(record.stats)) {

@@ -454,6 +454,9 @@ export function transformNotionPageToProjectPreview(page: NotionPage): NotionPro
     const category = extractPropertyValue(properties, "Category")
     const rawTags = extractPropertyValue(properties, "Tags")
     const tags = Array.isArray(rawTags) ? rawTags : []
+    const award = extractPropertyValue(properties, "Award")
+    const awardRank = extractPropertyValue(properties, "awardRank") || extractPropertyValue(properties, "Award Rank")
+    
     
     let heroImage = extractPropertyValue(properties, "Hero Image") || 
                     extractPropertyValue(properties, "Cover") ||
@@ -475,6 +478,8 @@ export function transformNotionPageToProjectPreview(page: NotionPage): NotionPro
       category: typeof category === "string" ? category as any : "Software",
       tags,
       heroImage: typeof heroImage === "string" ? heroImage : undefined,
+      award: typeof award === "string" ? award : undefined,
+      awardRank: typeof awardRank === "string" ? awardRank : undefined,
       published: true,
       stats: [], // Will be filled from project data
     }

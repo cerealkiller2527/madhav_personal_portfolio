@@ -13,7 +13,9 @@ interface ProjectBadgesProps {
 }
 
 export function ProjectBadges({ project }: ProjectBadgesProps) {
-  const trophyStyles = project.award ? getTrophyStyles(project.award) : null
+  // Use award description for display, but awardRank for trophy styling
+  const awardText = project.award
+  const trophyStyles = getTrophyStyles(project.awardRank)
   const categoryVariant = getCategoryBadgeVariant(project.category)
   const categoryClasses = getCategoryBadgeClasses(project.category)
 
@@ -26,7 +28,7 @@ export function ProjectBadges({ project }: ProjectBadgesProps) {
         {project.category}
       </Badge>
       
-      {project.award && trophyStyles && (
+      {awardText && trophyStyles && (
         <Badge 
           className={cn(
             "border-transparent", 
@@ -35,7 +37,7 @@ export function ProjectBadges({ project }: ProjectBadgesProps) {
           )}
         >
           <Trophy className={cn("mr-1.5 h-3.5 w-3.5", trophyStyles.iconClasses)} />
-          {project.award}
+          {awardText}
         </Badge>
       )}
     </div>
