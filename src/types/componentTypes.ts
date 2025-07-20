@@ -104,8 +104,10 @@ export interface BadgeProps {
 }
 
 export interface LoadingSpinnerProps {
-  readonly size?: "sm" | "md" | "lg"
+  readonly size?: "sm" | "md" | "lg" | "xl"
   readonly className?: string
+  readonly showText?: boolean
+  readonly text?: string
 }
 
 // Dialog component props

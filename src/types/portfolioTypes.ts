@@ -1,5 +1,6 @@
 // Import Notion project types for compatibility
 import type { NotionProject, NotionProjectPreview } from "./projectTypes"
+import type { ExtendedRecordMap } from "notion-types"
 
 // Core Portfolio Types
 export interface Experience {
@@ -33,6 +34,8 @@ export interface Project {
   readonly vectaryEmbedUrl?: string
   readonly keyFeatures: readonly Feature[]
   readonly techStack: readonly TechStackItem[]
+  // Optional Notion support
+  readonly recordMap?: ExtendedRecordMap
 }
 
 export interface Statistic {

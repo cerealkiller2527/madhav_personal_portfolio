@@ -1,7 +1,7 @@
 "use client"
 
-import { BlogGrid } from "./blog-grid"
-import { BlogErrorBoundary } from "../shared/blog-error-boundary"
+import { BlogGrid } from "@/components/blog/blog-grid"
+import { BlogErrorBoundary } from "@/components/blog/blog-error-boundary"
 import { BlogPostPreview } from "@/types/blogTypes"
 
 interface BlogGridWrapperProps {

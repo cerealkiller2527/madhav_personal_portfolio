@@ -5,7 +5,11 @@ import { BlogError, BlogErrorCode } from "@/types/blogTypes"
 import { NotionError } from "@/types/notionTypes"
 import { APIClientError, NetworkError, TimeoutError } from "@/types/apiTypes"
 
-// Generic Error Handler
+// =============================================================================
+// GENERIC ERROR HANDLERS
+// =============================================================================
+
+// Client-side Error Handler
 export class ErrorHandler {
   private static instance: ErrorHandler
   private errorListeners: Array<(error: Error) => void> = []
@@ -68,7 +72,73 @@ export class ErrorHandler {
   }
 }
 
-// Specific Error Handlers
+// Server-side Error Handler (no React dependencies)
+export class ServerErrorHandler {
+  private static instance: ServerErrorHandler
+  private errorListeners: Array<(error: Error) => void> = []
+
+  private constructor() {}
+
+  static getInstance(): ServerErrorHandler {
+    if (!ServerErrorHandler.instance) {
+      ServerErrorHandler.instance = new ServerErrorHandler()
+    }
+    return ServerErrorHandler.instance
+  }
+
+  addErrorListener(listener: (error: Error) => void): void {
+    this.errorListeners.push(listener)
+  }
+
+  removeErrorListener(listener: (error: Error) => void): void {
+    this.errorListeners = this.errorListeners.filter(l => l !== listener)
+  }
+
+  handleError(error: Error, context?: string): void {
+    const enhancedError = this.enhanceError(error, context)
+    
+    // Log error
+    console.error("Error occurred:", enhancedError)
+    
+    // Notify listeners
+    this.errorListeners.forEach(listener => {
+      try {
+        listener(enhancedError)
+      } catch (listenerError) {
+        console.error("Error in error listener:", listenerError)
+      }
+    })
+
+    // Report to monitoring service in production
+    if (process.env.NODE_ENV === "production") {
+      this.reportError(enhancedError, context)
+    }
+  }
+
+  private enhanceError(error: Error, context?: string): Error {
+    if (context) {
+      error.message = `[${context}] ${error.message}`
+    }
+    
+    // Add timestamp
+    if (!error.stack?.includes("timestamp:")) {
+      error.stack = `timestamp: ${new Date().toISOString()}\n${error.stack}`
+    }
+
+    return error
+  }
+
+  private reportError(error: Error, context?: string): void {
+    // Implement error reporting logic here
+    // Could send to Sentry, LogRocket, etc.
+    console.warn("Error reporting not implemented:", { error, context })
+  }
+}
+
+// =============================================================================
+// BLOG ERROR HANDLERS
+// =============================================================================
+
 export class BlogErrorHandler {
   static handleBlogError(error: unknown, operation: string): BlogError {
     if (error instanceof BlogError) {
@@ -135,7 +205,11 @@ export class BlogErrorHandler {
   }
 }
 
-// Async Error Wrapper
+// =============================================================================
+// ERROR HANDLING UTILITIES
+// =============================================================================
+
+// Client-side async error wrapper
 export async function withErrorHandling<T>(
   operation: () => Promise<T>,
   context: string,
@@ -171,6 +245,42 @@ export async function withErrorHandling<T>(
   throw lastError!
 }
 
+// Server-side async error wrapper
+export async function withServerErrorHandling<T>(
+  operation: () => Promise<T>,
+  context: string,
+  retryOptions?: {
+    maxRetries: number
+    baseDelay: number
+    shouldRetry?: (error: Error) => boolean
+  }
+): Promise<T> {
+  const { maxRetries = 0, baseDelay = 1000, shouldRetry } = retryOptions || {}
+  let lastError: Error
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await operation()
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error))
+      
+      const isLastAttempt = attempt === maxRetries
+      const shouldAttemptRetry = shouldRetry ? shouldRetry(lastError) : true
+
+      if (isLastAttempt || !shouldAttemptRetry) {
+        ServerErrorHandler.getInstance().handleError(lastError, context)
+        throw lastError
+      }
+
+      // Wait before retry with exponential backoff
+      const delay = baseDelay * Math.pow(2, attempt)
+      await new Promise(resolve => setTimeout(resolve, delay))
+    }
+  }
+
+  throw lastError!
+}
+
 // Type-safe error boundary wrapper
 export function createErrorBoundary<T>(
   fallback: T,
@@ -192,6 +302,32 @@ export function createErrorBoundary<T>(
     }
   }
 }
+
+// Server-safe error boundary wrapper
+export function createServerErrorBoundary<T>(
+  fallback: T,
+  errorHandler?: (error: Error) => void
+) {
+  return (operation: () => T): T => {
+    try {
+      return operation()
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error))
+      
+      if (errorHandler) {
+        errorHandler(err)
+      } else {
+        ServerErrorHandler.getInstance().handleError(err, "ServerErrorBoundary")
+      }
+      
+      return fallback
+    }
+  }
+}
+
+// =============================================================================
+// REACT ERROR BOUNDARY COMPONENTS
+// =============================================================================
 
 // React error boundary HOC
 export function withErrorBoundary<P extends Record<string, unknown>>(

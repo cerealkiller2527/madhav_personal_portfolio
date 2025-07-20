@@ -1,10 +1,10 @@
 import { Suspense } from "react"
 import { Metadata } from "next"
-import { getAllBlogPosts } from "@/lib/blog/blog-queries"
-import { BlogGridWrapper } from "@/components/blog/blog-list/blog-grid-wrapper"
-import { BlogLoading } from "@/components/blog/shared/blog-loading"
-import { BlogServerError } from "@/components/blog/shared/blog-server-error"
-import { BlogFallback } from "@/components/blog/shared/blog-fallback"
+import { getAllBlogPosts } from "@/lib/notion"
+import { BlogGridWrapper } from "@/components/blog/blog-grid-wrapper"
+import { BlogLoading } from "@/components/blog/blog-loading"
+import { BlogServerError } from "@/components/blog/blog-server-error"
+import { BlogFallback } from "@/components/blog/blog-fallback"
 
 export const metadata: Metadata = {
   title: "Blog - Madhav Lodha",
@@ -60,7 +60,7 @@ export default function BlogPage() {
               <div className="h-12 bg-muted rounded w-1/3 mx-auto mb-4"></div>
               <div className="h-6 bg-muted rounded w-2/3 mx-auto"></div>
             </div>
-            <BlogLoading variant="card" count={6} />
+            <BlogLoading variant="spinner" />
           </div>
         </div>
       </div>

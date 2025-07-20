@@ -5,6 +5,7 @@ import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { LogoSpinnerInline } from "@/components/ui/logo-spinner"
 import { Download, ChevronLeft, ChevronRight, Loader2, X, Code, Bot, Settings, Zap, ZoomIn, ZoomOut, RotateCcw, Printer, Maximize2, Minimize2 } from "lucide-react"
 
 // Dynamically import react-pdf components to avoid SSR issues
@@ -73,6 +74,7 @@ interface ResumeModalProps {
 
 export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const [activeTab, setActiveTab] = useState<string>("software")
+  const [loadingTab, setLoadingTab] = useState<string>("software") // Separate loading state
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
   const [containerWidth, setContainerWidth] = useState(0)
@@ -83,19 +85,34 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   const activeResume = resumeTypes.find(resume => resume.id === activeTab) || resumeTypes[0]
+  const loadingResume = resumeTypes.find(resume => resume.id === loadingTab) || resumeTypes[0]
 
   // Ensure we're on the client side
   useEffect(() => {
     setIsClient(true)
   }, [])
 
-  // Reset page and view settings when switching tabs
-  useEffect(() => {
+  // Handle quick tab transitions
+  const handleTabChange = (newTab: string) => {
+    if (newTab === activeTab) return
+    
+    setActiveTab(newTab)
+    setLoadingTab(newTab)
     setPageNumber(1)
     setNumPages(null)
     setScale(1.0)
     setRotation(0)
-  }, [activeTab])
+  }
+
+  // Reset page and view settings when switching tabs
+  useEffect(() => {
+    if (loadingTab === activeTab) {
+      setPageNumber(1)
+      setNumPages(null)
+      setScale(1.0)
+      setRotation(0)
+    }
+  }, [loadingTab, activeTab])
 
   // This effect ensures the PDF page resizes correctly when the window size changes.
   useEffect(() => {
@@ -166,29 +183,30 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
           
           {/* Glass Panel Tabs */}
           <div className="flex justify-center pt-4 -mb-4">
-            <div className="flex gap-1 sm:gap-2 p-1 sm:p-2 rounded-xl glass-effect shadow-lg">
+            <div className="flex gap-1 sm:gap-2 p-2 sm:p-3 rounded-xl glass-effect shadow-xl border border-white/10 dark:border-white/5">
               {resumeTypes.map((resume) => (
                 <motion.button
                   key={resume.id}
-                  onClick={() => setActiveTab(resume.id)}
-                  className="relative flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 text-muted-foreground hover:text-foreground opacity-60 hover:opacity-100"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleTabChange(resume.id)}
+                  className="relative flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 hover:bg-primary/10 dark:hover:bg-primary/20"
                 >
                   {activeTab === resume.id && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute inset-0 bg-primary/90 rounded-lg glass-effect"
+                      className="absolute inset-0 bg-primary rounded-lg shadow-lg"
                       initial={false}
                       transition={{ 
-                        type: "tween",
-                        ease: [0.4, 0.0, 0.2, 1],
-                        duration: 0.3
+                        type: "spring",
+                        damping: 25,
+                        stiffness: 300,
+                        duration: 0.4
                       }}
                     />
                   )}
-                  <span className={`relative z-10 flex items-center gap-1 sm:gap-1.5 transition-colors duration-200 ${
-                    activeTab === resume.id ? 'text-primary-foreground' : ''
+                  <span className={`relative z-10 flex items-center gap-1 sm:gap-1.5 transition-colors duration-200 font-semibold ${
+                    activeTab === resume.id 
+                      ? 'text-white dark:text-white' 
+                      : 'text-foreground/95 dark:text-foreground/90 hover:text-foreground/80 dark:hover:text-white'
                   }`}>
                     <span className="sm:hidden">{resume.icon}</span>
                     <span className="hidden sm:flex sm:items-center sm:gap-1.5">
@@ -296,18 +314,13 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
 
         {/* PDF Viewer */}
         <div className="flex-1 bg-muted/20 dark:bg-muted/40 overflow-auto p-2 sm:p-4" ref={containerRef}>
-          <div className="h-full transition-opacity duration-300">
+          <div className="h-full">
             {isClient ? (
               <Document
-                key={activeTab}
-                file={activeResume.filePath}
+                key={loadingTab}
+                file={loadingResume.filePath}
                 onLoadSuccess={onDocumentLoadSuccess}
-                loading={
-                  <div className="flex justify-center items-center h-full">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    <span className="ml-4 text-muted-foreground">Loading {activeResume.title}...</span>
-                  </div>
-                }
+                loading={null}
                 error={
                   <div className="flex justify-center items-center h-full text-destructive">
                     <div className="text-center">
@@ -327,7 +340,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                   rotate={rotation}
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
-                  className="shadow-xl rounded-lg overflow-hidden transition-opacity duration-300"
+                  className="shadow-xl rounded-lg overflow-hidden transition-all duration-300"
                   onRenderError={(error) => {
                     // Suppress TextLayer cancellation warnings
                     if (error?.message?.includes('TextLayer task cancelled')) {
@@ -339,8 +352,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
               </Document>
             ) : (
               <div className="flex justify-center items-center h-full">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <span className="ml-4 text-muted-foreground">Loading PDF Viewer...</span>
+                <LogoSpinnerInline size="md" text="Loading PDF Viewer..." />
               </div>
             )}
           </div>

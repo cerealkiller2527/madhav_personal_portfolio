@@ -1,9 +1,19 @@
+import { LogoSpinner, LogoSpinnerInline } from "@/components/ui/logo-spinner"
+
 interface BlogLoadingProps {
-  variant?: 'card' | 'page' | 'list'
+  variant?: 'card' | 'page' | 'list' | 'spinner'
   count?: number
 }
 
 export function BlogLoading({ variant = 'card', count = 3 }: BlogLoadingProps) {
+  // Centered spinner variant for when we want the logo
+  if (variant === 'spinner') {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <LogoSpinner size="lg" showText text="Loading blog posts..." />
+      </div>
+    )
+  }
   if (variant === 'page') {
     return (
       <div className="max-w-4xl mx-auto animate-pulse">

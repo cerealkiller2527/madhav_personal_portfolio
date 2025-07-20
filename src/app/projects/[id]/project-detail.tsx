@@ -6,7 +6,7 @@ import type { Project } from "@/types"
 import type { NotionProject } from "@/types/projectTypes"
 import { Badge } from "@/components/ui/badge"
 import { EnhancedTableOfContents } from "@/components/ui/enhanced-table-of-contents"
-import { ProjectNavigation } from "@/components/sections/projects/project-navigation"
+import { ProjectNavigation } from "@/components/projects/project-navigation"
 import { BackButton } from "@/components/ui/back-button"
 import { ProjectRenderer } from "@/components/projects/project-renderer"
 import { ArrowLeft } from "lucide-react"
@@ -57,29 +57,20 @@ function extractNotionHeadings(recordMap: any): { id: string; label: string; lev
 }
 
 interface ProjectDetailPageProps {
-  projectData: {
-    project: Project | NotionProject
-    isNotion: boolean
-  }
-  previousProject?: Project | NotionProject
-  nextProject?: Project | NotionProject
+  project: Project
+  previousProject?: Project
+  nextProject?: Project
 }
 
-export default function ProjectDetailPage({ projectData, previousProject, nextProject }: ProjectDetailPageProps) {
+export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
   const contentRef = useRef<HTMLDivElement>(null)
-  const { project, isNotion } = projectData
   
-  // Type guard to check if it's a NotionProject
-  const isNotionProject = (p: Project | NotionProject): p is NotionProject => {
-    return isNotion && 'recordMap' in p
-  }
-  
-  const notionProject = isNotionProject(project) ? project : null
-  const hasNotionContent = notionProject?.recordMap
+  // Check if this project has Notion content (recordMap)
+  const hasNotionContent = project.recordMap && Object.keys(project.recordMap).length > 0
   
   // Generate sections based on content type
   const sections = hasNotionContent 
-    ? extractNotionHeadings(notionProject.recordMap).map(h => ({ id: h.id, label: h.label, level: h.level }))
+    ? extractNotionHeadings(project.recordMap).map(h => ({ id: h.id, label: h.label, level: h.level }))
     : defaultSections.filter(section => {
         // Only show sections that have content
         if (section.id === 'features') return project.keyFeatures?.length > 0
@@ -137,8 +128,8 @@ export default function ProjectDetailPage({ projectData, previousProject, nextPr
               {hasNotionContent ? (
                 <div className="notion-project-full-page">
                   <ProjectRenderer 
-                    recordMap={notionProject.recordMap}
-                    rootPageId={notionProject.id}
+                    recordMap={project.recordMap!}
+                    rootPageId={project.id}
                     className="prose dark:prose-invert max-w-none"
                   />
                 </div>

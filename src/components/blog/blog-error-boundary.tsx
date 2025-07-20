@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { BlogErrorBoundaryProps, BlogErrorFallbackProps } from '@/types/componentTypes'
-import { ServerErrorHandler } from '@/lib/errors/server-error-handlers'
+import { ErrorHandler } from '@/lib/errors'
 
 interface State {
   hasError: boolean
@@ -24,7 +24,7 @@ export class BlogErrorBoundary extends Component<BlogErrorBoundaryProps, State> 
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Use centralized error handler
-    ServerErrorHandler.getInstance().handleError(error, 'Blog Error Boundary')
+    ErrorHandler.getInstance().handleError(error, 'Blog Error Boundary')
     
     // Call the optional error handler
     if (this.props.onError) {

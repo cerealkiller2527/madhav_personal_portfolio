@@ -2,11 +2,38 @@ import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { projects as localProjects } from "@/lib/data"
-import { getAllProjects, getProjectById } from "@/lib/projects/project-queries"
+import { getAllProjects, getProjectById } from "@/lib/notion"
 import ProjectDetailPage from "./project-detail"
+import type { Project } from "@/types/portfolioTypes"
+import type { NotionProject } from "@/types/projectTypes"
+import { LogoSpinner } from "@/components/ui/logo-spinner"
 
 // Add revalidation for ISR
 export const revalidate = 60
+
+// Transform Notion project to local project structure (shared with homepage)
+function transformNotionToLocalProject(notionProject: NotionProject): Project {
+  return {
+    id: notionProject.id,
+    title: notionProject.title,
+    subtitle: notionProject.subtitle,
+    description: notionProject.description,
+    category: notionProject.category,
+    award: notionProject.award,
+    stats: notionProject.stats || [],
+    tags: notionProject.tags,
+    liveLink: notionProject.liveLink,
+    githubLink: notionProject.githubLink,
+    heroImage: notionProject.heroImage || "/placeholder.svg",
+    gallery: notionProject.gallery || [],
+    detailedDescription: notionProject.description, // Use description as fallback
+    vectaryEmbedUrl: notionProject.vectaryEmbedUrl,
+    keyFeatures: notionProject.keyFeatures || [],
+    techStack: notionProject.techStack || [],
+    // Preserve recordMap for Notion content rendering
+    recordMap: notionProject.recordMap,
+  }
+}
 
 interface ProjectPageProps {
   params: Promise<{
@@ -23,7 +50,7 @@ async function getProjectData(id: string) {
       // Try to get full Notion project with content
       const notionProject = await getProjectById(id)
       if (notionProject) {
-        return { project: notionProject, isNotion: true }
+        return transformNotionToLocalProject(notionProject)
       }
       
       // If not found by ID, try to get from projects list (in case of slug mismatch)
@@ -32,7 +59,7 @@ async function getProjectData(id: string) {
       if (foundProject) {
         const fullProject = await getProjectById(foundProject.id)
         if (fullProject) {
-          return { project: fullProject, isNotion: true }
+          return transformNotionToLocalProject(fullProject)
         }
       }
     } catch (error) {
@@ -43,7 +70,7 @@ async function getProjectData(id: string) {
   // Fallback to local project data
   const localProject = localProjects.find((p) => p.id === id)
   if (localProject) {
-    return { project: localProject, isNotion: false }
+    return localProject
   }
   
   return null
@@ -51,16 +78,14 @@ async function getProjectData(id: string) {
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { id } = await params
-  const projectData = await getProjectData(id)
+  const project = await getProjectData(id)
   
-  if (!projectData) {
+  if (!project) {
     return {
       title: "Project Not Found - Madhav Lodha",
       description: "The requested project could not be found.",
     }
   }
-
-  const { project } = projectData
   
   return {
     title: `${project.title} - Projects - Madhav Lodha`,
@@ -102,7 +127,7 @@ export async function generateStaticParams() {
   }
 }
 
-async function getAllProjectsWithOrder() {
+async function getAllProjectsWithOrder(): Promise<Project[]> {
   // Check if Notion projects should be used (environment flag)
   const useNotionProjects = process.env.NOTION_TOKEN && process.env.NOTION_PROJECTS_DATABASE_ID
   
@@ -110,7 +135,40 @@ async function getAllProjectsWithOrder() {
     try {
       const notionProjects = await getAllProjects()
       if (notionProjects && notionProjects.length > 0) {
-        return notionProjects
+        // Transform all Notion projects to local project structure for consistency
+        const transformedProjects = await Promise.all(
+          notionProjects.map(async (preview) => {
+            try {
+              const fullProject = await getProjectById(preview.id)
+              if (fullProject) {
+                return transformNotionToLocalProject(fullProject)
+              } else {
+                // Fallback: transform preview to local project structure
+                const fallbackProject: NotionProject = {
+                  ...preview,
+                  keyFeatures: [],
+                  techStack: [],
+                  gallery: [],
+                  updatedAt: preview.publishedAt,
+                  recordMap: {} as any, // Empty recordMap for preview fallback
+                }
+                return transformNotionToLocalProject(fallbackProject)
+              }
+            } catch (error) {
+              // Fallback: transform preview to local project structure
+              const fallbackProject: NotionProject = {
+                ...preview,
+                keyFeatures: [],
+                techStack: [],
+                gallery: [],
+                updatedAt: preview.publishedAt,
+                recordMap: {} as any, // Empty recordMap for preview fallback
+              }
+              return transformNotionToLocalProject(fallbackProject)
+            }
+          })
+        )
+        return transformedProjects
       }
     } catch (error) {
       // Failed to fetch Notion projects for navigation, using local data
@@ -123,12 +181,12 @@ async function getAllProjectsWithOrder() {
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { id } = await params
-  const [projectData, allProjects] = await Promise.all([
+  const [project, allProjects] = await Promise.all([
     getProjectData(id),
     getAllProjectsWithOrder()
   ])
   
-  if (!projectData) {
+  if (!project) {
     notFound()
   }
   
@@ -141,14 +199,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     <Suspense fallback={
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28">
         <div className="flex items-center justify-center py-32">
-          <div className="text-center">
-            <div className="animate-pulse">Loading project...</div>
-          </div>
+          <LogoSpinner size="xl" showText text="Loading project..." />
         </div>
       </div>
     }>
       <ProjectDetailPage 
-        projectData={projectData}
+        project={project}
         previousProject={previousProject}
         nextProject={nextProject}
       />

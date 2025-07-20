@@ -2,9 +2,11 @@ import { BlogError, BlogErrorCode } from "@/types/blogTypes"
 import { NotionError } from "@/types/notionTypes"
 import { APIClientError, NetworkError, TimeoutError } from "@/types/apiTypes"
 
-// Server-safe error handling (no React components)
+// =============================================================================
+// SERVER-SIDE ERROR HANDLERS (No React dependencies)
+// =============================================================================
 
-// Generic Error Handler
+// Server-side Error Handler (no React dependencies)
 export class ServerErrorHandler {
   private static instance: ServerErrorHandler
   private errorListeners: Array<(error: Error) => void> = []
@@ -67,7 +69,10 @@ export class ServerErrorHandler {
   }
 }
 
-// Specific Error Handlers
+// =============================================================================
+// BLOG ERROR HANDLERS
+// =============================================================================
+
 export class BlogErrorHandler {
   static handleBlogError(error: unknown, operation: string): BlogError {
     if (error instanceof BlogError) {
@@ -134,7 +139,11 @@ export class BlogErrorHandler {
   }
 }
 
-// Async Error Wrapper (Server-safe)
+// =============================================================================
+// SERVER-SIDE ERROR HANDLING UTILITIES
+// =============================================================================
+
+// Server-side async error wrapper
 export async function withServerErrorHandling<T>(
   operation: () => Promise<T>,
   context: string,
@@ -170,7 +179,7 @@ export async function withServerErrorHandling<T>(
   throw lastError!
 }
 
-// Type-safe error boundary wrapper (Server-safe)
+// Server-safe error boundary wrapper
 export function createServerErrorBoundary<T>(
   fallback: T,
   errorHandler?: (error: Error) => void

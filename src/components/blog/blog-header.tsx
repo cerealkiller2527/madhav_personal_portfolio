@@ -3,7 +3,7 @@ import { Calendar, Clock, User, Tag } from "lucide-react"
 import { BlogPost } from "@/types/blogTypes"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { BlogImage } from "@/components/blog/shared/blog-image"
+import { BlogImage } from "@/components/blog/blog-image"
 
 interface BlogHeaderProps {
   post: BlogPost
