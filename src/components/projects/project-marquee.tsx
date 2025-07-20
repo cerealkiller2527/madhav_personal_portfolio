@@ -1,5 +1,5 @@
 "use client"
-import { useMemo, useRef, useEffect } from "react"
+import { useMemo } from "react"
 import type React from "react"
 
 import Image from "next/image"

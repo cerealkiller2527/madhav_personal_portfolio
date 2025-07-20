@@ -1,4 +1,4 @@
-import { BlogPost, BlogPostPreview } from "@/types/blogTypes"
+import { BlogContent as BlogPost, BlogPreview as BlogPostPreview } from "@/types/notion-unified"
 
 interface SEOData {
   title: string

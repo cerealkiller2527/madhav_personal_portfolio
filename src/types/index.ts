@@ -2,10 +2,10 @@
 export * from "./portfolioTypes"
 export * from "./blogTypes"
 export * from "./notionTypes"
-export * from "./environmentTypes"
 export * from "./apiTypes"
 export * from "./componentTypes"
 export * from "./projectTypes"
+export * from "./notion-unified"
 
 // Re-export commonly used types for convenience
 export type {
@@ -30,11 +30,6 @@ export type {
   NotionClientInterface
 } from "./notionTypes"
 
-export type {
-  EnvironmentConfig,
-  EnvironmentVariables,
-  EnvironmentValidationResult
-} from "./environmentTypes"
 
 export type {
   APIResponse,
