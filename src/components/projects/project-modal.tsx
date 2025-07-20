@@ -6,8 +6,8 @@ import type { Project } from "@/types"
 import { EnhancedTableOfContents } from "@/components/ui/enhanced-table-of-contents"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { ProjectRenderer } from "@/components/projects/project-renderer"
-import { ProjectModalHeader } from "./project-modal-header"
-import { ProjectContentSections } from "./project-content-sections"
+import { ProjectModalHeader } from "@/components/projects/project-modal-header"
+import { ProjectContentSections } from "@/components/projects/project-content-sections"
 import { 
   isNotionProject, 
   generateProjectSections, 

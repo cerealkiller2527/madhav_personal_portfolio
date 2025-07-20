@@ -1,7 +1,7 @@
 import { BlogPostPreview } from "@/types/blogTypes"
-import { BlogCard } from "./blog-card"
-import { BlogLoading } from "../shared/blog-loading"
-import { BlogError } from "../shared/blog-error"
+import { BlogCard } from "@/components/blog/blog-card"
+import { BlogLoading } from "@/components/blog/blog-loading"
+import { BlogError } from "@/components/blog/blog-error"
 
 interface BlogGridProps {
   posts: BlogPostPreview[]

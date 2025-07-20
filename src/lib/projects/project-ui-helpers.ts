@@ -24,35 +24,35 @@ export function getTrophyStyles(award: string): TrophyStyles {
     lowerAward.includes("first")
   ) {
     return {
-      badgeClasses: "text-amber-700 bg-amber-100/80 backdrop-blur-sm dark:text-yellow-400 dark:bg-yellow-400/20",
-      iconClasses: "text-amber-700 dark:text-yellow-400",
-      hoverClasses: "hover:bg-amber-200/80 dark:hover:bg-yellow-400/30",
+      badgeClasses: "text-amber-800 bg-gradient-to-br from-amber-100/90 to-yellow-100/80 backdrop-blur-md border border-amber-200/50 dark:text-yellow-300 dark:from-yellow-400/25 dark:to-amber-400/20 dark:border-yellow-400/30 shadow-lg",
+      iconClasses: "text-amber-700 dark:text-yellow-400 drop-shadow-sm",
+      hoverClasses: "hover:from-amber-200/90 hover:to-yellow-200/80 dark:hover:from-yellow-400/35 dark:hover:to-amber-400/30",
     }
   }
 
   // Silver - 2nd place
   if (lowerAward.includes("2nd") || lowerAward.includes("second")) {
     return {
-      badgeClasses: "text-slate-600 bg-slate-200/80 backdrop-blur-sm dark:text-gray-300 dark:bg-gray-500/20",
-      iconClasses: "text-slate-600 dark:text-gray-300",
-      hoverClasses: "hover:bg-slate-300/80 dark:hover:bg-gray-500/30",
+      badgeClasses: "text-slate-700 bg-gradient-to-br from-slate-200/90 to-gray-200/80 backdrop-blur-md border border-slate-300/50 dark:text-gray-200 dark:from-gray-500/25 dark:to-slate-500/20 dark:border-gray-500/30 shadow-lg",
+      iconClasses: "text-slate-600 dark:text-gray-300 drop-shadow-sm",
+      hoverClasses: "hover:from-slate-300/90 hover:to-gray-300/80 dark:hover:from-gray-500/35 dark:hover:to-slate-500/30",
     }
   }
 
   // Bronze - 3rd place
   if (lowerAward.includes("3rd") || lowerAward.includes("third")) {
     return {
-      badgeClasses: "text-orange-800 bg-orange-100/80 backdrop-blur-sm dark:text-amber-500 dark:bg-amber-500/20",
-      iconClasses: "text-orange-800 dark:text-amber-500",
-      hoverClasses: "hover:bg-orange-200/80 dark:hover:bg-amber-500/30",
+      badgeClasses: "text-orange-800 bg-gradient-to-br from-orange-100/90 to-amber-100/80 backdrop-blur-md border border-orange-200/50 dark:text-amber-400 dark:from-amber-500/25 dark:to-orange-500/20 dark:border-amber-500/30 shadow-lg",
+      iconClasses: "text-orange-700 dark:text-amber-500 drop-shadow-sm",
+      hoverClasses: "hover:from-orange-200/90 hover:to-amber-200/80 dark:hover:from-amber-500/35 dark:hover:to-orange-500/30",
     }
   }
 
   // Default (Gold) for any other award
   return {
-    badgeClasses: "text-amber-700 bg-amber-100/80 backdrop-blur-sm dark:text-yellow-400 dark:bg-yellow-400/20",
-    iconClasses: "text-amber-700 dark:text-yellow-400",
-    hoverClasses: "hover:bg-amber-200/80 dark:hover:bg-yellow-400/30",
+    badgeClasses: "text-amber-800 bg-gradient-to-br from-amber-100/90 to-yellow-100/80 backdrop-blur-md border border-amber-200/50 dark:text-yellow-300 dark:from-yellow-400/25 dark:to-amber-400/20 dark:border-yellow-400/30 shadow-lg",
+    iconClasses: "text-amber-700 dark:text-yellow-400 drop-shadow-sm",
+    hoverClasses: "hover:from-amber-200/90 hover:to-yellow-200/80 dark:hover:from-yellow-400/35 dark:hover:to-amber-400/30",
   }
 }
 
@@ -70,12 +70,18 @@ export function getCategoryBadgeVariant(category: Project['category']): Category
   }
 }
 
-// Get category badge custom classes
+// Get category badge custom classes with glass effects
 export function getCategoryBadgeClasses(category: Project['category']): string {
-  if (category === 'Hybrid') {
-    return "border-transparent bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-900/60 dark:text-violet-300 dark:hover:bg-violet-900/90"
+  switch (category) {
+    case 'Software':
+      return "border-transparent bg-blue-100/80 backdrop-blur-sm text-blue-800 hover:bg-blue-200/80 dark:bg-blue-500/20 dark:text-blue-300 dark:hover:bg-blue-500/30 shadow-lg"
+    case 'Hardware':
+      return "border-transparent bg-red-100/80 backdrop-blur-sm text-red-800 hover:bg-red-200/80 dark:bg-red-500/20 dark:text-red-300 dark:hover:bg-red-500/30 shadow-lg"
+    case 'Hybrid':
+      return "border-transparent bg-violet-100/80 backdrop-blur-sm text-violet-800 hover:bg-violet-200/80 dark:bg-violet-500/20 dark:text-violet-300 dark:hover:bg-violet-500/30 shadow-lg"
+    default:
+      return ""
   }
-  return ""
 }
 
 // Format project index for display

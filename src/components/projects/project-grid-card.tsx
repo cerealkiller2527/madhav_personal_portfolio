@@ -5,8 +5,8 @@ import { ArrowRight } from "lucide-react"
 import type { Project } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ProjectBadges } from "./project-badges"
-import { ProjectMedia } from "./project-media"
+import { ProjectBadges } from "@/components/projects/project-badges"
+import { ProjectMedia } from "@/components/projects/project-media"
 import { getDisplayProjectTags } from "@/lib/projects/project-ui-helpers"
 
 interface ProjectGridCardProps {
@@ -54,7 +54,11 @@ export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: 
         <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 flex justify-between items-end">
           <div className="flex flex-wrap gap-2">
             {displayTags.map((tag) => (
-              <Badge key={tag} variant="secondary">
+              <Badge 
+                key={tag} 
+                variant="secondary"
+                className="bg-muted/60 backdrop-blur-sm border border-muted-foreground/20 text-muted-foreground hover:bg-muted/80 hover:border-muted-foreground/30 transition-all duration-200 shadow-sm dark:bg-muted/40 dark:border-muted-foreground/30 dark:hover:bg-muted/60"
+              >
                 {tag}
               </Badge>
             ))}

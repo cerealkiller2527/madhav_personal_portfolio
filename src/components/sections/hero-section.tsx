@@ -5,7 +5,7 @@ import type React from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ArrowDown } from "lucide-react"
-import { ProjectMarquee } from "@/components/sections/projects/project-marquee"
+import { ProjectMarquee } from "@/components/projects/project-marquee"
 import type { HeroSectionProps } from "@/types/componentTypes"
 import { smoothScrollToElement } from "@/lib/utils"
 

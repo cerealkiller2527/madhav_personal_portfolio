@@ -1,11 +1,37 @@
 import { Suspense } from "react"
 import { projects as localProjects, experiences } from "@/lib/data"
-import { getAllProjects, getProjectById } from "@/lib/projects/project-queries"
+import { getAllProjects, getProjectById } from "@/lib/notion"
 import HomePage from "@/components/pages/home-page"
 import Loading from "./loading"
+import type { Project } from "@/types/portfolioTypes"
+import type { NotionProject } from "@/types/projectTypes"
 
 // Add revalidation for ISR
 export const revalidate = 60
+
+// Transform Notion project to local project structure
+function transformNotionToLocalProject(notionProject: NotionProject): Project {
+  return {
+    id: notionProject.id,
+    title: notionProject.title,
+    subtitle: notionProject.subtitle,
+    description: notionProject.description,
+    category: notionProject.category,
+    award: notionProject.award,
+    stats: notionProject.stats || [],
+    tags: notionProject.tags,
+    liveLink: notionProject.liveLink,
+    githubLink: notionProject.githubLink,
+    heroImage: notionProject.heroImage || "/placeholder.svg",
+    gallery: notionProject.gallery || [],
+    detailedDescription: notionProject.description, // Use description as fallback
+    vectaryEmbedUrl: notionProject.vectaryEmbedUrl,
+    keyFeatures: notionProject.keyFeatures || [],
+    techStack: notionProject.techStack || [],
+    // Preserve recordMap for Notion content rendering
+    recordMap: notionProject.recordMap,
+  }
+}
 
 /**
  * The main portfolio page, acting as a Server Component.
@@ -15,7 +41,7 @@ export const revalidate = 60
 export default async function PortfolioPage() {
   // Check if Notion projects should be used (environment flag)
   const useNotionProjects = process.env.NOTION_TOKEN && process.env.NOTION_PROJECTS_DATABASE_ID
-  let projects = localProjects
+  let projects: Project[] = localProjects
   
   if (useNotionProjects) {
     try {
@@ -28,30 +54,30 @@ export default async function PortfolioPage() {
             try {
               const fullProject = await getProjectById(preview.id)
               if (fullProject) {
-                return fullProject
+                return transformNotionToLocalProject(fullProject)
               } else {
-                // Fallback to preview data
-                return {
+                // Fallback: transform preview to local project structure
+                const fallbackProject: NotionProject = {
                   ...preview,
-                  detailedDescription: preview.description || "",
                   keyFeatures: [],
                   techStack: [],
                   gallery: [],
-                  heroImage: preview.heroImage || "/placeholder.svg",
-                  stats: preview.stats || [],
+                  updatedAt: preview.publishedAt,
+                  recordMap: {} as any, // Empty recordMap for preview fallback
                 }
+                return transformNotionToLocalProject(fallbackProject)
               }
             } catch (error) {
-              // Fallback to preview data
-              return {
+              // Fallback: transform preview to local project structure
+              const fallbackProject: NotionProject = {
                 ...preview,
-                detailedDescription: preview.description || "",
                 keyFeatures: [],
                 techStack: [],
                 gallery: [],
-                heroImage: preview.heroImage || "/placeholder.svg",
-                stats: preview.stats || [],
+                updatedAt: preview.publishedAt,
+                recordMap: {} as any, // Empty recordMap for preview fallback
               }
+              return transformNotionToLocalProject(fallbackProject)
             }
           })
         )
@@ -60,6 +86,7 @@ export default async function PortfolioPage() {
       }
     } catch (error) {
       // Failed to fetch Notion projects, fallback to local data
+      console.error("Failed to fetch Notion projects:", error)
     }
   }
 

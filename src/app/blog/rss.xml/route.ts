@@ -1,4 +1,4 @@
-import { getAllBlogPosts } from "@/lib/blog/blog-queries"
+import { getAllBlogPosts } from "@/lib/notion"
 
 export async function GET() {
   const posts = await getAllBlogPosts()

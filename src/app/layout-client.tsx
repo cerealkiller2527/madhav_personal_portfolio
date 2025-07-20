@@ -4,7 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
-import { ResumeModal } from "@/components/sections/resume/resume-modal"
+import { ResumeModal } from "@/components/layout/resume-modal"
 
 /**
  * Client-side layout component that provides Header, Footer, and Resume modal.

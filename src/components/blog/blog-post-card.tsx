@@ -2,7 +2,7 @@ import Link from "next/link"
 import { ArrowRight, Calendar, Clock, FileText } from "lucide-react"
 import { BlogPostPreview } from "@/types/blogTypes"
 import { Badge } from "@/components/ui/badge"
-import { BlogImage } from "./blog-image"
+import { BlogImage } from "@/components/blog/blog-image"
 import { formatBlogDate, getDisplayTags } from "@/lib/blog/blog-helpers"
 
 interface BlogPostCardProps {
