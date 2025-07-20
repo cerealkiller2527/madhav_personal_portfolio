@@ -70,6 +70,7 @@ export const projects: Project[] = [
       "Led a team of 15 to build an award-winning underwater robot for cable repair and marine surveying, featuring a modular design, custom electronics, and advanced software.",
     category: "Hybrid",
     award: "2nd Place Globally",
+    awardRank: "2nd place",
     stats: [
       { value: "2nd/200", label: "Global Teams" },
       { value: "1st", label: "Engineering Presentation" },
@@ -116,6 +117,7 @@ export const projects: Project[] = [
       "A Space Invaders-inspired game featuring a self-evolving LLM-driven codebase and 3D hand-tracking controls using computer vision.",
     category: "Software",
     award: "2nd @ UMass Hackathon",
+    awardRank: "2nd place",
     stats: [
       { value: "2nd/500+", label: "Participants" },
       { value: "99.7%", label: "Grip Accuracy" },
@@ -157,6 +159,7 @@ export const projects: Project[] = [
       "An AI-powered system that uses computer vision to track fridge inventory, monitor expiry dates, and suggest recipes to reduce food waste.",
     category: "Hybrid",
     award: "1st Place Winner",
+    awardRank: "1st place",
     stats: [
       { value: "1st Place", label: "In Code We Trust" },
       { value: "98%", label: "Detection Accuracy" },
@@ -241,6 +244,7 @@ export const projects: Project[] = [
       "Engineered a lightweight, stable, and hyper crash-resistant indoor RC plane with a modular bi-wing structure using generative design and rapid prototyping.",
     category: "Hardware",
     award: "3rd @ Singapore Challenge",
+    awardRank: "3rd place",
     tags: ["Aerospace", "Fusion 360", "Generative Design", "3D Printing"],
     heroImage: "/assets/projects/rc-plane-hero.png",
     gallery: [],

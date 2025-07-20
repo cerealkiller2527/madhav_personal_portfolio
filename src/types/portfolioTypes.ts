@@ -24,6 +24,7 @@ export interface Project {
   readonly description: string
   readonly category: ProjectCategory
   readonly award?: string
+  readonly awardRank?: string
   readonly stats?: readonly Statistic[]
   readonly tags: readonly string[]
   readonly liveLink?: string

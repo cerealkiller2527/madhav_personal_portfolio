@@ -20,6 +20,7 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project {
     description: notionProject.description,
     category: notionProject.category,
     award: notionProject.award,
+    awardRank: notionProject.awardRank,
     stats: notionProject.stats || [],
     tags: notionProject.tags,
     liveLink: notionProject.liveLink,
