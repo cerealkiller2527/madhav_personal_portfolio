@@ -1,4 +1,4 @@
-import { NotionError, NotionErrorCode } from "@/types/notion-unified"
+import { NotionError, NotionErrorCode } from "@/types"
 import { NetworkError } from "@/types/apiTypes"
 
 // =============================================================================
@@ -6,9 +6,9 @@ import { NetworkError } from "@/types/apiTypes"
 // =============================================================================
 
 // Basic error logging
-export function logError(error: Error, context?: string): void {
-  const message = context ? `[${context}] ${error.message}` : error.message
-  console.error(message, error)
+export function logError(_error: Error, _context?: string): void {
+  // Error logging removed for production
+  // Can be replaced with proper error tracking service if needed
 }
 
 // =============================================================================

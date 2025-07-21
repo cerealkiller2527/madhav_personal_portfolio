@@ -11,10 +11,9 @@ import {
   BlogPreview,
   ProjectContent,
   ProjectPreview,
-  ProjectCategory,
   NotionError,
   NotionErrorCode
-} from "@/types/notion-unified"
+} from "@/types"
 
 // =============================================================================
 // PROPERTY EXTRACTION UTILITIES
@@ -51,7 +50,7 @@ function extractPropertyValue(
       default:
         return null
     }
-  } catch (_error) {
+  } catch {
     return null
   }
 }
@@ -94,22 +93,6 @@ function createSlugFromTitle(title: string): string {
     .replace(/-+/g, "-")
 }
 
-function extractCoverImageFromPage(page: NotionPage): string | undefined {
-  try {
-    if (page.cover) {
-      if (page.cover.type === "external" && page.cover.external?.url) {
-        return normalizeImageUrl(page.cover.external.url)
-      }
-      if (page.cover.type === "file" && page.cover.file?.url) {
-        return normalizeImageUrl(page.cover.file.url)
-      }
-    }
-    return undefined
-  } catch (error) {
-    return undefined
-  }
-}
-
 function extractCoverImageFromRecordMap(recordMap: ExtendedRecordMap, pageId: string): string | undefined {
   try {
     const block = recordMap.block?.[pageId]?.value
@@ -117,7 +100,7 @@ function extractCoverImageFromRecordMap(recordMap: ExtendedRecordMap, pageId: st
       return normalizeImageUrl(block.format.page_cover)
     }
     return undefined
-  } catch (error) {
+  } catch {
     return undefined
   }
 }
@@ -208,9 +191,9 @@ export function transformToProjectPreview(page: NotionPage): ProjectPreview | nu
     }
 
     // Validate and convert category
-    const category = Object.values(ProjectCategory).includes(categoryValue as ProjectCategory) 
-      ? categoryValue as ProjectCategory 
-      : ProjectCategory.SOFTWARE
+    const category = ['Software', 'Hardware', 'Hybrid'].includes(categoryValue) 
+      ? categoryValue as 'Software' | 'Hardware' | 'Hybrid'
+      : 'Software'
 
     // Extract optional fields
     const award = tryMultipleProperties(properties, ["Award"]) as string

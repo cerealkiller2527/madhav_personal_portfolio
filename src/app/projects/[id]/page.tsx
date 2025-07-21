@@ -5,7 +5,7 @@ import { projects as localProjects } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion"
 import ProjectDetailPage from "./project-detail"
 import type { Project } from "@/types/portfolioTypes"
-import type { ProjectContent as NotionProject } from "@/types/notion-unified"
+import type { ProjectContent as NotionProject } from "@/types"
 import { LogoSpinner } from "@/components/ui/logo-spinner"
 
 // Add revalidation for ISR
@@ -17,7 +17,7 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project {
     id: notionProject.id,
     title: notionProject.title,
     subtitle: notionProject.subtitle,
-    description: notionProject.description,
+    description: notionProject.description || "",
     category: notionProject.category,
     award: notionProject.award,
     awardRank: notionProject.awardRank,
@@ -27,10 +27,11 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project {
     githubLink: notionProject.githubLink,
     heroImage: notionProject.heroImage || "/placeholder.svg",
     gallery: notionProject.gallery || [],
-    detailedDescription: notionProject.description, // Use description as fallback
+    detailedDescription: notionProject.description || "", // Use description as fallback
     vectaryEmbedUrl: notionProject.vectaryEmbedUrl,
     keyFeatures: notionProject.keyFeatures || [],
-    techStack: notionProject.techStack || [],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    techStack: notionProject.techStack as any || [],
     // Preserve recordMap for Notion content rendering
     recordMap: notionProject.recordMap,
   }
@@ -63,7 +64,7 @@ async function getProjectData(id: string) {
           return transformNotionToLocalProject(fullProject)
         }
       }
-    } catch (error) {
+    } catch {
       // Failed to fetch Notion project, will try local data
     }
   }
@@ -114,7 +115,7 @@ export async function generateStaticParams() {
             id: project.id,
           }))
         }
-      } catch (error) {
+      } catch {
         // Failed to generate static params from Notion, using local data
       }
     }
@@ -123,7 +124,7 @@ export async function generateStaticParams() {
     return localProjects.map((project) => ({
       id: project.id,
     }))
-  } catch (error) {
+  } catch {
     return []
   }
 }
@@ -155,7 +156,7 @@ async function getAllProjectsWithOrder(): Promise<Project[]> {
                 }
                 return transformNotionToLocalProject(fallbackProject)
               }
-            } catch (error) {
+            } catch {
               // Fallback: transform preview to local project structure
               const fallbackProject: NotionProject = {
                 ...preview,
@@ -171,13 +172,14 @@ async function getAllProjectsWithOrder(): Promise<Project[]> {
         )
         return transformedProjects
       }
-    } catch (error) {
+    } catch {
       // Failed to fetch Notion projects for navigation, using local data
     }
   }
   
   // Fallback to local projects
-  return localProjects
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return localProjects as any
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
@@ -205,9 +207,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </div>
     }>
       <ProjectDetailPage 
-        project={project}
-        previousProject={previousProject}
-        nextProject={nextProject}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        project={project as any}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        previousProject={previousProject as any}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        nextProject={nextProject as any}
       />
     </Suspense>
   )

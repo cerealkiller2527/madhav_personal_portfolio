@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { Calendar, Clock, User, Tag } from "lucide-react"
-import { BlogContent } from "@/types/notion-unified"
+import { BlogContent } from "@/types"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { BlogImage } from "@/components/blog/blog-image"

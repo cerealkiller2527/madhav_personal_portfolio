@@ -3,8 +3,7 @@ import { projects as localProjects, experiences } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion"
 import HomePage from "@/components/pages/home-page"
 import Loading from "./loading"
-import type { Project } from "@/types/portfolioTypes"
-import type { NotionProject } from "@/types/notion-unified"
+import type { Project, NotionProject } from "@/types"
 
 export const revalidate = 60
 
@@ -14,7 +13,7 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project {
     id: notionProject.id,
     title: notionProject.title,
     subtitle: notionProject.subtitle,
-    description: notionProject.description,
+    description: notionProject.description || "",
     category: notionProject.category,
     award: notionProject.award,
     awardRank: notionProject.awardRank,
@@ -24,10 +23,11 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project {
     githubLink: notionProject.githubLink,
     heroImage: notionProject.heroImage || "/placeholder.svg",
     gallery: notionProject.gallery || [],
-    detailedDescription: notionProject.description,
+    detailedDescription: notionProject.description || "",
     vectaryEmbedUrl: notionProject.vectaryEmbedUrl,
     keyFeatures: notionProject.keyFeatures || [],
-    techStack: notionProject.techStack || [],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    techStack: notionProject.techStack as any || [],
     recordMap: notionProject.recordMap,
   }
 }

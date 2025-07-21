@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { BlogPreview } from "@/types/notion-unified"
+import { BlogPreview } from "@/types"
 
 interface BlogNavigationProps {
   previousPost?: BlogPreview

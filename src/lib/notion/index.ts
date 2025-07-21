@@ -31,4 +31,4 @@ export type {
   BlogPreview as BlogPreview,
   ProjectContent as NotionProject,
   ProjectPreview as NotionProjectPreview
-} from "@/types/notion-unified"
+} from "@/types"

@@ -1,4 +1,4 @@
-import { BlogPreview } from "@/types/notion-unified"
+import { BlogPreview } from "@/types"
 import { BlogCard } from "@/components/blog/blog-card"
 import { BlogLoading } from "@/components/blog/blog-loading"
 import { BlogError } from "@/components/blog/blog-error"

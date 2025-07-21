@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Calendar, Clock, FileText } from "lucide-react"
-import { BlogPreview } from "@/types/notion-unified"
+import { BlogPreview } from "@/types"
 import { Badge } from "@/components/ui/badge"
 import { BlogImage } from "@/components/blog/blog-image"
 
