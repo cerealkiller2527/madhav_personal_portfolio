@@ -64,7 +64,7 @@ export default async function PortfolioPage() {
                   techStack: [],
                   gallery: [],
                   updatedAt: preview.publishedAt,
-                  recordMap: {} as any, // Empty recordMap for preview fallback
+                  recordMap: undefined, // Empty recordMap for preview fallback
                 }
                 return transformNotionToLocalProject(fallbackProject)
               }
@@ -76,7 +76,7 @@ export default async function PortfolioPage() {
                 techStack: [],
                 gallery: [],
                 updatedAt: preview.publishedAt,
-                recordMap: {} as any, // Empty recordMap for preview fallback
+                recordMap: undefined, // Empty recordMap for preview fallback
               }
               return transformNotionToLocalProject(fallbackProject)
             }

@@ -151,7 +151,7 @@ async function getAllProjectsWithOrder(): Promise<Project[]> {
                   techStack: [],
                   gallery: [],
                   updatedAt: preview.publishedAt,
-                  recordMap: {} as any, // Empty recordMap for preview fallback
+                  recordMap: undefined, // Empty recordMap for preview fallback
                 }
                 return transformNotionToLocalProject(fallbackProject)
               }
@@ -163,7 +163,7 @@ async function getAllProjectsWithOrder(): Promise<Project[]> {
                 techStack: [],
                 gallery: [],
                 updatedAt: preview.publishedAt,
-                recordMap: {} as any, // Empty recordMap for preview fallback
+                recordMap: undefined, // Empty recordMap for preview fallback
               }
               return transformNotionToLocalProject(fallbackProject)
             }

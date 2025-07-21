@@ -16,7 +16,7 @@ interface EnhancedTocProps {
 }
 
 interface ObservableSection extends TocSection {
-  ref: any
+  ref: (node?: Element | null) => void
   inView: boolean
 }
 
