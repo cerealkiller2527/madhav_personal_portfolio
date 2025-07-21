@@ -1,5 +1,4 @@
 import type { ExtendedRecordMap } from "notion-types"
-import type { ProjectContent as NotionProject, ProjectPreview as NotionProjectPreview } from "./notion-unified"
 
 // Core Portfolio Types
 export interface Experience {

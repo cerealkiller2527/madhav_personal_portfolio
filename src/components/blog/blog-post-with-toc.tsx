@@ -4,6 +4,7 @@ import { useRef } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import type { NotionBlogContent } from "@/types/notion-unified"
+import type { ExtendedRecordMap } from "notion-types"
 import { BlogRenderer } from "@/components/blog/blog-renderer"
 import { BlogHeader } from "@/components/blog/blog-header"
 import { BlogNavigation } from "@/components/blog/blog-navigation"
@@ -17,13 +18,13 @@ interface BlogContentWithTOCProps {
 }
 
 // Extract headings from Notion recordMap to generate TOC
-function extractHeadings(recordMap: any): { id: string; label: string; level: number }[] {
+function extractHeadings(recordMap: ExtendedRecordMap | undefined): { id: string; label: string; level: number }[] {
   const headings: { id: string; label: string; level: number }[] = []
   
   if (!recordMap?.block) return headings
 
   for (const [blockId, block] of Object.entries(recordMap.block)) {
-    const blockValue = (block as any)?.value
+    const blockValue = (block as { value?: { type?: string; properties?: { title?: string[][] } } })?.value
     if (!blockValue) continue
 
     const { type, properties } = blockValue

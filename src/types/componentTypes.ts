@@ -14,7 +14,7 @@ export interface HeaderProps {
   readonly onResumeOpen: () => void
 }
 
-export interface FooterProps extends BaseComponentProps {}
+export type FooterProps = BaseComponentProps
 
 export interface SectionProps extends BaseComponentProps {
   readonly title?: string
@@ -122,11 +122,11 @@ export interface DialogContentProps extends BaseComponentProps {
   readonly onPointerDownOutside?: (event: PointerEvent) => void
 }
 
-export interface DialogHeaderProps extends BaseComponentProps {}
+export type DialogHeaderProps = BaseComponentProps
 
-export interface DialogTitleProps extends BaseComponentProps {}
+export type DialogTitleProps = BaseComponentProps
 
-export interface DialogDescriptionProps extends BaseComponentProps {}
+export type DialogDescriptionProps = BaseComponentProps
 
 // Theme component props
 export interface ThemeToggleProps {
@@ -229,12 +229,12 @@ export type ReactFragment = React.ReactFragment
 export type ReactPortal = React.ReactPortal
 
 // Component types
-export type FunctionComponent<P = {}> = React.FunctionComponent<P>
-export type ComponentType<P = {}> = React.ComponentType<P>
-export type ComponentClass<P = {}> = React.ComponentClass<P>
+export type FunctionComponent<P = object> = React.FunctionComponent<P>
+export type ComponentType<P = object> = React.ComponentType<P>
+export type ComponentClass<P = object> = React.ComponentClass<P>
 
 // Higher-order component types
-export type HOC<TOwnProps = {}, TInjectedProps = {}> = (
+export type HOC<TOwnProps = object, TInjectedProps = object> = (
   component: ComponentType<TOwnProps & TInjectedProps>
 ) => ComponentType<TOwnProps>
 
