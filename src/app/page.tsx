@@ -1,10 +1,10 @@
 import { Suspense } from "react"
-import { projects as localProjects, experiences } from "@/lib/data"
+import { projects as localProjects, experiences } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion"
 import HomePage from "@/components/pages/home-page"
 import Loading from "./loading"
 import type { Project } from "@/types/portfolioTypes"
-import type { NotionProject } from "@/types/projectTypes"
+import type { NotionProject } from "@/types/notion-unified"
 
 // Add revalidation for ISR
 export const revalidate = 60

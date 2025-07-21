@@ -1,6 +1,6 @@
 import Image from "next/image"
 import type { Project } from "@/types"
-import { formatProjectIndex } from "@/lib/projects/project-ui-helpers"
+import { formatProjectIndex } from "@/lib/projects"
 
 interface ProjectMediaProps {
   project: Project

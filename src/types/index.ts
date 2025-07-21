@@ -1,10 +1,7 @@
 // Core Types
 export * from "./portfolioTypes"
-export * from "./blogTypes"
-export * from "./notionTypes"
 export * from "./apiTypes"
 export * from "./componentTypes"
-export * from "./projectTypes"
 export * from "./notion-unified"
 
 // Re-export commonly used types for convenience
@@ -16,19 +13,6 @@ export type {
   ProficiencyLevel
 } from "./portfolioTypes"
 
-export type {
-  BlogPost,
-  BlogPostPreview,
-  BlogConfig,
-  BlogMetadata,
-  ValidationResult
-} from "./blogTypes"
-
-export type {
-  NotionPage,
-  NotionPropertyValue,
-  NotionClientInterface
-} from "./notionTypes"
 
 
 export type {
@@ -48,14 +32,3 @@ export type {
   CursorGlowProps
 } from "./componentTypes"
 
-// Project types for convenience
-export type {
-  NotionProject,
-  NotionProjectPreview,
-  ProjectValidationResult,
-  ProjectCacheEntry,
-  ProjectTechStackItem,
-  ProjectStatistic,
-  ProjectGalleryItem,
-  ProjectFeature
-} from "./projectTypes"

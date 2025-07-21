@@ -6,7 +6,7 @@ import { ArrowRight, Trophy } from "lucide-react"
 import type { Project } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/core/utils"
 
 interface ProjectGridCardProps {
   project: Project

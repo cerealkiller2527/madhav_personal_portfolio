@@ -3,9 +3,9 @@ import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/notion"
 import { BlogLoading } from "@/components/blog/blog-loading"
-import { BlogPostWithTOC } from "@/components/blog/blog-post-with-toc"
+import { BlogContentWithTOC } from "@/components/blog/blog-post-with-toc"
 
-interface BlogPostPageProps {
+interface BlogContentPageProps {
   params: Promise<{
     slug: string
   }>
@@ -13,7 +13,7 @@ interface BlogPostPageProps {
 
 export const revalidate = 60 // Revalidate every 60 seconds
 
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: BlogContentPageProps): Promise<Metadata> {
   const { slug } = await params
   const post = await getBlogPostBySlug(slug)
   
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 }
 
-async function BlogPostContent({ slug }: { slug: string }) {
+async function BlogContentContent({ slug }: { slug: string }) {
   const [post, allPosts] = await Promise.all([
     getBlogPostBySlug(slug),
     getAllBlogPosts()
@@ -54,7 +54,7 @@ async function BlogPostContent({ slug }: { slug: string }) {
   const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : undefined
 
   return (
-    <BlogPostWithTOC 
+    <BlogContentWithTOC 
       post={post}
       previousPost={previousPost}
       nextPost={nextPost}
@@ -62,7 +62,7 @@ async function BlogPostContent({ slug }: { slug: string }) {
   )
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogContentPage({ params }: BlogContentPageProps) {
   const { slug } = await params
   
   return (
@@ -75,7 +75,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </div>
     }>
-      <BlogPostContent slug={slug} />
+      <BlogContentContent slug={slug} />
     </Suspense>
   )
 }

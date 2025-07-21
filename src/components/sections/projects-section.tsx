@@ -7,7 +7,7 @@ import { ProjectGridCard } from "@/components/projects/project-grid-card"
 import { Section } from "@/components/common/section"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp } from "lucide-react"
-import { smoothScrollTo } from "@/lib/utils"
+import { smoothScrollTo } from "@/lib/core/utils"
 
 const FILTERS = ["All", "Software", "Hardware", "Hybrid"] as const
 type FilterType = (typeof FILTERS)[number]

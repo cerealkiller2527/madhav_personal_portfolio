@@ -109,7 +109,7 @@ export class UnifiedNotionClient {
   // BLOG METHODS
   // =============================================================================
 
-  async getBlogPosts(): Promise<NotionPage[]> {
+  async getBlogContents(): Promise<NotionPage[]> {
     if (!this.config.blogDatabaseId) {
       throw new NotionError(
         "Blog database ID not configured",

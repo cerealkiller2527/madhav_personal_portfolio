@@ -1,12 +1,12 @@
 import { Trophy } from "lucide-react"
 import type { Project } from "@/types"
 import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/core/utils"
 import { 
   getTrophyStyles, 
   getCategoryBadgeVariant, 
   getCategoryBadgeClasses 
-} from "@/lib/projects/project-ui-helpers"
+} from "@/lib/projects"
 
 interface ProjectBadgesProps {
   project: Project

@@ -16,19 +16,19 @@ export {
   clearBlogCache,
   clearProjectsCache,
   notionClient
-} from "@/lib/notion-service"
+} from "./service"
 
 // Re-export utility functions
 export {
   calculateReadingTime,
   normalizeImageUrl,
   createSlugFromTitle
-} from "@/lib/notion-transforms"
+} from "./transforms"
 
 // Re-export types for backward compatibility
 export type {
-  BlogContent as BlogPost,
-  BlogPreview as BlogPostPreview,
+  BlogContent as BlogContent,
+  BlogPreview as BlogPreview,
   ProjectContent as NotionProject,
   ProjectPreview as NotionProjectPreview
 } from "@/types/notion-unified"

@@ -1,15 +1,15 @@
 import Link from "next/link"
 import { ArrowRight, Calendar, Clock, FileText } from "lucide-react"
-import { BlogPostPreview } from "@/types/blogTypes"
+import { BlogPreview } from "@/types/notion-unified"
 import { Badge } from "@/components/ui/badge"
 import { BlogImage } from "@/components/blog/blog-image"
-import { formatBlogDate, getDisplayTags } from "@/lib/blog/blog-helpers"
+import { formatBlogDate, getDisplayTags } from "@/lib/blog"
 
-interface BlogPostCardProps {
-  post: BlogPostPreview
+interface BlogContentCardProps {
+  post: BlogPreview
 }
 
-export function BlogPostCard({ post }: BlogPostCardProps) {
+export function BlogContentCard({ post }: BlogContentCardProps) {
   const { visible: visibleTags, overflow: overflowCount } = getDisplayTags(post.tags)
 
   return (

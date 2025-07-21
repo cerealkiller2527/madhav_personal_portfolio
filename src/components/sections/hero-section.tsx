@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowDown } from "lucide-react"
 import { ProjectMarquee } from "@/components/projects/project-marquee"
 import type { HeroSectionProps } from "@/types/componentTypes"
-import { smoothScrollToElement } from "@/lib/utils"
+import { smoothScrollToElement } from "@/lib/core/utils"
 
 const containerVariants = {
   hidden: { opacity: 0 },
