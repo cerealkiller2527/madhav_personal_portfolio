@@ -1,7 +1,7 @@
 import Image from "next/image"
 import type { Project } from "@/types"
 import { Badge } from "@/components/ui/badge"
-import { hasProjectContent } from "@/lib/projects/project-helpers"
+import { hasProjectContent } from "@/lib/projects"
 
 interface ProjectContentSectionsProps {
   project: Project

@@ -1,12 +1,12 @@
 import Image from "next/image"
 import { Calendar, Clock, User, Tag } from "lucide-react"
-import { BlogPost } from "@/types/blogTypes"
+import { BlogContent } from "@/types/notion-unified"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { BlogImage } from "@/components/blog/blog-image"
 
 interface BlogHeaderProps {
-  post: BlogPost
+  post: BlogContent
   author?: {
     name: string
     avatar?: string

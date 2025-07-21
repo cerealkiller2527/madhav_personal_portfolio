@@ -1,11 +1,11 @@
 import Link from "next/link"
 import { Calendar, Clock, FileText } from "lucide-react"
-import { BlogPostPreview } from "@/types/blogTypes"
+import { BlogPreview } from "@/types/notion-unified"
 import { Badge } from "@/components/ui/badge"
 import { BlogImage } from "@/components/blog/blog-image"
 
 interface BlogCardProps {
-  post: BlogPostPreview
+  post: BlogPreview
 }
 
 export function BlogCard({ post }: BlogCardProps) {

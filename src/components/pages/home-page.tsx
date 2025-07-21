@@ -7,7 +7,7 @@ import { ProjectsSection } from "@/components/sections/projects-section"
 import { ProjectModal } from "@/components/projects/project-modal"
 import type { Project, Experience } from "@/types"
 import { CursorGlow } from "@/components/common/cursor-glow"
-import { smoothScrollToElement } from "@/lib/utils"
+import { smoothScrollToElement } from "@/lib/core/utils"
 
 interface HomePageProps {
   projects: Project[]

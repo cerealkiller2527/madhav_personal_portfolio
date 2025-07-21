@@ -11,27 +11,27 @@ import {
   NotionError,
   NotionErrorCode
 } from "@/types/notion-unified"
-import { notionClient } from "@/lib/notion-client"
+import { notionClient } from "./client"
 import { 
   transformToBlogPreview,
   transformToBlogContent,
   transformToProjectPreview,
   transformToProjectContent
-} from "@/lib/notion-transforms"
+} from "./transforms"
 import {
   sanitizeBlogPreview,
   sanitizeBlogContent,
   sanitizeProjectPreview,
   sanitizeProjectContent,
   validateEnvironmentConfig
-} from "@/lib/notion-validation"
+} from "./validation"
 import { 
   getCachedData,
   clearCache,
   getBlogCacheKey,
   getProjectsCacheKey
-} from "@/lib/simple-cache"
-import { withServerErrorHandling } from "@/lib/server-errors"
+} from "@/lib/core/cache"
+import { logError } from "@/lib/errors"
 
 // =============================================================================
 // CACHE CONFIGURATION
@@ -61,7 +61,7 @@ async function _getAllBlogPosts(): Promise<BlogPreview[]> {
   }
 
   try {
-    const pages = await notionClient.getBlogPosts()
+    const pages = await notionClient.getBlogContents()
     
     const blogPosts = pages
       .map(page => {
@@ -239,88 +239,73 @@ async function _getFeaturedProjects(limit: number = 4): Promise<ProjectPreview[]
 // =============================================================================
 
 export async function getAllBlogPosts(): Promise<BlogPreview[]> {
-  return withServerErrorHandling(
-    () => getCachedData(
+  try {
+    return await getCachedData(
       getBlogCacheKey("posts_list"),
       _getAllBlogPosts,
       CACHE_DURATION.BLOG_POSTS_LIST,
       []
-    ),
-    "fetch-all-blog-posts",
-    {
-      maxRetries: 2,
-      baseDelay: 1000,
-      shouldRetry: (error) => !error.message.includes("configuration")
-    }
-  )
+    )
+  } catch (error) {
+    logError(error instanceof Error ? error : new Error(String(error)), "fetch-all-blog-posts")
+    return []
+  }
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
-  return withServerErrorHandling(
-    () => getCachedData(
+  try {
+    return await getCachedData(
       getBlogCacheKey("single_post", slug),
       () => _getBlogPostBySlug(slug),
       CACHE_DURATION.BLOG_SINGLE_POST,
       null
-    ),
-    "fetch-blog-post-by-slug",
-    {
-      maxRetries: 2,
-      baseDelay: 1000,
-      shouldRetry: (error) => !error.message.includes("not found")
-    }
-  )
+    )
+  } catch (error) {
+    logError(error instanceof Error ? error : new Error(String(error)), "fetch-blog-post-by-slug")
+    return null
+  }
 }
 
 export async function getAllProjects(): Promise<ProjectPreview[]> {
-  return withServerErrorHandling(
-    () => getCachedData(
+  try {
+    return await getCachedData(
       getProjectsCacheKey("projects_list"),
       _getAllProjects,
       CACHE_DURATION.PROJECTS_LIST,
       []
-    ),
-    "fetch-all-projects",
-    {
-      maxRetries: 2,
-      baseDelay: 1000,
-      shouldRetry: (error) => !error.message.includes("configuration")
-    }
-  )
+    )
+  } catch (error) {
+    logError(error instanceof Error ? error : new Error(String(error)), "fetch-all-projects")
+    return []
+  }
 }
 
 export async function getProjectById(id: string): Promise<ProjectContent | null> {
-  return withServerErrorHandling(
-    () => getCachedData(
+  try {
+    return await getCachedData(
       getProjectsCacheKey("single_project", id),
       () => _getProjectById(id),
       CACHE_DURATION.SINGLE_PROJECT,
       null
-    ),
-    "fetch-project-by-id",
-    {
-      maxRetries: 2,
-      baseDelay: 1000,
-      shouldRetry: (error) => !error.message.includes("not found")
-    }
-  )
+    )
+  } catch (error) {
+    logError(error instanceof Error ? error : new Error(String(error)), "fetch-project-by-id")
+    return null
+  }
 }
 
 export async function getFeaturedProjects(limit: number = 4): Promise<ProjectPreview[]> {
-  return withServerErrorHandling(
-    () => getCachedData(
+  try {
+    return await getCachedData(
       getProjectsCacheKey("featured_projects"),
       () => _getFeaturedProjects(limit),
       CACHE_DURATION.FEATURED_PROJECTS,
       []
-    ),
-    "fetch-featured-projects",
-    {
-      maxRetries: 2,
-      baseDelay: 1000,
-      shouldRetry: (error) => !error.message.includes("configuration")
-    }
-  )
+    )
+  } catch (error) {
+    logError(error instanceof Error ? error : new Error(String(error)), "fetch-featured-projects")
+    return []
+  }
 }
 
 // =============================================================================

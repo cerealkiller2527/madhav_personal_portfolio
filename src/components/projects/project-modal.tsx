@@ -12,7 +12,7 @@ import {
   isNotionProject, 
   generateProjectSections, 
   getDisplayProject
-} from "@/lib/projects/project-helpers"
+} from "@/lib/projects"
 
 interface ProjectModalProps {
   project: Project | null

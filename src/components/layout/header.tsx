@@ -9,7 +9,7 @@ import Image from "next/image"
 import { Home, Briefcase, Code, Mail, Eye, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/common/theme-toggle"
-import { smoothScrollToElement } from "@/lib/utils"
+import { smoothScrollToElement } from "@/lib/core/utils"
 
 const navItems = [
   { name: "Home", id: "home", icon: <Home className="h-4 w-4" />, href: "/" },

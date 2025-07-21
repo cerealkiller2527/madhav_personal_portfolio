@@ -1,4 +1,41 @@
-import { BlogContent as BlogPost, BlogPreview as BlogPostPreview } from "@/types/notion-unified"
+/**
+ * Unified Blog Utilities
+ * SEO generation, date formatting, display utilities, and constants
+ */
+
+import { BlogContent as BlogContent, BlogPreview as BlogPreview } from "@/types/notion-unified"
+
+// =============================================================================
+// DATE AND DISPLAY UTILITIES
+// =============================================================================
+
+// Date formatting utilities
+export function formatBlogDate(dateString: string): string {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  })
+}
+
+// Tag display utilities
+export function getDisplayTags(tags: string[], maxTags = 2): { visible: string[]; overflow: number } {
+  const visible = tags.slice(0, maxTags)
+  const overflow = Math.max(0, tags.length - maxTags)
+  
+  return { visible, overflow }
+}
+
+// Blog preview constants
+export const BLOG_PREVIEW_LIMITS = {
+  POSTS_TO_SHOW: 3,
+  MAX_TAGS_VISIBLE: 2,
+  DEFAULT_READING_TIME: 5
+} as const
+
+// =============================================================================
+// SEO UTILITIES
+// =============================================================================
 
 interface SEOData {
   title: string
@@ -26,7 +63,7 @@ interface SEOData {
   }
 }
 
-export function generateBlogPostSEO(post: BlogPost, baseUrl: string = ""): SEOData {
+export function generateBlogContentSEO(post: BlogContent, baseUrl: string = ""): SEOData {
   const url = `${baseUrl}/blog/${post.slug}`
   const imageUrl = post.coverImage || `${baseUrl}/assets/portfolio/avatar-logo.png`
   
@@ -59,7 +96,7 @@ export function generateBlogPostSEO(post: BlogPost, baseUrl: string = ""): SEODa
   }
 }
 
-export function generateBlogIndexSEO(posts: BlogPostPreview[], baseUrl: string = ""): SEOData {
+export function generateBlogIndexSEO(posts: BlogPreview[], baseUrl: string = ""): SEOData {
   const latestPost = posts[0]
   const imageUrl = latestPost?.coverImage || `${baseUrl}/assets/portfolio/avatar-logo.png`
   
@@ -90,10 +127,10 @@ export function generateBlogIndexSEO(posts: BlogPostPreview[], baseUrl: string =
   }
 }
 
-export function generateStructuredData(post: BlogPost, baseUrl: string = "") {
+export function generateStructuredData(post: BlogContent, baseUrl: string = "") {
   return {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": "BlogContenting",
     headline: post.title,
     description: post.description,
     image: post.coverImage || `${baseUrl}/assets/portfolio/avatar-logo.png`,

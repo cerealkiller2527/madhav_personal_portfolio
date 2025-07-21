@@ -1,6 +1,6 @@
 import React from "react"
 import { Project, Experience } from "./portfolioTypes"
-import { BlogPost, BlogPostPreview } from "./blogTypes"
+import { BlogContent, BlogPreview } from "./blogTypes"
 
 // Base component props
 export interface BaseComponentProps {
@@ -60,17 +60,17 @@ export interface ProjectMarqueeProps {
 
 // Blog component props
 export interface BlogCardProps {
-  readonly post: BlogPostPreview
+  readonly post: BlogPreview
 }
 
 export interface BlogListProps {
-  readonly posts: readonly BlogPostPreview[]
+  readonly posts: readonly BlogPreview[]
   readonly loading?: boolean
   readonly error?: string
 }
 
-export interface BlogPostPageProps {
-  readonly post: BlogPost
+export interface BlogContentPageProps {
+  readonly post: BlogContent
 }
 
 export interface BlogErrorBoundaryProps {

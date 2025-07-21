@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import type { Experience } from "@/types"
 import { Section } from "@/components/common/section"
 import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/core/utils"
 import { MapPin } from "lucide-react"
 
 const listVariants = {

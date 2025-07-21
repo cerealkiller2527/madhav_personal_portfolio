@@ -1,13 +1,13 @@
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { BlogPostPreview } from "@/types/blogTypes"
+import { BlogPreview } from "@/types/notion-unified"
 import { Button } from "@/components/ui/button"
 import { Section } from "@/components/common/section"
-import { BlogPostCard } from "@/components/blog/blog-post-card"
-import { BLOG_PREVIEW_LIMITS } from "@/lib/blog/blog-helpers"
+import { BlogContentCard } from "@/components/blog/blog-post-card"
+import { BLOG_PREVIEW_LIMITS } from "@/lib/blog"
 
 interface BlogPreviewProps {
-  posts: BlogPostPreview[]
+  posts: BlogPreview[]
 }
 
 export function BlogPreview({ posts }: BlogPreviewProps) {
@@ -23,7 +23,7 @@ export function BlogPreview({ posts }: BlogPreviewProps) {
     >
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {posts.slice(0, BLOG_PREVIEW_LIMITS.POSTS_TO_SHOW).map((post) => (
-          <BlogPostCard key={post.id} post={post} />
+          <BlogContentCard key={post.id} post={post} />
         ))}
       </div>
 

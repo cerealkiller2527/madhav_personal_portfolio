@@ -3,17 +3,17 @@
 import { useRef } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-import type { NotionBlogPost } from "@/types/blogTypes"
+import type { NotionBlogContent } from "@/types/notion-unified"
 import { BlogRenderer } from "@/components/blog/blog-renderer"
 import { BlogHeader } from "@/components/blog/blog-header"
 import { BlogNavigation } from "@/components/blog/blog-navigation"
 import { Button } from "@/components/ui/button"
 import { EnhancedTableOfContents } from "@/components/ui/enhanced-table-of-contents"
 
-interface BlogPostWithTOCProps {
-  post: NotionBlogPost
-  previousPost?: NotionBlogPost
-  nextPost?: NotionBlogPost
+interface BlogContentWithTOCProps {
+  post: NotionBlogContent
+  previousPost?: NotionBlogContent
+  nextPost?: NotionBlogContent
 }
 
 // Extract headings from Notion recordMap to generate TOC
@@ -54,7 +54,7 @@ function extractHeadings(recordMap: any): { id: string; label: string; level: nu
   return headings
 }
 
-export function BlogPostWithTOC({ post, previousPost, nextPost }: BlogPostWithTOCProps) {
+export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContentWithTOCProps) {
   const contentRef = useRef<HTMLDivElement>(null)
   const headings = extractHeadings(post.recordMap)
   

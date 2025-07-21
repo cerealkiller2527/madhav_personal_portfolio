@@ -1,6 +1,5 @@
-// Import Notion project types for compatibility
-import type { NotionProject, NotionProjectPreview } from "./projectTypes"
 import type { ExtendedRecordMap } from "notion-types"
+import type { ProjectContent as NotionProject, ProjectPreview as NotionProjectPreview } from "./notion-unified"
 
 // Core Portfolio Types
 export interface Experience {

@@ -2,14 +2,14 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { BlogPostPreview } from "@/types/blogTypes"
+import { BlogPreview } from "@/types/notion-unified"
 
 interface BlogNavigationProps {
-  previousPost?: BlogPostPreview
-  nextPost?: BlogPostPreview
+  previousPost?: BlogPreview
+  nextPost?: BlogPreview
 }
 
-const BlogNavCard = ({ post, direction }: { post: BlogPostPreview; direction: "left" | "right" }) => (
+const BlogNavCard = ({ post, direction }: { post: BlogPreview; direction: "left" | "right" }) => (
   <Link
     href={`/blog/${post.slug}`}
     className="group flex items-center w-full max-w-md md:w-[28rem] p-6 gap-6 rounded-2xl border border-orange-200/20 dark:border-orange-400/20 bg-orange-50/10 dark:bg-orange-900/10 backdrop-blur-lg shadow-lg transition-all duration-300 hover:border-orange-400/40 hover:bg-orange-100/20 dark:hover:bg-orange-800/20 hover:shadow-orange-200/20 dark:hover:shadow-orange-400/20"
