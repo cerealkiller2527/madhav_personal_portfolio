@@ -366,3 +366,7 @@ export function isTimeoutError(error: Error): error is TimeoutError {
 export function isValidationError(error: Error): error is ValidationError {
   return error instanceof ValidationError
 }
+
+// Export enum values for runtime use
+export const ProjectCategory = projectCategorySchema.enum
+export const NotionErrorCode = notionErrorCodeSchema.enum

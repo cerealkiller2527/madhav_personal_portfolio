@@ -22,9 +22,6 @@ export class BlogErrorBoundary extends Component<BlogErrorBoundaryProps, State> 
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Simple error logging
-    console.error('Blog Error Boundary:', error, errorInfo)
-    
     // Call the optional error handler
     if (this.props.onError) {
       this.props.onError(error, errorInfo)

@@ -4,7 +4,7 @@
  */
 
 import type { Project } from "@/types"
-import type { ProjectContent as NotionProject } from "@/types/notion-unified"
+import type { ProjectContent as NotionProject } from "@/types"
 import { createSlugFromTitle } from "@/lib/notion/transforms"
 
 // =============================================================================

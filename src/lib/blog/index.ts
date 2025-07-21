@@ -3,7 +3,7 @@
  * SEO generation, date formatting, display utilities, and constants
  */
 
-import { BlogContent as BlogContent, BlogPreview as BlogPreview } from "@/types/notion-unified"
+import { BlogContent, BlogPreview } from "@/types"
 
 // =============================================================================
 // DATE AND DISPLAY UTILITIES

@@ -63,7 +63,7 @@ interface ProjectDetailPageProps {
 }
 
 export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
-  const contentRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLElement>(null)
   
   // Check if this project has Notion content (recordMap)
   const hasNotionContent = project.recordMap && Object.keys(project.recordMap).length > 0
@@ -90,7 +90,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                 Back
               </BackButton>
             </div>
-            <EnhancedTableOfContents sections={sections} containerRef={contentRef} />
+            <EnhancedTableOfContents sections={sections} containerRef={contentRef as React.RefObject<HTMLElement>} />
           </div>
         </aside>
 

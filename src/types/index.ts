@@ -104,6 +104,7 @@ export type {
   NotionPage,
   BaseContent,
   ProjectContent,
+  ProjectContent as NotionProject, // Alias for backward compatibility
   NotionProjectPreview,
   NotionProjectPreview as ProjectPreview, // Alias for backward compatibility
   ValidationResult,

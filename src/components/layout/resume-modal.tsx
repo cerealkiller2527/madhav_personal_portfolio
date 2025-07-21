@@ -346,7 +346,6 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                     if (error?.message?.includes('TextLayer task cancelled')) {
                       return;
                     }
-                    console.warn('PDF render error:', error);
                   }}
                 />
               </Document>

@@ -10,7 +10,7 @@ import {
   ProjectPreview,
   NotionError,
   NotionErrorCode
-} from "@/types/notion-unified"
+} from "@/types"
 import { notionClient } from "./client"
 import { 
   transformToBlogPreview,
@@ -68,8 +68,7 @@ async function _getAllBlogPosts(): Promise<BlogPreview[]> {
         try {
           const preview = transformToBlogPreview(page)
           return sanitizeBlogPreview(preview)
-        } catch (error) {
-          console.warn(`Failed to transform blog post ${page.id}:`, error)
+        } catch {
           return null
         }
       })
@@ -144,8 +143,7 @@ async function _getAllProjects(): Promise<ProjectPreview[]> {
         try {
           const preview = transformToProjectPreview(page)
           return sanitizeProjectPreview(preview)
-        } catch (error) {
-          console.warn(`Failed to transform project ${page.id}:`, error)
+        } catch {
           return null
         }
       })
@@ -216,8 +214,7 @@ async function _getFeaturedProjects(limit: number = 4): Promise<ProjectPreview[]
         try {
           const preview = transformToProjectPreview(page)
           return sanitizeProjectPreview(preview)
-        } catch (error) {
-          console.warn(`Failed to transform featured project ${page.id}:`, error)
+        } catch {
           return null
         }
       })

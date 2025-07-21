@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       ...blogUrls,
     ]
-  } catch (error) {
+  } catch {
     // Return basic sitemap if blog fails
     return [
       {

@@ -11,7 +11,7 @@ import {
   NotionConfig, 
   NotionError, 
   NotionErrorCode
-} from "@/types/notion-unified"
+} from "@/types"
 
 // =============================================================================
 // NOTION CLIENT

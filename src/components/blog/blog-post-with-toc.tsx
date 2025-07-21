@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-import type { NotionBlogContent } from "@/types/notion-unified"
+import type { NotionBlogContent } from "@/types"
 import type { ExtendedRecordMap } from "notion-types"
 import { BlogRenderer } from "@/components/blog/blog-renderer"
 import { BlogHeader } from "@/components/blog/blog-header"

@@ -63,12 +63,7 @@ export interface TechStackItem {
   readonly proficiency?: ProficiencyLevel
 }
 
-// Enums
-export enum ProjectCategory {
-  SOFTWARE = "Software",
-  HARDWARE = "Hardware",
-  HYBRID = "Hybrid"
-}
+// ProjectCategory is now imported from schemas
 
 export enum TechCategory {
   FRONTEND = "Frontend",

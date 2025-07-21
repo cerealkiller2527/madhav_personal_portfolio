@@ -109,3 +109,73 @@ This document tracks all changes made during the refactoring of the Next.js 15 p
 
 ## Lessons Learned
 *[To be added throughout the process]*
+
+---
+
+## Phase 4: Total Code Reduction & Cleanup
+
+### Cleanup Objectives
+
+1. **Eliminate Redundancy**
+   - Remove all console.log/error/warn statements (5 files affected)
+   - Remove unused error variables in catch blocks (21 instances)
+   - Remove unused functions and imports
+   - Delete fallback/backup logic
+
+2. **Simplify Logic**
+   - Flatten over-engineered error handling
+   - Remove excessive try-catch blocks
+   - Simplify component logic
+   - Remove defensive coding patterns
+
+3. **Enforce Consistency**
+   - Align with Next.js 15 app/ conventions
+   - Standardize naming conventions
+   - Clean up file structure
+
+4. **Polish UX & Dev Experience**
+   - Keep only essential loading/error states
+   - Remove dev-only logic
+   - Streamline user interactions
+
+### Pre-Cleanup Build Status
+- 1 React Hook error (useInView in enhanced-table-of-contents.tsx)
+- 14 unused variable warnings
+- 5 console statements to remove
+
+### Changes Made
+
+#### Debug Statement Removal
+- ❌ `src/app/blog/page.tsx`: Removed console.error in BlogContent
+- ❌ `src/lib/errors/index.ts`: Removed console.error in reportError
+- ❌ `src/lib/notion/service.ts`: Removed 3 console.warn statements
+- ❌ `src/components/layout/resume-modal.tsx`: Removed console.warn
+- ❌ `src/components/blog/blog-error-boundary.tsx`: Removed console.error
+
+#### Unused Variable Cleanup
+- ❌ Fixed 21 instances of unused error variables in catch blocks
+- ❌ Removed unused `extractCoverImageFromPage` function
+
+#### Component Simplification
+- ❌ Simplified enhanced-table-of-contents.tsx to fix React Hook error
+- ❌ Removed excessive error handling in multiple components
+- ❌ Streamlined loading states
+
+#### Code Removal
+- ❌ Removed redundant type files after Zod migration
+- ❌ Deleted unused utility functions
+- ❌ Removed commented-out code
+
+### Files Modified/Removed
+
+#### Files Removed
+- (To be listed as files are removed)
+
+#### Files Significantly Simplified
+- (To be listed as files are simplified)
+
+### Post-Cleanup Metrics
+- Build errors: TBD
+- Warnings: TBD
+- Lines of code removed: TBD
+- Files deleted: TBD

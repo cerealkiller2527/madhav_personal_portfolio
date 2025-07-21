@@ -11,7 +11,7 @@ import {
   ProjectPreview,
   ProjectCategory,
   NotionConfig
-} from "@/types/notion-unified"
+} from "@/types"
 
 // =============================================================================
 // SHARED VALIDATION UTILITIES
