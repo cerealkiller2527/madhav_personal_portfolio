@@ -12,7 +12,7 @@ interface BlogGridProps {
 
 export function BlogGrid({ posts, loading, error, onRetry }: BlogGridProps) {
   if (loading) {
-    return <BlogLoading variant="card" count={6} />
+    return <BlogLoading variant="grid" count={6} />
   }
 
   if (error) {

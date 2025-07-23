@@ -147,30 +147,6 @@ export {
   type CacheEntry
 } from './notion.schemas'
 
-// ============================================================================
-// API Schemas and Types
-// ============================================================================
-export {
-  // Schemas
-  httpMethodSchema,
-  httpStatusCodeSchema,
-  requestConfigSchema,
-  retryConfigSchema,
-  apiClientConfigSchema,
-  
-  // Types
-  type HTTPMethod,
-  type HTTPStatusCode,
-  type RequestConfig,
-  type RetryConfig,
-  type APIClientConfig,
-  
-  // Error Classes
-  APIClientError,
-  NetworkError,
-  TimeoutError,
-  ValidationError
-} from './api.schemas'
 
 // ============================================================================
 // Portfolio Schemas and Types

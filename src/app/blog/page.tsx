@@ -1,9 +1,9 @@
 import { Suspense } from "react"
 import { Metadata } from "next"
 import { getAllBlogPosts } from "@/lib/notion"
-import { BlogGridWrapper } from "@/components/blog/blog-grid-wrapper"
+import { BlogGrid } from "@/components/blog/blog-grid"
 import { BlogLoading } from "@/components/blog/blog-loading"
-import { BlogServerError } from "@/components/blog/blog-server-error"
+import { BlogError } from "@/components/blog/blog-error"
 
 export const metadata: Metadata = {
   title: "Blog - Madhav Lodha",
@@ -27,7 +27,7 @@ async function BlogContent() {
               </p>
             </div>
             
-            <BlogGridWrapper posts={posts} />
+            <BlogGrid posts={posts} />
           </div>
         </div>
       </div>
@@ -37,10 +37,7 @@ async function BlogContent() {
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
-            <BlogServerError 
-              title="Unable to load blog posts"
-              description="There was an error loading the blog content. Please try again later."
-            />
+            <BlogError message="Unable to load blog posts. Please try again later." showRetry={false} />
           </div>
         </div>
       </div>

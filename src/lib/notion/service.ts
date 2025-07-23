@@ -16,12 +16,6 @@ import {
   transformToProjectPreview,
   transformToProjectContent
 } from "./transforms"
-import {
-  sanitizeBlogPreview,
-  sanitizeBlogContent,
-  sanitizeProjectPreview,
-  sanitizeProjectContent
-} from "./validation"
 import { 
   getCachedData,
   clearCache,
@@ -56,7 +50,7 @@ async function _getAllBlogPosts(): Promise<BlogPreview[]> {
     .map(page => {
       try {
         const preview = transformToBlogPreview(page)
-        return sanitizeBlogPreview(preview)
+        return preview
       } catch {
         return null
       }
@@ -80,7 +74,7 @@ async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
 
   const recordMap = await notionClient.getPage(matchingPost.id)
   const blogContent = await transformToBlogContent(matchingPost, recordMap)
-  return sanitizeBlogContent(blogContent)
+  return blogContent
 }
 
 // =============================================================================
@@ -98,7 +92,7 @@ async function _getAllProjects(): Promise<NotionProjectPreview[]> {
     .map(page => {
       try {
         const preview = transformToProjectPreview(page)
-        return sanitizeProjectPreview(preview)
+        return preview
       } catch {
         return null
       }
@@ -122,7 +116,7 @@ async function _getProjectById(id: string): Promise<ProjectContent | null> {
 
   const recordMap = await notionClient.getPage(matchingProject.id)
   const projectContent = await transformToProjectContent(matchingProject, recordMap)
-  return sanitizeProjectContent(projectContent)
+  return projectContent
 }
 
 async function _getFeaturedProjects(limit: number = 4): Promise<NotionProjectPreview[]> {
@@ -136,7 +130,7 @@ async function _getFeaturedProjects(limit: number = 4): Promise<NotionProjectPre
     .map(page => {
       try {
         const preview = transformToProjectPreview(page)
-        return sanitizeProjectPreview(preview)
+        return preview
       } catch {
         return null
       }

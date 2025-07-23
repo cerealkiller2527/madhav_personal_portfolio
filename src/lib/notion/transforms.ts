@@ -1,6 +1,5 @@
 /**
- * Unified Notion Data Transformations
- * Handles converting Notion pages to typed content objects
+ * Simplified Notion Data Transformations
  */
 
 import { ExtendedRecordMap } from "notion-types"
@@ -13,60 +12,33 @@ import {
   NotionProjectPreview
 } from "@/schemas"
 
-// =============================================================================
-// PROPERTY EXTRACTION UTILITIES
-// =============================================================================
-
-function extractPropertyValue(
-  properties: Record<string, NotionPropertyValue>,
-  propertyName: string
-): string | string[] | boolean | null {
-  const property = properties[propertyName]
-  if (!property) return null
-
-  try {
-    switch (property.type) {
-      case "title":
-        return property.title?.[0]?.plain_text || ""
-      case "rich_text":
-        return property.rich_text?.[0]?.plain_text || ""
-      case "date":
-        return property.date?.start || null
-      case "checkbox":
-        return property.checkbox || false
-      case "multi_select":
-        return property.multi_select?.map(tag => tag.name) || []
-      case "select":
-        return property.select?.name || null
-      case "url":
-        return property.url ? normalizeImageUrl(property.url) : null
-      case "files":
-        const file = property.files?.[0]
-        if (file?.file?.url) return normalizeImageUrl(file.file.url)
-        if (file?.external?.url) return normalizeImageUrl(file.external.url)
-        return null
-      default:
-        return null
-    }
-  } catch {
-    return null
+function getProperty(properties: Record<string, NotionPropertyValue>, name: string): any {
+  const prop = properties[name]
+  if (!prop) return null
+  
+  switch (prop.type) {
+    case "title": return prop.title?.[0]?.plain_text || null
+    case "rich_text": return prop.rich_text?.[0]?.plain_text || null
+    case "date": return prop.date?.start || null
+    case "checkbox": return prop.checkbox || false
+    case "multi_select": return prop.multi_select?.map(tag => tag.name) || []
+    case "select": return prop.select?.name || null
+    case "url": return prop.url || null
+    case "files": return prop.files?.[0]?.file?.url || prop.files?.[0]?.external?.url || null
+    default: return null
   }
 }
 
-function tryMultipleProperties(
-  properties: Record<string, NotionPropertyValue>,
-  propertyNames: string[]
-): string | string[] | boolean | null {
-  for (const name of propertyNames) {
-    const value = extractPropertyValue(properties, name)
-    if (value !== null && value !== "") {
-      return value
-    }
-  }
-  return null
+function createSlug(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")
 }
 
-function normalizeImageUrl(url: string): string {
+export function calculateReadingTime(content: string, wordsPerMinute = 200): number {
+  const wordCount = content.split(/\s+/).length
+  return Math.ceil(wordCount / wordsPerMinute)
+}
+
+export function normalizeImageUrl(url: string): string {
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url
   }
@@ -82,81 +54,28 @@ function normalizeImageUrl(url: string): string {
   return url
 }
 
-function createSlugFromTitle(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-}
-
-function extractCoverImageFromRecordMap(recordMap: ExtendedRecordMap, pageId: string): string | undefined {
-  try {
-    const block = recordMap.block?.[pageId]?.value
-    if (block?.format?.page_cover) {
-      return normalizeImageUrl(block.format.page_cover)
-    }
-    return undefined
-  } catch {
-    return undefined
-  }
-}
-
-// =============================================================================
-// BLOG TRANSFORMS
-// =============================================================================
+export const createSlugFromTitle = createSlug
 
 export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
-  try {
-    const properties = page.properties
-    
-    // Extract required fields
-    const title = tryMultipleProperties(properties, ["Name", "Title"]) as string
-    const publishedAt = tryMultipleProperties(properties, ["Published Date", "Date"]) as string
-    
-    if (!title || !publishedAt) {
-      return null
-    }
+  const { properties } = page
+  
+  const title = getProperty(properties, "Name") || getProperty(properties, "Title")
+  const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
+  
+  if (!title || !publishedAt) return null
 
-    // Extract optional fields
-    const description = tryMultipleProperties(properties, ["Description", "Summary"]) as string
-    const category = tryMultipleProperties(properties, ["Category"]) as string
-    const rawTags = tryMultipleProperties(properties, ["Tags"]) as string[]
-    const tags = Array.isArray(rawTags) ? rawTags : []
-    
-    // Try to get cover image from multiple possible property names
-    const coverImage = tryMultipleProperties(properties, [
-      "Cover", "Image", "cover", "Featured Image", "Cover Image", "image", "URL", "url"
-    ]) as string
-
-    const slug = createSlugFromTitle(title)
-
-    return {
-      id: page.id,
-      slug,
-      title,
-      description: description || undefined,
-      publishedAt,
-      updatedAt: publishedAt, // Use publishedAt as fallback
-      tags,
-      category: category || undefined,
-      coverImage: coverImage || undefined,
-      published: true,
-      readingTime: Math.ceil(Math.random() * 10 + 2), // Placeholder
-    }
-  } catch {
-    // Return minimal valid object on transform error
-    return {
-      id: page.id,
-      slug: page.id,
-      title: "Untitled",
-      publishedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      tags: [],
-      published: true,
-      readingTime: 5,
-    }
+  return {
+    id: page.id,
+    slug: createSlug(title),
+    title,
+    description: getProperty(properties, "Description"),
+    publishedAt,
+    updatedAt: publishedAt,
+    tags: getProperty(properties, "Tags") || [],
+    category: getProperty(properties, "Category"),
+    coverImage: getProperty(properties, "Cover"),
+    published: true,
+    readingTime: 5,
   }
 }
 
@@ -164,88 +83,45 @@ export async function transformToBlogContent(
   preview: BlogPreview,
   recordMap: ExtendedRecordMap
 ): Promise<BlogContent> {
-  // Extract cover image from recordMap (more reliable than database properties)
-  const coverImageFromRecordMap = extractCoverImageFromRecordMap(recordMap, preview.id)
-  
   return {
     ...preview,
-    coverImage: coverImageFromRecordMap || preview.coverImage,
     recordMap,
   }
 }
 
-// =============================================================================
-// PROJECT TRANSFORMS
-// =============================================================================
-
 export function transformToProjectPreview(page: NotionPage): NotionProjectPreview | null {
-  try {
-    const properties = page.properties
-    
-    // Extract required fields
-    const title = tryMultipleProperties(properties, ["Name", "Title"]) as string
-    const subtitle = tryMultipleProperties(properties, ["Subtitle", "Short Description"]) as string
-    const description = tryMultipleProperties(properties, ["Description", "Summary"]) as string
-    const publishedAt = tryMultipleProperties(properties, ["Published Date", "Date"]) as string
-    const categoryValue = tryMultipleProperties(properties, ["Category"]) as string
-    
-    if (!title || !subtitle || !description || !publishedAt || !categoryValue) {
-      return null
-    }
+  const { properties } = page
+  
+  const title = getProperty(properties, "Name") || getProperty(properties, "Title")
+  const subtitle = getProperty(properties, "Subtitle")
+  const description = getProperty(properties, "Description")
+  const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
+  const categoryValue = getProperty(properties, "Category")
+  
+  if (!title || !publishedAt) return null
 
-    // Validate and convert category
-    const category = ['Software', 'Hardware', 'Hybrid'].includes(categoryValue) 
-      ? categoryValue as 'Software' | 'Hardware' | 'Hybrid'
-      : 'Software'
+  const category = ['Software', 'Hardware', 'Hybrid'].includes(categoryValue) 
+    ? categoryValue : 'Software'
 
-    // Extract optional fields
-    const award = tryMultipleProperties(properties, ["Award"]) as string
-    const awardRank = tryMultipleProperties(properties, ["awardRank", "Award Rank"]) as string
-    const rawTags = tryMultipleProperties(properties, ["Tags"]) as string[]
-    const tags = Array.isArray(rawTags) ? rawTags : []
-    const liveLink = tryMultipleProperties(properties, ["Live Link", "Website"]) as string
-    const githubLink = tryMultipleProperties(properties, ["GitHub Link", "GitHub"]) as string
-    const heroImage = tryMultipleProperties(properties, ["Hero Image", "Cover", "Image"]) as string
-    const vectaryEmbedUrl = tryMultipleProperties(properties, ["Vectary Embed URL"]) as string
-
-    const slug = createSlugFromTitle(title)
-
-    return {
-      id: page.id,
-      slug,
-      title,
-      subtitle,
-      description,
-      publishedAt,
-      updatedAt: publishedAt, // Use publishedAt as fallback
-      category,
-      award: award || undefined,
-      awardRank: awardRank || undefined,
-      tags,
-      liveLink: liveLink || undefined,
-      githubLink: githubLink || undefined,
-      heroImage: heroImage || undefined,
-      vectaryEmbedUrl: vectaryEmbedUrl || undefined,
-      stats: [], // Will be populated from static data
-      published: true,
-      coverImage: heroImage || undefined,
-    }
-  } catch {
-    // Return minimal valid object on transform error
-    return {
-      id: page.id,
-      slug: page.id,
-      title: "Untitled",
-      description: "",
-      publishedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      tags: [],
-      published: true,
-      category: "Software" as const,
-      subtitle: "",
-      stats: [],
-      coverImage: undefined,
-    }
+  return {
+    id: page.id,
+    slug: createSlug(title),
+    title,
+    subtitle: subtitle || "",
+    description: description || "",
+    publishedAt,
+    updatedAt: publishedAt,
+    category: category as 'Software' | 'Hardware' | 'Hybrid',
+    award: getProperty(properties, "Award"),
+    awardRank: getProperty(properties, "Award Rank"),
+    tags: getProperty(properties, "Tags") || [],
+    liveLink: getProperty(properties, "Live Link"),
+    githubLink: getProperty(properties, "GitHub Link"),
+    heroImage: getProperty(properties, "Hero Image"),
+    vectaryEmbedUrl: getProperty(properties, "Vectary Embed URL"),
+    stats: [],
+    published: true,
+    coverImage: getProperty(properties, "Cover"),
   }
 }
 
@@ -253,27 +129,11 @@ export async function transformToProjectContent(
   preview: NotionProjectPreview,
   recordMap: ExtendedRecordMap
 ): Promise<ProjectContent> {
-  // Extract cover image from recordMap (more reliable than database properties)
-  const coverImageFromRecordMap = extractCoverImageFromRecordMap(recordMap, preview.id)
-  
   return {
     ...preview,
-    heroImage: coverImageFromRecordMap || preview.heroImage,
-    coverImage: coverImageFromRecordMap || preview.coverImage,
     recordMap,
-    gallery: [], // Will be populated from static data if needed
-    keyFeatures: [], // Will be populated from static data if needed
-    techStack: [], // Will be populated from static data if needed
+    gallery: [],
+    keyFeatures: [],
+    techStack: [],
   }
 }
-
-// =============================================================================
-// UTILITY FUNCTIONS
-// =============================================================================
-
-export function calculateReadingTime(content: string, wordsPerMinute = 200): number {
-  const wordCount = content.split(/\s+/).length
-  return Math.ceil(wordCount / wordsPerMinute)
-}
-
-export { normalizeImageUrl, createSlugFromTitle }
