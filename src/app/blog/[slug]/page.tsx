@@ -1,9 +1,10 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { Metadata } from "next"
-import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/notion"
-import { BlogLoading } from "@/components/blog/blog-loading"
-import { BlogContentWithTOC } from "@/components/blog/blog-post-with-toc"
+import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/notion/notion-service"
+import type { BlogPreview } from "@/lib/schemas"
+import { LoadingGrid } from "@/components/common/ui/loading-states"
+import { BlogContentWithTOC } from "@/components/pages/blog/blog-post-with-toc"
 
 interface BlogContentPageProps {
   params: Promise<{
@@ -49,7 +50,7 @@ async function BlogContentContent({ slug }: { slug: string }) {
   }
 
   // Find previous and next posts
-  const currentIndex = allPosts.findIndex(p => p.slug === slug)
+  const currentIndex = allPosts.findIndex((p: BlogPreview) => p.slug === slug)
   const previousPost = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined
   const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : undefined
 
@@ -70,7 +71,7 @@ export default async function BlogContentPage({ params }: BlogContentPageProps) 
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
-            <BlogLoading variant="spinner" />
+            <LoadingGrid variant="blog" count={1} />
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getAllProjects } from "@/lib/notion"
+import { getAllProjects } from "@/lib/notion/notion-service"
 
 async function handleProjectsRequest() {
   try {

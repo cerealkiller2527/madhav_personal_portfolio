@@ -2,12 +2,12 @@
 
 import { useRef } from "react"
 import Image from "next/image"
-import type { Project } from "@/schemas"
+import type { Project, Feature, TechStackItem, GalleryItem } from "@/lib/schemas"
 import { Badge } from "@/components/ui/badge"
-import { EnhancedTableOfContents } from "@/components/ui/enhanced-table-of-contents"
-import { ProjectNavigation } from "@/components/projects/project-navigation"
-import { BackButton } from "@/components/ui/back-button"
-import { ProjectRenderer } from "@/components/projects/project-renderer"
+import { TableOfContents } from "@/components/common/content/table-of-contents"
+import { ProjectNavigation } from "@/components/common/content/content-navigation"
+import { BackButton } from "@/components/common/content/content-navigation"
+import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { ArrowLeft } from "lucide-react"
 import type { ExtendedRecordMap } from "notion-types"
 
@@ -90,7 +90,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                 Back
               </BackButton>
             </div>
-            <EnhancedTableOfContents sections={sections} containerRef={contentRef as React.RefObject<HTMLElement>} />
+            <TableOfContents sections={sections} containerRef={contentRef as React.RefObject<HTMLElement>} />
           </div>
         </aside>
 
@@ -127,10 +127,11 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               {/* Render Notion content if available, otherwise use local content */}
               {hasNotionContent ? (
                 <div className="notion-project-full-page">
-                  <ProjectRenderer 
+                  <NotionRenderer 
                     recordMap={project.recordMap!}
                     rootPageId={project.id}
                     className="prose dark:prose-invert max-w-none"
+                    contentType="project"
                   />
                 </div>
               ) : (
@@ -146,7 +147,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               <section id="features" className="mt-12 scroll-mt-28">
                 <h2 className="text-3xl font-bold mb-4 border-b pb-3">Key Features</h2>
                 <ul className="space-y-6">
-                  {project.keyFeatures.map((feature) => (
+                  {project.keyFeatures.map((feature: Feature) => (
                     <li key={feature.title}>
                       <p className="font-semibold text-lg text-foreground">{feature.title}</p>
                       <p className="text-muted-foreground">{feature.description}</p>
@@ -160,7 +161,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               <section id="tech-stack" className="mt-12 scroll-mt-28">
                 <h2 className="text-3xl font-bold mb-4 border-b pb-3">Tech Stack</h2>
                 <div className="flex flex-wrap gap-2">
-                  {project.techStack.map((tech) => (
+                  {project.techStack.map((tech: TechStackItem) => (
                     <Badge key={tech.name} variant="secondary" className="text-sm px-3 py-1">
                       {tech.name}
                     </Badge>
@@ -173,7 +174,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               <section id="gallery" className="mt-12 scroll-mt-28">
                 <h2 className="text-3xl font-bold mb-4 border-b pb-3">Gallery</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {project.gallery.map((image, index) => (
+                  {project.gallery.map((image: GalleryItem, index: number) => (
                     <div key={index} className="relative w-full h-56 rounded-md overflow-hidden bg-secondary">
                       <Image
                         src={image.url || "/placeholder.svg"}

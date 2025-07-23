@@ -2,11 +2,11 @@ import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { projects as localProjects } from "@/lib/core/data"
-import { getAllProjects, getProjectById } from "@/lib/notion"
+import { getAllProjects, getProjectById } from "@/lib/notion/notion-service"
 import ProjectDetailPage from "./project-detail"
-import type { Project } from "@/schemas/project.schemas"
-import type { ProjectContent as NotionProject } from "@/schemas"
-import { LogoSpinner } from "@/components/ui/logo-spinner"
+import type { Project } from "@/lib/schemas/project.schemas"
+import type { ProjectContent as NotionProject } from "@/lib/schemas"
+import { LogoSpinner } from "@/components/common/ui/logo-spinner"
 
 // Add revalidation for ISR
 export const revalidate = 60
@@ -194,7 +194,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
   
   // Find previous and next projects
-  const currentIndex = allProjects.findIndex(p => p.id === id)
+  const currentIndex = allProjects.findIndex((p: Project) => p.id === id)
   const previousProject = currentIndex > 0 ? allProjects[currentIndex - 1] : undefined
   const nextProject = currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : undefined
   

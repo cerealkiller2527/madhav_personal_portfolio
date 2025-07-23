@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getAllBlogPosts } from '@/lib/notion'
+import { getAllBlogPosts } from '@/lib/notion/notion-service'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localhost:3000'

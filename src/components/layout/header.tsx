@@ -2,13 +2,13 @@
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import type React from "react"
-import type { HeaderProps } from "@/schemas"
+import type { HeaderProps } from "@/lib/schemas"
 
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { Home, Briefcase, Code, Mail, Eye, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ThemeToggle } from "@/components/common/theme-toggle"
+import { ThemeToggle } from "@/components/common/theme/theme-toggle"
 import { smoothScrollToElement } from "@/lib/core/utils"
 
 const navItems = [

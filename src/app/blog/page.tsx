@@ -1,9 +1,8 @@
 import { Suspense } from "react"
 import { Metadata } from "next"
-import { getAllBlogPosts } from "@/lib/notion"
-import { BlogGrid } from "@/components/blog/blog-grid"
-import { BlogLoading } from "@/components/blog/blog-loading"
-import { BlogError } from "@/components/blog/blog-error"
+import { getAllBlogPosts } from "@/lib/notion/notion-service"
+import { BlogGrid } from "@/components/pages/blog/blog-card"
+import { LoadingGrid } from "@/components/common/ui/loading-states"
 
 export const metadata: Metadata = {
   title: "Blog - Madhav Lodha",
@@ -37,7 +36,10 @@ async function BlogContent() {
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
-            <BlogError message="Unable to load blog posts. Please try again later." showRetry={false} />
+            <div className="text-center py-12">
+              <h3 className="text-lg font-semibold mb-2">Unable to load blog posts</h3>
+              <p className="text-muted-foreground">Please try again later.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -55,7 +57,7 @@ export default function BlogPage() {
               <div className="h-12 bg-muted rounded w-1/3 mx-auto mb-4"></div>
               <div className="h-6 bg-muted rounded w-2/3 mx-auto"></div>
             </div>
-            <BlogLoading variant="spinner" />
+            <LoadingGrid variant="blog" count={6} />
           </div>
         </div>
       </div>

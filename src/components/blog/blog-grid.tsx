@@ -1,7 +1,7 @@
-import { BlogPreview } from "@/schemas"
+import { BlogPreview } from "@/lib/schemas"
 import { BlogCard } from "@/components/blog/blog-card"
 import { BlogLoading } from "@/components/blog/blog-loading"
-import { BlogError } from "@/components/blog/blog-error"
+import { ContentGrid, GRID_CONFIGS } from "@/components/ui/custom/content-grid"
 
 interface BlogGridProps {
   posts: readonly BlogPreview[]
@@ -12,11 +12,21 @@ interface BlogGridProps {
 
 export function BlogGrid({ posts, loading, error, onRetry }: BlogGridProps) {
   if (loading) {
-    return <BlogLoading variant="grid" count={6} />
+    return <BlogLoading count={6} />
   }
 
   if (error) {
-    return <BlogError message={error} onRetry={onRetry} />
+    return (
+      <div className="text-center py-12">
+        <h3 className="text-lg font-semibold mb-2">Something went wrong</h3>
+        <p className="text-muted-foreground mb-4">{error}</p>
+        {onRetry && (
+          <button onClick={onRetry} className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+            Try again
+          </button>
+        )}
+      </div>
+    )
   }
 
   if (posts.length === 0) {
@@ -31,10 +41,10 @@ export function BlogGrid({ posts, loading, error, onRetry }: BlogGridProps) {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <ContentGrid config={GRID_CONFIGS.blog}>
       {posts.map((post) => (
         <BlogCard key={post.id} post={post} />
       ))}
-    </div>
+    </ContentGrid>
   )
 }

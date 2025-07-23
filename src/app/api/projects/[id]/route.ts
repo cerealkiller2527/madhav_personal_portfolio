@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getProjectById } from "@/lib/notion"
+import { getProjectById } from "@/lib/notion/notion-service"
 
 export async function GET(
   _request: NextRequest,

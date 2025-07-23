@@ -1,4 +1,4 @@
-import type { Project, Experience } from "@/schemas"
+import type { Project, Experience } from "@/lib/schemas"
 
 export const experiences: readonly Experience[] = [
   {

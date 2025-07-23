@@ -1,9 +1,9 @@
 import { Suspense } from "react"
 import { projects as localProjects, experiences } from "@/lib/core/data"
-import { getAllProjects, getProjectById } from "@/lib/notion"
-import HomePage from "@/components/pages/home-page"
+import { getAllProjects, getProjectById } from "@/lib/notion/notion-service"
+import HomePage from "@/components/pages/home/home-page"
 import Loading from "./loading"
-import type { Project, ProjectContent } from "@/schemas"
+import type { Project, ProjectContent } from "@/lib/schemas"
 
 export const revalidate = 60
 

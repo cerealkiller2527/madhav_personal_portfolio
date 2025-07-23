@@ -1,7 +1,7 @@
-import Image from "next/image"
-import type { Project } from "@/schemas"
+import type { Project } from "@/lib/schemas"
 import { Badge } from "@/components/ui/badge"
-import { hasProjectContent } from "@/lib/projects"
+import { hasProjectContent } from "@/lib/utils/project-utils"
+import { ContentImage } from "@/components/common/content/content-image"
 
 interface ProjectContentSectionsProps {
   project: Project
@@ -48,12 +48,13 @@ export function ProjectContentSections({ project, hasNotionContent }: ProjectCon
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {project.gallery?.map((image, index) => (
               <div key={index} className="relative w-full h-48 rounded-md overflow-hidden">
-                <Image
-                  src={image.url || "/placeholder.svg"}
+                <ContentImage
+                  src={image.url || ""}
                   alt={image.caption}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover bg-secondary"
+                  fallbackType="project"
                 />
               </div>
             ))}

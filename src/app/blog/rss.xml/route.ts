@@ -1,4 +1,4 @@
-import { getAllBlogPosts } from "@/lib/notion"
+import { getAllBlogPosts } from "@/lib/notion/notion-service"
 
 export async function GET() {
   const posts = await getAllBlogPosts()
@@ -28,7 +28,7 @@ export async function GET() {
       <author>${authorEmail} (Madhav Lodha)</author>
       ${post.category ? `<category><![CDATA[${post.category}]]></category>` : ""}
       ${(post.tags || [])
-        .map((tag) => `<category><![CDATA[${tag}]]></category>`)
+        .map((tag: string) => `<category><![CDATA[${tag}]]></category>`)
         .join("")}
     </item>`
       )

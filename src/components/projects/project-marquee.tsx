@@ -5,8 +5,9 @@ import type React from "react"
 import Image from "next/image"
 import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame, MotionValue } from "framer-motion"
 import { Trophy, ChevronLeft, ChevronRight } from "lucide-react"
-import type { Project } from "@/schemas"
+import type { Project } from "@/lib/schemas"
 import { cn } from "@/lib/core/utils"
+import { BadgeUtil } from "@/components/common/utils/badge-utils"
 
 interface ProjectMarqueeProps {
   projects: readonly Project[]
@@ -14,54 +15,6 @@ interface ProjectMarqueeProps {
   onProjectSelect: (projectId: string) => void
 }
 
-const getTrophyStyles = (awardRank?: string) => {
-  if (!awardRank) return null
-  
-  const lowerRank = awardRank.toLowerCase()
-
-  // Gold - 1st Place
-  if (
-    lowerRank.includes("1st") ||
-    lowerRank === "1" ||
-    lowerRank.includes("first") ||
-    lowerRank.includes("winner") ||
-    lowerRank.includes("gold")
-  ) {
-    return {
-      containerClasses: "bg-amber-100/80 backdrop-blur-sm dark:bg-yellow-400/20",
-      iconClasses: "text-amber-900 dark:text-yellow-400",
-    }
-  }
-
-  // Silver - 2nd Place
-  if (
-    lowerRank.includes("2nd") ||
-    lowerRank === "2" ||
-    lowerRank.includes("second") ||
-    lowerRank.includes("silver")
-  ) {
-    return {
-      containerClasses: "bg-slate-200/80 backdrop-blur-sm dark:bg-gray-500/20",
-      iconClasses: "text-slate-700 dark:text-gray-300",
-    }
-  }
-
-  // Bronze - 3rd Place
-  if (
-    lowerRank.includes("3rd") ||
-    lowerRank === "3" ||
-    lowerRank.includes("third") ||
-    lowerRank.includes("bronze")
-  ) {
-    return {
-      containerClasses: "bg-orange-100/80 backdrop-blur-sm dark:bg-amber-500/20",
-      iconClasses: "text-orange-900 dark:text-amber-400",
-    }
-  }
-
-  // Other awards - No trophy styling
-  return null
-}
 
 const InteractiveMarqueeItem = ({
   project,
@@ -97,7 +50,7 @@ const InteractiveMarqueeItem = ({
   const smoothY = useSpring(y, { mass: 0.6, stiffness: 300, damping: 40 })
   const smoothTranslateZ = useSpring(translateZ, { mass: 0.6, stiffness: 300, damping: 40 })
 
-  const trophyStyles = getTrophyStyles(project.awardRank)
+  const trophyStyles = project.awardRank ? BadgeUtil.getTrophyStyles(project.awardRank) : null
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -118,7 +71,7 @@ const InteractiveMarqueeItem = ({
       }}
     >
       <a href={`/projects/${project.id}`} onClick={handleClick} className="block w-full h-full cursor-pointer">
-        <div className="w-full h-full bg-secondary/50 dark:bg-secondary/80 border-2 border-border/50 rounded-xl p-3 shadow-md hover:shadow-lg transition-shadow flex flex-col overflow-hidden">
+        <div className="w-full h-full bg-secondary/80 dark:bg-secondary/90 border-2 border-border/50 rounded-xl p-3 shadow-md hover:shadow-lg transition-shadow flex flex-col overflow-hidden">
           <div className="relative h-28 w-full rounded-md overflow-hidden mb-3 flex-shrink-0">
             <Image
               src={
