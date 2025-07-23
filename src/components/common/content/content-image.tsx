@@ -66,22 +66,42 @@ export function ContentImage({
     )
   }
 
+  if (fill) {
+    // For fill images, don't add extra wrapper - let parent handle positioning
+    return (
+      <>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} ${className}`}
+          priority={priority}
+          sizes={sizes}
+          onError={() => setHasError(true)}
+          onLoad={() => setIsLoading(false)}
+        />
+        {isLoading && (
+          <div className="absolute inset-0 bg-muted animate-pulse" />
+        )}
+      </>
+    )
+  }
+  
   return (
     <div className={`relative ${className}`}>
       <Image
         src={src}
         alt={alt}
-        fill={fill}
-        width={!fill ? width : undefined}
-        height={!fill ? height : undefined}
-        className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} ${!fill ? className : ''}`}
+        width={width}
+        height={height}
+        className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
         priority={priority}
         sizes={sizes}
         onError={() => setHasError(true)}
         onLoad={() => setIsLoading(false)}
       />
       {isLoading && (
-        <div className={`absolute inset-0 bg-muted animate-pulse ${fill ? '' : className}`} />
+        <div className={`absolute inset-0 bg-muted animate-pulse`} />
       )}
     </div>
   )

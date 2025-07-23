@@ -29,6 +29,46 @@ function getProperty(properties: Record<string, NotionPropertyValue>, name: stri
   }
 }
 
+function parseStatistics(statisticsText: string | null): Array<{value: string, label: string}> {
+  if (!statisticsText) return []
+  
+  try {
+    // Try to parse as JSON first
+    const parsed = JSON.parse(statisticsText)
+    if (Array.isArray(parsed)) {
+      return parsed.filter(stat => stat.value && stat.label)
+    }
+  } catch {
+    // If JSON parsing fails, try to parse as simple text format
+    // Expected format: "label1: value1, label2: value2" or "label1|value1,label2|value2"
+    const stats: Array<{value: string, label: string}> = []
+    
+    // Split by comma and parse each stat
+    const statPairs = statisticsText.split(',').map(s => s.trim())
+    
+    for (const pair of statPairs) {
+      // Try colon separator first
+      let parts = pair.split(':')
+      if (parts.length !== 2) {
+        // Try pipe separator
+        parts = pair.split('|')
+      }
+      
+      if (parts.length === 2) {
+        const label = parts[0].trim()
+        const value = parts[1].trim()
+        if (label && value) {
+          stats.push({ label, value })
+        }
+      }
+    }
+    
+    return stats
+  }
+  
+  return []
+}
+
 function createSlug(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")
 }
@@ -39,6 +79,11 @@ export function calculateReadingTime(content: string, wordsPerMinute = 200): num
 }
 
 export function normalizeImageUrl(url: string): string {
+  // Skip base64 images - they're too large for HTTP headers
+  if (url.startsWith('data:')) {
+    return ''
+  }
+  
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url
   }
@@ -79,7 +124,7 @@ export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
   const category = typeof categoryValue === 'string' ? categoryValue : undefined
   
   const coverImageValue = getProperty(properties, "Cover")
-  const coverImage = typeof coverImageValue === 'string' ? coverImageValue : undefined
+  const coverImage = typeof coverImageValue === 'string' ? normalizeImageUrl(coverImageValue) : undefined
 
   return {
     id: page.id,
@@ -107,7 +152,7 @@ export async function transformToBlogContent(
   // Priority: database Cover property > Notion page cover
   let coverImage = preview.coverImage
   if (!coverImage && page?.format?.page_cover) {
-    coverImage = page.format.page_cover
+    coverImage = normalizeImageUrl(page.format.page_cover)
   }
   
   return {
@@ -152,19 +197,23 @@ export function transformToProjectPreview(page: NotionPage): NotionProjectPrevie
   const liveLinkValue = getProperty(properties, "Live Link")
   const liveLink = typeof liveLinkValue === 'string' ? liveLinkValue : undefined
   
-  const githubLinkValue = getProperty(properties, "GitHub Link")
+  const githubLinkValue = getProperty(properties, "GitHub")
   const githubLink = typeof githubLinkValue === 'string' ? githubLinkValue : undefined
   
   const heroImageValue = getProperty(properties, "Hero Image")
-  const heroImage = typeof heroImageValue === 'string' ? heroImageValue : undefined
+  const heroImage = typeof heroImageValue === 'string' ? normalizeImageUrl(heroImageValue) : undefined
   
-  const vectaryEmbedUrlValue = getProperty(properties, "Vectary Embed URL")
+  const vectaryEmbedUrlValue = getProperty(properties, "Vectary URL")
   const vectaryEmbedUrl = typeof vectaryEmbedUrlValue === 'string' ? vectaryEmbedUrlValue : undefined
   
-  const coverImageValue = getProperty(properties, "Cover")
-  const coverImage = typeof coverImageValue === 'string' ? coverImageValue : undefined
+  // Projects don't have Cover property - only Hero Image
+  // const coverImageValue = getProperty(properties, "Cover")
+  // const coverImage = typeof coverImageValue === 'string' ? coverImageValue : undefined
+  
+  const statisticsValue = getProperty(properties, "Statistics")
+  const stats = parseStatistics(typeof statisticsValue === 'string' ? statisticsValue : null)
 
-  return {
+  const preview = {
     id: page.id,
     slug: createSlug(title),
     title,
@@ -180,10 +229,12 @@ export function transformToProjectPreview(page: NotionPage): NotionProjectPrevie
     githubLink,
     heroImage,
     vectaryEmbedUrl,
-    stats: [],
+    stats,
     published: true,
-    coverImage,
+    coverImage: heroImage, // Use heroImage as coverImage for projects
   }
+  
+  return preview
 }
 
 export async function transformToProjectContent(
@@ -194,7 +245,7 @@ export async function transformToProjectContent(
   const pageId = Object.keys(recordMap.block)[0]
   const page = recordMap.block[pageId]?.value
   
-  // Priority for hero image: vectaryEmbedUrl > heroImage/coverImage > Notion page cover
+  // Priority for hero image: vectaryEmbedUrl > heroImage > Notion page cover
   let heroImage = preview.heroImage
   let coverImage = preview.coverImage
   
@@ -202,16 +253,19 @@ export async function transformToProjectContent(
   if (preview.vectaryEmbedUrl) {
     // Vectary is for 3D content, so we keep the URL but might need special handling
     heroImage = preview.vectaryEmbedUrl
-  } else if (!heroImage && !coverImage && page?.format?.page_cover) {
-    // If no heroImage or coverImage from database, use Notion page cover
-    heroImage = page.format.page_cover
-    coverImage = page.format.page_cover
-  } else if (coverImage && !heroImage) {
-    // If only coverImage exists, use it as heroImage
-    heroImage = coverImage
+    coverImage = preview.vectaryEmbedUrl
+  } else if (!heroImage && page?.format?.page_cover) {
+    // If no heroImage from database, use Notion page cover
+    const pagecover = normalizeImageUrl(page.format.page_cover)
+    heroImage = pagecover
+    coverImage = pagecover
+  } else if (heroImage) {
+    // Normalize existing hero image URL
+    heroImage = normalizeImageUrl(heroImage)
+    coverImage = heroImage
   }
   
-  return {
+  const finalProject = {
     ...preview,
     heroImage,
     coverImage,
@@ -220,4 +274,13 @@ export async function transformToProjectContent(
     keyFeatures: [],
     techStack: [],
   }
+  
+  console.log('🎆 Final Project:', {
+    id: finalProject.id,
+    title: finalProject.title,
+    heroImage: finalProject.heroImage,
+    coverImage: finalProject.coverImage
+  })
+  
+  return finalProject
 }
