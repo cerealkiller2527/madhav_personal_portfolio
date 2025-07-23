@@ -7,9 +7,7 @@ import {
   BlogContent, 
   BlogPreview,
   ProjectContent,
-  NotionProjectPreview,
-  NotionError,
-  NotionErrorCode
+  NotionProjectPreview
 } from "@/schemas"
 import { notionClient } from "./client"
 import { 
@@ -22,8 +20,7 @@ import {
   sanitizeBlogPreview,
   sanitizeBlogContent,
   sanitizeProjectPreview,
-  sanitizeProjectContent,
-  validateEnvironmentConfig
+  sanitizeProjectContent
 } from "./validation"
 import { 
   getCachedData,
@@ -50,74 +47,41 @@ const CACHE_DURATION = {
 // =============================================================================
 
 async function _getAllBlogPosts(): Promise<BlogPreview[]> {
-  // Validate environment
-  const envValidation = validateEnvironmentConfig()
-  if (!envValidation.isValid) {
-    return []
-  }
-
   if (!notionClient.isBlogConfigured()) {
     return []
   }
 
-  try {
-    const pages = await notionClient.getBlogContents()
-    
-    const blogPosts = pages
-      .map(page => {
-        try {
-          const preview = transformToBlogPreview(page)
-          return sanitizeBlogPreview(preview)
-        } catch {
-          return null
-        }
-      })
-      .filter(Boolean) as BlogPreview[]
+  const pages = await notionClient.getBlogContents()
+  
+  const blogPosts = pages
+    .map(page => {
+      try {
+        const preview = transformToBlogPreview(page)
+        return sanitizeBlogPreview(preview)
+      } catch {
+        return null
+      }
+    })
+    .filter(Boolean) as BlogPreview[]
 
-    return blogPosts
-  } catch (error) {
-    throw new NotionError(
-      "Failed to fetch blog posts from Notion",
-      NotionErrorCode.NETWORK_ERROR,
-      undefined,
-      error instanceof Error ? error : new Error(String(error))
-    )
-  }
+  return blogPosts
 }
 
 async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
-  // Validate environment
-  const envValidation = validateEnvironmentConfig()
-  if (!envValidation.isValid) {
-    return null
-  }
-
   if (!notionClient.isBlogConfigured()) {
     return null
   }
 
-  try {
-    // First get all posts to find the one with matching slug
-    const allPosts = await getAllBlogPosts()
-    const matchingPost = allPosts.find(post => post.slug === slug)
-    
-    if (!matchingPost) {
-      return null
-    }
-
-    // Get the full page content
-    const recordMap = await notionClient.getPage(matchingPost.id)
-    
-    const blogContent = await transformToBlogContent(matchingPost, recordMap)
-    return sanitizeBlogContent(blogContent)
-  } catch (error) {
-    throw new NotionError(
-      `Failed to fetch blog post: ${slug}`,
-      NotionErrorCode.NETWORK_ERROR,
-      undefined,
-      error instanceof Error ? error : new Error(String(error))
-    )
+  const allPosts = await getAllBlogPosts()
+  const matchingPost = allPosts.find(post => post.slug === slug)
+  
+  if (!matchingPost) {
+    return null
   }
+
+  const recordMap = await notionClient.getPage(matchingPost.id)
+  const blogContent = await transformToBlogContent(matchingPost, recordMap)
+  return sanitizeBlogContent(blogContent)
 }
 
 // =============================================================================
@@ -125,110 +89,62 @@ async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
 // =============================================================================
 
 async function _getAllProjects(): Promise<NotionProjectPreview[]> {
-  // Validate environment
-  const envValidation = validateEnvironmentConfig()
-  if (!envValidation.isValid) {
-    return []
-  }
-
   if (!notionClient.isProjectsConfigured()) {
     return []
   }
 
-  try {
-    const pages = await notionClient.getProjects()
-    
-    const projects = pages
-      .map(page => {
-        try {
-          const preview = transformToProjectPreview(page)
-          return sanitizeProjectPreview(preview)
-        } catch {
-          return null
-        }
-      })
-      .filter(Boolean) as NotionProjectPreview[]
+  const pages = await notionClient.getProjects()
+  
+  const projects = pages
+    .map(page => {
+      try {
+        const preview = transformToProjectPreview(page)
+        return sanitizeProjectPreview(preview)
+      } catch {
+        return null
+      }
+    })
+    .filter(Boolean) as NotionProjectPreview[]
 
-    return projects
-  } catch (error) {
-    throw new NotionError(
-      "Failed to fetch projects from Notion",
-      NotionErrorCode.NETWORK_ERROR,
-      undefined,
-      error instanceof Error ? error : new Error(String(error))
-    )
-  }
+  return projects
 }
 
 async function _getProjectById(id: string): Promise<ProjectContent | null> {
-  // Validate environment
-  const envValidation = validateEnvironmentConfig()
-  if (!envValidation.isValid) {
-    return null
-  }
-
   if (!notionClient.isProjectsConfigured()) {
     return null
   }
 
-  try {
-    // First get all projects to find the one with matching ID
-    const allProjects = await getAllProjects()
-    const matchingProject = allProjects.find(project => project.id === id)
-    
-    if (!matchingProject) {
-      return null
-    }
-
-    // Get the full page content
-    const recordMap = await notionClient.getPage(matchingProject.id)
-    
-    const projectContent = await transformToProjectContent(matchingProject, recordMap)
-    return sanitizeProjectContent(projectContent)
-  } catch (error) {
-    throw new NotionError(
-      `Failed to fetch project: ${id}`,
-      NotionErrorCode.NETWORK_ERROR,
-      undefined,
-      error instanceof Error ? error : new Error(String(error))
-    )
+  const allProjects = await getAllProjects()
+  const matchingProject = allProjects.find(project => project.id === id)
+  
+  if (!matchingProject) {
+    return null
   }
+
+  const recordMap = await notionClient.getPage(matchingProject.id)
+  const projectContent = await transformToProjectContent(matchingProject, recordMap)
+  return sanitizeProjectContent(projectContent)
 }
 
 async function _getFeaturedProjects(limit: number = 4): Promise<NotionProjectPreview[]> {
-  // Validate environment
-  const envValidation = validateEnvironmentConfig()
-  if (!envValidation.isValid) {
-    return []
-  }
-
   if (!notionClient.isProjectsConfigured()) {
     return []
   }
 
-  try {
-    const pages = await notionClient.getFeaturedProjects(limit)
-    
-    const projects = pages
-      .map(page => {
-        try {
-          const preview = transformToProjectPreview(page)
-          return sanitizeProjectPreview(preview)
-        } catch {
-          return null
-        }
-      })
-      .filter(Boolean) as NotionProjectPreview[]
+  const pages = await notionClient.getFeaturedProjects(limit)
+  
+  const projects = pages
+    .map(page => {
+      try {
+        const preview = transformToProjectPreview(page)
+        return sanitizeProjectPreview(preview)
+      } catch {
+        return null
+      }
+    })
+    .filter(Boolean) as NotionProjectPreview[]
 
-    return projects.slice(0, limit)
-  } catch (error) {
-    throw new NotionError(
-      "Failed to fetch featured projects from Notion",
-      NotionErrorCode.NETWORK_ERROR,
-      undefined,
-      error instanceof Error ? error : new Error(String(error))
-    )
-  }
+  return projects.slice(0, limit)
 }
 
 // =============================================================================

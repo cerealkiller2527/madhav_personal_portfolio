@@ -382,21 +382,10 @@ export type FadeInProps = z.infer<typeof fadeInPropsSchema>
 // ============================================================================
 
 /**
- * Blog error fallback props schema
- */
-export const blogErrorFallbackPropsSchema = z.object({
-  error: z.instanceof(Error),
-  reset: z.function().args().returns(z.void())
-})
-export type BlogErrorFallbackProps = z.infer<typeof blogErrorFallbackPropsSchema>
-
-/**
  * Blog error boundary props schema
  */
 export const blogErrorBoundaryPropsSchema = z.object({
-  children: z.any(), // React.ReactNode
-  fallback: z.any().optional(), // React.ComponentType
-  onError: z.function().args(z.instanceof(Error), z.any()).returns(z.void()).optional()
+  children: z.any() // React.ReactNode
 })
 export type BlogErrorBoundaryProps = z.infer<typeof blogErrorBoundaryPropsSchema>
 

@@ -291,7 +291,6 @@ export {
   fadeInPropsSchema,
   
   // Error Boundary Props
-  blogErrorFallbackPropsSchema,
   blogErrorBoundaryPropsSchema,
   
   // Context Schemas
@@ -334,7 +333,6 @@ export {
   type TextareaProps,
   type AnimatedCounterProps,
   type FadeInProps,
-  type BlogErrorFallbackProps,
   type BlogErrorBoundaryProps,
   type ThemeContextType,
   type ErrorBoundaryState

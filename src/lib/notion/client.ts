@@ -9,9 +9,7 @@ import { NotionAPI } from "notion-client"
 import { ExtendedRecordMap } from "notion-types"
 import { 
   NotionPage, 
-  NotionConfig, 
-  NotionError, 
-  NotionErrorCode
+  NotionConfig
 } from "@/schemas"
 
 // =============================================================================
@@ -43,16 +41,7 @@ export class UnifiedNotionClient {
   // =============================================================================
 
   async getPage(pageId: string): Promise<ExtendedRecordMap> {
-    try {
-      return await this.notionAPI.getPage(pageId)
-    } catch (error) {
-      throw new NotionError(
-        `Failed to fetch page: ${pageId}`,
-        NotionErrorCode.NETWORK_ERROR,
-        undefined,
-        error instanceof Error ? error : new Error(String(error))
-      )
-    }
+    return await this.notionAPI.getPage(pageId)
   }
 
   private async queryDatabase(
@@ -61,49 +50,25 @@ export class UnifiedNotionClient {
     sorts?: QueryDatabaseParameters["sorts"]
   ): Promise<NotionPage[]> {
     if (!this.client) {
-      throw new NotionError(
-        "Notion client not initialized. Please check NOTION_TOKEN.",
-        NotionErrorCode.CONFIGURATION_ERROR
-      )
+      return []
     }
 
-    try {
-      const response = await this.client.databases.query({
-        database_id: databaseId,
-        filter,
-        sorts,
-      })
+    const response = await this.client.databases.query({
+      database_id: databaseId,
+      filter,
+      sorts,
+    })
 
-      return response.results as NotionPage[]
-    } catch (error) {
-      throw new NotionError(
-        `Failed to query database: ${databaseId}`,
-        NotionErrorCode.NETWORK_ERROR,
-        undefined,
-        error instanceof Error ? error : new Error(String(error))
-      )
-    }
+    return response.results as NotionPage[]
   }
 
-  async getPageWithCover(pageId: string): Promise<NotionPage> {
+  async getPageWithCover(pageId: string): Promise<NotionPage | null> {
     if (!this.client) {
-      throw new NotionError(
-        "Notion client not initialized. Please check NOTION_TOKEN.",
-        NotionErrorCode.CONFIGURATION_ERROR
-      )
+      return null
     }
 
-    try {
-      const page = await this.client.pages.retrieve({ page_id: pageId })
-      return page as NotionPage
-    } catch (error) {
-      throw new NotionError(
-        `Failed to fetch page with cover: ${pageId}`,
-        NotionErrorCode.NETWORK_ERROR,
-        undefined,
-        error instanceof Error ? error : new Error(String(error))
-      )
-    }
+    const page = await this.client.pages.retrieve({ page_id: pageId })
+    return page as NotionPage
   }
 
   // =============================================================================
@@ -112,10 +77,7 @@ export class UnifiedNotionClient {
 
   async getBlogContents(): Promise<NotionPage[]> {
     if (!this.config.blogDatabaseId) {
-      throw new NotionError(
-        "Blog database ID not configured",
-        NotionErrorCode.CONFIGURATION_ERROR
-      )
+      return []
     }
 
     const filter = {
@@ -137,10 +99,7 @@ export class UnifiedNotionClient {
 
   async getProjects(): Promise<NotionPage[]> {
     if (!this.config.projectsDatabaseId) {
-      throw new NotionError(
-        "Projects database ID not configured",
-        NotionErrorCode.CONFIGURATION_ERROR
-      )
+      return []
     }
 
     const filter = {
@@ -158,10 +117,7 @@ export class UnifiedNotionClient {
 
   async getFeaturedProjects(limit: number = 4): Promise<NotionPage[]> {
     if (!this.config.projectsDatabaseId) {
-      throw new NotionError(
-        "Projects database ID not configured",
-        NotionErrorCode.CONFIGURATION_ERROR
-      )
+      return []
     }
 
     const filter = {
