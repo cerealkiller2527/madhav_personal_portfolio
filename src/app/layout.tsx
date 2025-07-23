@@ -4,6 +4,8 @@ import { Roboto_Mono } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/common/theme/theme-provider"
 import { LayoutClient } from "./layout-client"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 
 const robotoMono = Roboto_Mono({
   subsets: ["latin"],
@@ -83,6 +85,8 @@ export default function RootLayout({
           disableTransitionOnChange // Disable transitions on theme change to prevent flashes
         >
           <LayoutClient>{children}</LayoutClient>
+          <SpeedInsights />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
