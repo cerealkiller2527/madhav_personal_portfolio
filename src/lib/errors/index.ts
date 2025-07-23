@@ -1,14 +1,14 @@
-import { NotionError, NotionErrorCode } from "@/types/notion-unified"
-import { NetworkError } from "@/types/apiTypes"
+import { NotionError, NotionErrorCode, NetworkError } from "@/schemas"
 
 // =============================================================================
 // SIMPLE ERROR UTILITIES
 // =============================================================================
 
 // Basic error logging
-export function logError(error: Error, context?: string): void {
-  const message = context ? `[${context}] ${error.message}` : error.message
-  console.error(message, error)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function logError(_error: Error, _context?: string): void {
+  // Error logging removed for production
+  // Can be replaced with proper error tracking service if needed
 }
 
 // =============================================================================

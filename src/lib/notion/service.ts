@@ -7,10 +7,10 @@ import {
   BlogContent, 
   BlogPreview,
   ProjectContent,
-  ProjectPreview,
+  NotionProjectPreview,
   NotionError,
   NotionErrorCode
-} from "@/types/notion-unified"
+} from "@/schemas"
 import { notionClient } from "./client"
 import { 
   transformToBlogPreview,
@@ -68,8 +68,7 @@ async function _getAllBlogPosts(): Promise<BlogPreview[]> {
         try {
           const preview = transformToBlogPreview(page)
           return sanitizeBlogPreview(preview)
-        } catch (error) {
-          console.warn(`Failed to transform blog post ${page.id}:`, error)
+        } catch {
           return null
         }
       })
@@ -125,7 +124,7 @@ async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
 // PROJECT SERVICE METHODS
 // =============================================================================
 
-async function _getAllProjects(): Promise<ProjectPreview[]> {
+async function _getAllProjects(): Promise<NotionProjectPreview[]> {
   // Validate environment
   const envValidation = validateEnvironmentConfig()
   if (!envValidation.isValid) {
@@ -144,12 +143,11 @@ async function _getAllProjects(): Promise<ProjectPreview[]> {
         try {
           const preview = transformToProjectPreview(page)
           return sanitizeProjectPreview(preview)
-        } catch (error) {
-          console.warn(`Failed to transform project ${page.id}:`, error)
+        } catch {
           return null
         }
       })
-      .filter(Boolean) as ProjectPreview[]
+      .filter(Boolean) as NotionProjectPreview[]
 
     return projects
   } catch (error) {
@@ -197,7 +195,7 @@ async function _getProjectById(id: string): Promise<ProjectContent | null> {
   }
 }
 
-async function _getFeaturedProjects(limit: number = 4): Promise<ProjectPreview[]> {
+async function _getFeaturedProjects(limit: number = 4): Promise<NotionProjectPreview[]> {
   // Validate environment
   const envValidation = validateEnvironmentConfig()
   if (!envValidation.isValid) {
@@ -216,12 +214,11 @@ async function _getFeaturedProjects(limit: number = 4): Promise<ProjectPreview[]
         try {
           const preview = transformToProjectPreview(page)
           return sanitizeProjectPreview(preview)
-        } catch (error) {
-          console.warn(`Failed to transform featured project ${page.id}:`, error)
+        } catch {
           return null
         }
       })
-      .filter(Boolean) as ProjectPreview[]
+      .filter(Boolean) as NotionProjectPreview[]
 
     return projects.slice(0, limit)
   } catch (error) {
@@ -266,7 +263,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogContent | nul
   }
 }
 
-export async function getAllProjects(): Promise<ProjectPreview[]> {
+export async function getAllProjects(): Promise<NotionProjectPreview[]> {
   try {
     return await getCachedData(
       getProjectsCacheKey("projects_list"),
@@ -294,7 +291,7 @@ export async function getProjectById(id: string): Promise<ProjectContent | null>
   }
 }
 
-export async function getFeaturedProjects(limit: number = 4): Promise<ProjectPreview[]> {
+export async function getFeaturedProjects(limit: number = 4): Promise<NotionProjectPreview[]> {
   try {
     return await getCachedData(
       getProjectsCacheKey("featured_projects"),

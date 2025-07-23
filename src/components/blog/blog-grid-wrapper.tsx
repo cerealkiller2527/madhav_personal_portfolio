@@ -2,7 +2,7 @@
 
 import { BlogGrid } from "@/components/blog/blog-grid"
 import { BlogErrorBoundary } from "@/components/blog/blog-error-boundary"
-import { BlogPreview } from "@/types/notion-unified"
+import { BlogPreview } from "@/schemas"
 
 interface BlogGridWrapperProps {
   posts: readonly BlogPreview[]

@@ -1,7 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
-import { useInView } from "react-intersection-observer"
+import React, { useState, useEffect, useRef } from "react"
 
 interface TocSection {
   id: string
@@ -15,55 +14,44 @@ interface EnhancedTocProps {
   className?: string
 }
 
-interface ObservableSection extends TocSection {
-  ref: any
-  inView: boolean
-}
-
 /**
  * Enhanced Table of Contents component with automatic active section highlighting
- * Uses react-intersection-observer for better performance and accuracy
  */
 export function EnhancedTableOfContents({ sections, containerRef, className }: EnhancedTocProps) {
   const [activeSection, setActiveSection] = useState<string>("")
-  
-  // Create intersection observer refs for each section
-  const observableSections: ObservableSection[] = sections.map(section => {
-    const { ref, inView } = useInView({
-      threshold: 0.3,
-      rootMargin: '-20% 0px -35% 0px', // Trigger when section is in middle third of viewport
-    })
-    
-    return {
-      ...section,
-      ref,
-      inView,
-    }
-  })
+  const observerRef = useRef<IntersectionObserver | null>(null)
 
-  // Update active section based on which sections are in view
   useEffect(() => {
-    const visibleSections = observableSections.filter(section => section.inView)
-    
-    if (visibleSections.length > 0) {
-      // If multiple sections are visible, choose the first one
-      setActiveSection(visibleSections[0].id)
-    }
-  }, [observableSections.map(s => s.inView).join(',')])
-
-  // Attach intersection observers to actual DOM elements
-  useEffect(() => {
-    observableSections.forEach(section => {
-      const element = document.getElementById(section.id)
-      if (element && section.ref) {
-        // Create a wrapper div to attach the ref if needed
-        const observer = section.ref
-        if (typeof observer === 'function') {
-          observer(element)
+    // Create intersection observer
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        // Find the first visible section
+        const visibleSection = entries.find(entry => entry.isIntersecting)
+        if (visibleSection) {
+          setActiveSection(visibleSection.target.id)
         }
+      },
+      {
+        threshold: 0.3,
+        rootMargin: '-20% 0px -35% 0px', // Trigger when section is in middle third of viewport
+      }
+    )
+
+    // Observe all sections
+    sections.forEach(section => {
+      const element = document.getElementById(section.id)
+      if (element && observerRef.current) {
+        observerRef.current.observe(element)
       }
     })
-  }, [])
+
+    // Cleanup
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [sections])
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault()
@@ -124,7 +112,6 @@ export function EnhancedTableOfContents({ sections, containerRef, className }: E
 
 /**
  * Hook to automatically detect headings in a container and generate TOC sections
- * This is useful when you want to automatically generate TOC from DOM headings
  */
 export function useAutoDetectHeadings(containerSelector: string = 'main'): TocSection[] {
   const [sections, setSections] = useState<TocSection[]>([])

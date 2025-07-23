@@ -2,7 +2,7 @@
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import type React from "react"
-import type { HeaderProps } from "@/types/componentTypes"
+import type { HeaderProps } from "@/schemas"
 
 import { motion } from "framer-motion"
 import Image from "next/image"

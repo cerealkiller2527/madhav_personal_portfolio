@@ -2,7 +2,7 @@
 
 import { useRef } from "react"
 import Image from "next/image"
-import type { Project } from "@/types"
+import type { Project } from "@/schemas"
 import { EnhancedTableOfContents } from "@/components/ui/enhanced-table-of-contents"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { ProjectRenderer } from "@/components/projects/project-renderer"
@@ -38,7 +38,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
         <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-0 overflow-hidden">
           <aside className="hidden md:block md:col-span-1 p-6 border-r">
-            <EnhancedTableOfContents sections={sections} containerRef={contentRef} />
+            <EnhancedTableOfContents sections={sections} containerRef={contentRef as React.RefObject<HTMLElement>} />
           </aside>
 
           <main className="md:col-span-4 overflow-y-auto p-8" ref={contentRef}>

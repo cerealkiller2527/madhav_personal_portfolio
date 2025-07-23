@@ -1,27 +1,11 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import dynamic from "next/dynamic"
+import { useState, useRef } from "react"
 import { motion } from "framer-motion"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { LogoSpinnerInline } from "@/components/ui/logo-spinner"
-import { Download, ChevronLeft, ChevronRight, X, Code, Bot, Settings, Zap, ZoomIn, ZoomOut, RotateCcw, Printer, Maximize2, Minimize2 } from "lucide-react"
-
-// Dynamically import react-pdf components to avoid SSR issues
-const Document = dynamic(() => import("react-pdf").then(mod => ({ default: mod.Document })), { ssr: false })
-const Page = dynamic(() => import("react-pdf").then(mod => ({ default: mod.Page })), { ssr: false })
-
-// Set up the worker and CSS client-side only
-if (typeof window !== 'undefined') {
-  import("react-pdf").then(({ pdfjs }) => {
-    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
-  })
-  
-  // Import CSS dynamically
-  import("react-pdf/dist/Page/AnnotationLayer.css")
-  import("react-pdf/dist/Page/TextLayer.css")
-}
+import { Download, X, Code, Bot, Settings, Zap, ZoomIn, ZoomOut, Printer, Maximize2, Minimize2 } from "lucide-react"
 
 interface ResumeType {
   id: string
@@ -74,61 +58,20 @@ interface ResumeModalProps {
 
 export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const [activeTab, setActiveTab] = useState<string>("software")
-  const [loadingTab, setLoadingTab] = useState<string>("software") // Separate loading state
-  const [numPages, setNumPages] = useState<number | null>(null)
-  const [pageNumber, setPageNumber] = useState(1)
-  const [containerWidth, setContainerWidth] = useState(0)
-  const [isClient, setIsClient] = useState(false)
   const [scale, setScale] = useState(1.0)
-  const [rotation, setRotation] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
 
   const activeResume = resumeTypes.find(resume => resume.id === activeTab) || resumeTypes[0]
-  const loadingResume = resumeTypes.find(resume => resume.id === loadingTab) || resumeTypes[0]
-
-  // Ensure we're on the client side
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   // Handle quick tab transitions
   const handleTabChange = (newTab: string) => {
     if (newTab === activeTab) return
     
     setActiveTab(newTab)
-    setLoadingTab(newTab)
-    setPageNumber(1)
-    setNumPages(null)
     setScale(1.0)
-    setRotation(0)
-  }
-
-  // Reset page and view settings when switching tabs
-  useEffect(() => {
-    if (loadingTab === activeTab) {
-      setPageNumber(1)
-      setNumPages(null)
-      setScale(1.0)
-      setRotation(0)
-    }
-  }, [loadingTab, activeTab])
-
-  // This effect ensures the PDF page resizes correctly when the window size changes.
-  useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth)
-      }
-    }
-    window.addEventListener("resize", handleResize)
-    handleResize() // Set initial width
-    return () => window.removeEventListener("resize", handleResize)
-  }, [isOpen])
-
-  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
-    setNumPages(numPages)
-    setPageNumber(1)
+    setIsLoading(true)
   }
 
   const handleDownload = () => {
@@ -147,11 +90,11 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const handleZoomIn = () => setScale(prev => Math.min(prev + 0.25, 3.0))
   const handleZoomOut = () => setScale(prev => Math.max(prev - 0.25, 0.5))
   const handleResetZoom = () => setScale(1.0)
-  const handleRotate = () => setRotation(prev => (prev + 90) % 360)
   const handleFullscreen = () => setIsFullscreen(!isFullscreen)
 
-  const goToPrevPage = () => setPageNumber((prev) => Math.max(prev - 1, 1))
-  const goToNextPage = () => setPageNumber((prev) => Math.min(prev + 1, numPages || 1))
+  const handleIframeLoad = () => {
+    setIsLoading(false)
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -260,14 +203,6 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={handleRotate}
-                  className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-orange-500/20 transition-colors"
-                >
-                  <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
                   onClick={handlePrint}
                   className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-orange-500/20 transition-colors"
                 >
@@ -283,78 +218,33 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                 </Button>
               </div>
             </div>
-            
-            {numPages && numPages > 1 && (
-              <div className="flex items-center gap-1 sm:gap-2 p-1 rounded-lg glass-effect flex-shrink-0">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={goToPrevPage}
-                  disabled={pageNumber <= 1}
-                  className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-orange-500/20 transition-colors"
-                >
-                  <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-                </Button>
-                <span className="text-xs font-medium px-1 sm:px-2 min-w-[50px] sm:min-w-[60px] text-center">
-                  {pageNumber} / {numPages}
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={goToNextPage}
-                  disabled={pageNumber >= numPages}
-                  className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-orange-500/20 transition-colors"
-                >
-                  <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                </Button>
-              </div>
-            )}
           </div>
         </div>
 
         {/* PDF Viewer */}
-        <div className="flex-1 bg-muted/20 dark:bg-muted/40 overflow-auto p-2 sm:p-4" ref={containerRef}>
-          <div className="h-full">
-            {isClient ? (
-              <Document
-                key={loadingTab}
-                file={loadingResume.filePath}
-                onLoadSuccess={onDocumentLoadSuccess}
-                loading={null}
-                error={
-                  <div className="flex justify-center items-center h-full text-destructive">
-                    <div className="text-center">
-                      <p className="font-medium">Failed to load PDF</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Please try downloading it or switching to another resume
-                      </p>
-                    </div>
-                  </div>
-                }
-                className="flex justify-center"
-              >
-                <Page
-                  pageNumber={pageNumber}
-                  width={containerWidth > 0 ? Math.min(containerWidth - 32, 800) * scale : undefined}
-                  scale={scale}
-                  rotate={rotation}
-                  renderTextLayer={false}
-                  renderAnnotationLayer={false}
-                  className="shadow-xl rounded-lg overflow-hidden transition-all duration-300"
-                  onRenderError={(error) => {
-                    // Suppress TextLayer cancellation warnings
-                    if (error?.message?.includes('TextLayer task cancelled')) {
-                      return;
-                    }
-                    console.warn('PDF render error:', error);
-                  }}
-                />
-              </Document>
-            ) : (
-              <div className="flex justify-center items-center h-full">
-                <LogoSpinnerInline size="md" text="Loading PDF Viewer..." />
-              </div>
-            )}
+        <div className="flex-1 bg-muted/20 dark:bg-muted/40 overflow-auto p-2 sm:p-4 relative">
+          {isLoading && (
+            <div className="absolute inset-0 flex justify-center items-center bg-background/80 backdrop-blur-sm z-10">
+              <LogoSpinnerInline size="md" text="Loading PDF..." />
+            </div>
+          )}
+          
+          <div className="h-full flex justify-center items-center">
+            <div 
+              className="transition-transform duration-300 shadow-xl rounded-lg overflow-hidden"
+              style={{ transform: `scale(${scale})` }}
+            >
+              <iframe
+                ref={iframeRef}
+                key={activeTab}
+                src={activeResume.filePath}
+                width="800"
+                height="1100"
+                className="border-0 bg-white"
+                onLoad={handleIframeLoad}
+                title={`${activeResume.title} Resume`}
+              />
+            </div>
           </div>
         </div>
 

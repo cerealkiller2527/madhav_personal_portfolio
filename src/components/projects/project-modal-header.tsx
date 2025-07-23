@@ -1,5 +1,5 @@
 import Link from "next/link"
-import type { Project } from "@/types"
+import type { Project } from "@/schemas"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"

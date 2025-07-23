@@ -31,18 +31,18 @@ const ANIMATION_CONFIG = {
 
 export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
   // Motion values for position
-  const mouseX = useMotionValue(-1000)
-  const mouseY = useMotionValue(-1000)
-  const smoothX = useSpring(mouseX, SPRING_CONFIGS.position)
-  const smoothY = useSpring(mouseY, SPRING_CONFIGS.position)
+  const mouseX = useMotionValue<number>(-1000)
+  const mouseY = useMotionValue<number>(-1000)
+  const smoothX = useSpring(mouseX.get(), SPRING_CONFIGS.position)
+  const smoothY = useSpring(mouseY.get(), SPRING_CONFIGS.position)
 
   // Motion values for size
-  const size = useMotionValue(ANIMATION_CONFIG.baseSize)
-  const smoothSize = useSpring(size, SPRING_CONFIGS.size)
+  const size = useMotionValue<number>(ANIMATION_CONFIG.baseSize)
+  const smoothSize = useSpring(ANIMATION_CONFIG.baseSize, SPRING_CONFIGS.size)
 
   // Motion values for opacity
-  const opacity = useMotionValue(0)
-  const smoothOpacity = useSpring(opacity, SPRING_CONFIGS.opacity)
+  const opacity = useMotionValue<number>(0)
+  const smoothOpacity = useSpring(0, SPRING_CONFIGS.opacity)
 
   // Refs for tracking and cleanup
   const lastPosRef = useRef<CursorPosition>({ x: 0, y: 0, time: 0 })
@@ -69,6 +69,8 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
     // Update position
     mouseX.set(clientX)
     mouseY.set(clientY)
+    smoothX.set(clientX)
+    smoothY.set(clientY)
 
     // Calculate speed-based size
     if (lastPos.time > 0) {
@@ -85,6 +87,7 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
           ANIMATION_CONFIG.maxSize
         )
         size.set(newSize)
+        smoothSize.set(newSize)
       }
     }
 
@@ -97,8 +100,9 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
     }
     sizeTimeoutRef.current = setTimeout(() => {
       size.set(ANIMATION_CONFIG.baseSize)
+      smoothSize.set(ANIMATION_CONFIG.baseSize)
     }, ANIMATION_CONFIG.resetDelay)
-  }, [mouseX, mouseY, size])
+  }, [mouseX, mouseY, size, smoothX, smoothY, smoothSize])
 
   // Mouse event handlers
   const handleMouseMove = useCallback((event: MouseEvent) => {
@@ -109,8 +113,9 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
   const handleMouseLeave = useCallback(() => {
     opacityTimeoutRef.current = setTimeout(() => {
       opacity.set(0)
+      smoothOpacity.set(0)
     }, 500)
-  }, [opacity])
+  }, [opacity, smoothOpacity])
 
   const handleMouseEnter = useCallback(() => {
     if (opacityTimeoutRef.current) {
@@ -119,8 +124,9 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
     }
     if (isVisible) {
       opacity.set(ANIMATION_CONFIG.visibleOpacity)
+      smoothOpacity.set(ANIMATION_CONFIG.visibleOpacity)
     }
-  }, [isVisible, opacity])
+  }, [isVisible, opacity, smoothOpacity])
 
   // Handle visibility changes
   useEffect(() => {
@@ -128,14 +134,16 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
 
     if (isVisible) {
       opacity.set(ANIMATION_CONFIG.visibleOpacity)
+      smoothOpacity.set(ANIMATION_CONFIG.visibleOpacity)
     } else {
       opacityTimeoutRef.current = setTimeout(() => {
         opacity.set(0)
+        smoothOpacity.set(0)
       }, ANIMATION_CONFIG.fadeDelay)
     }
 
     return cleanup
-  }, [isVisible, opacity, cleanup])
+  }, [isVisible, opacity, smoothOpacity, cleanup])
 
   // Mouse event listeners
   useEffect(() => {

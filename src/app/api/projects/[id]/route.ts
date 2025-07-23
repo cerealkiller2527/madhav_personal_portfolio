@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getProjectById } from "@/lib/notion"
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -42,7 +42,7 @@ export async function GET(
     
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch project", details: error.message },
+      { error: "Failed to fetch project", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     )
   }

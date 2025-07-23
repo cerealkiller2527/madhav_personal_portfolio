@@ -16,7 +16,7 @@ export async function GET() {
     <webMaster>${authorEmail} (Madhav Lodha)</webMaster>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${baseUrl}/blog/rss.xml" rel="self" type="application/rss+xml"/>
-    ${posts
+    ${(posts || [])
       .map(
         (post) => `
     <item>
@@ -27,7 +27,7 @@ export async function GET() {
       <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
       <author>${authorEmail} (Madhav Lodha)</author>
       ${post.category ? `<category><![CDATA[${post.category}]]></category>` : ""}
-      ${post.tags
+      ${(post.tags || [])
         .map((tag) => `<category><![CDATA[${tag}]]></category>`)
         .join("")}
     </item>`

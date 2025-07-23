@@ -10,11 +10,10 @@ import {
   BlogContent,
   BlogPreview,
   ProjectContent,
-  ProjectPreview,
-  ProjectCategory,
+  NotionProjectPreview,
   NotionError,
   NotionErrorCode
-} from "@/types/notion-unified"
+} from "@/schemas"
 
 // =============================================================================
 // PROPERTY EXTRACTION UTILITIES
@@ -51,7 +50,7 @@ function extractPropertyValue(
       default:
         return null
     }
-  } catch (_error) {
+  } catch {
     return null
   }
 }
@@ -94,22 +93,6 @@ function createSlugFromTitle(title: string): string {
     .replace(/-+/g, "-")
 }
 
-function extractCoverImageFromPage(page: NotionPage): string | undefined {
-  try {
-    if (page.cover) {
-      if (page.cover.type === "external" && page.cover.external?.url) {
-        return normalizeImageUrl(page.cover.external.url)
-      }
-      if (page.cover.type === "file" && page.cover.file?.url) {
-        return normalizeImageUrl(page.cover.file.url)
-      }
-    }
-    return undefined
-  } catch (error) {
-    return undefined
-  }
-}
-
 function extractCoverImageFromRecordMap(recordMap: ExtendedRecordMap, pageId: string): string | undefined {
   try {
     const block = recordMap.block?.[pageId]?.value
@@ -117,7 +100,7 @@ function extractCoverImageFromRecordMap(recordMap: ExtendedRecordMap, pageId: st
       return normalizeImageUrl(block.format.page_cover)
     }
     return undefined
-  } catch (error) {
+  } catch {
     return undefined
   }
 }
@@ -192,7 +175,7 @@ export async function transformToBlogContent(
 // PROJECT TRANSFORMS
 // =============================================================================
 
-export function transformToProjectPreview(page: NotionPage): ProjectPreview | null {
+export function transformToProjectPreview(page: NotionPage): NotionProjectPreview | null {
   try {
     const properties = page.properties
     
@@ -208,9 +191,9 @@ export function transformToProjectPreview(page: NotionPage): ProjectPreview | nu
     }
 
     // Validate and convert category
-    const category = Object.values(ProjectCategory).includes(categoryValue as ProjectCategory) 
-      ? categoryValue as ProjectCategory 
-      : ProjectCategory.SOFTWARE
+    const category = ['Software', 'Hardware', 'Hybrid'].includes(categoryValue) 
+      ? categoryValue as 'Software' | 'Hardware' | 'Hybrid'
+      : 'Software'
 
     // Extract optional fields
     const award = tryMultipleProperties(properties, ["Award"]) as string
@@ -255,7 +238,7 @@ export function transformToProjectPreview(page: NotionPage): ProjectPreview | nu
 }
 
 export async function transformToProjectContent(
-  preview: ProjectPreview,
+  preview: NotionProjectPreview,
   recordMap: ExtendedRecordMap
 ): Promise<ProjectContent> {
   // Extract cover image from recordMap (more reliable than database properties)

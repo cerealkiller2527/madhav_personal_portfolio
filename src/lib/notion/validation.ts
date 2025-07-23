@@ -8,10 +8,10 @@ import {
   BlogContent,
   BlogPreview,
   ProjectContent,
-  ProjectPreview,
+  NotionProjectPreview,
   ProjectCategory,
   NotionConfig
-} from "@/types/notion-unified"
+} from "@/schemas"
 
 // =============================================================================
 // SHARED VALIDATION UTILITIES
@@ -254,9 +254,9 @@ export function validateBlogContent(data: unknown): ValidationResult<BlogContent
 // PROJECT VALIDATION
 // =============================================================================
 
-export function validateProjectPreview(data: unknown): ValidationResult<ProjectPreview> {
+export function validateProjectPreview(data: unknown): ValidationResult<NotionProjectPreview> {
   const errors: string[] = []
-  const validatedData: Partial<ProjectPreview> = {}
+  const validatedData: Partial<NotionProjectPreview> = {}
 
   if (!data || typeof data !== "object" || data === null) {
     return { isValid: false, errors: ["Invalid data structure"] }
@@ -303,7 +303,7 @@ export function validateProjectPreview(data: unknown): ValidationResult<ProjectP
   return {
     isValid,
     errors,
-    data: isValid ? validatedData as ProjectPreview : undefined
+    data: isValid ? validatedData as NotionProjectPreview : undefined
   }
 }
 

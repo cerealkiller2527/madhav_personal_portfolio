@@ -4,6 +4,7 @@
  */
 
 import { Client } from "@notionhq/client"
+import type { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints"
 import { NotionAPI } from "notion-client"
 import { ExtendedRecordMap } from "notion-types"
 import { 
@@ -11,7 +12,7 @@ import {
   NotionConfig, 
   NotionError, 
   NotionErrorCode
-} from "@/types/notion-unified"
+} from "@/schemas"
 
 // =============================================================================
 // NOTION CLIENT
@@ -56,8 +57,8 @@ export class UnifiedNotionClient {
 
   private async queryDatabase(
     databaseId: string,
-    filter?: Record<string, unknown>,
-    sorts?: Array<Record<string, unknown>>
+    filter?: QueryDatabaseParameters["filter"],
+    sorts?: QueryDatabaseParameters["sorts"]
   ): Promise<NotionPage[]> {
     if (!this.client) {
       throw new NotionError(

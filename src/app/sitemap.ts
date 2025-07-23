@@ -7,7 +7,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const posts = await getAllBlogPosts()
     
-    const blogUrls: MetadataRoute.Sitemap = posts.map((post) => ({
+    const blogUrls: MetadataRoute.Sitemap = (posts || []).map((post) => ({
       url: `${baseUrl}/blog/${post.slug}`,
       lastModified: new Date(post.publishedAt),
       changeFrequency: 'weekly',
@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       ...blogUrls,
     ]
-  } catch (error) {
+  } catch {
     // Return basic sitemap if blog fails
     return [
       {

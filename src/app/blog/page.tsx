@@ -32,8 +32,7 @@ async function BlogContent() {
         </div>
       </div>
     )
-  } catch (error) {
-    console.error("Error in BlogContent:", error)
+  } catch {
     return (
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8">

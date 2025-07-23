@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import type { Experience } from "@/types"
+import type { Experience, ExperienceSectionProps } from "@/schemas"
 import { Section } from "@/components/common/section"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/core/utils"
@@ -15,11 +15,18 @@ const listVariants = {
 }
 
 const itemVariants = {
-  visible: { opacity: 1, x: 0, transition: { ease: "easeOut", duration: 0.3 } },
+  visible: { 
+    opacity: 1, 
+    x: 0, 
+    transition: { 
+      ease: [0.4, 0.0, 0.2, 1.0] as const, 
+      duration: 0.3 
+    } 
+  },
   hidden: { opacity: 0, x: -20 },
 }
 
-export function ExperienceSection({ experiences }: { experiences: Experience[] }) {
+export function ExperienceSection({ experiences }: ExperienceSectionProps) {
   const [selected, setSelected] = useState<Experience>(experiences[0])
 
   return (

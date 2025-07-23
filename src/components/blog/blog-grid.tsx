@@ -1,10 +1,10 @@
-import { BlogPreview } from "@/types/notion-unified"
+import { BlogPreview } from "@/schemas"
 import { BlogCard } from "@/components/blog/blog-card"
 import { BlogLoading } from "@/components/blog/blog-loading"
 import { BlogError } from "@/components/blog/blog-error"
 
 interface BlogGridProps {
-  posts: BlogPreview[]
+  posts: readonly BlogPreview[]
   loading?: boolean
   error?: string
   onRetry?: () => void

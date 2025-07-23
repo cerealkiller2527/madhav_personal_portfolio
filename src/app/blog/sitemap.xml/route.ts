@@ -12,7 +12,7 @@ export async function GET() {
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
-  ${posts
+  ${(posts || [])
     .map(
       (post) => `
   <url>

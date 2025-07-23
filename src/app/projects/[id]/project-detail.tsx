@@ -2,14 +2,14 @@
 
 import { useRef } from "react"
 import Image from "next/image"
-import type { Project } from "@/types"
-import type { NotionProject } from "@/types/notion-unified"
+import type { Project } from "@/schemas"
 import { Badge } from "@/components/ui/badge"
 import { EnhancedTableOfContents } from "@/components/ui/enhanced-table-of-contents"
 import { ProjectNavigation } from "@/components/projects/project-navigation"
 import { BackButton } from "@/components/ui/back-button"
 import { ProjectRenderer } from "@/components/projects/project-renderer"
 import { ArrowLeft } from "lucide-react"
+import type { ExtendedRecordMap } from "notion-types"
 
 const defaultSections = [
   { id: "overview", label: "Overview" },
@@ -19,13 +19,13 @@ const defaultSections = [
 ]
 
 // Extract headings from Notion recordMap to generate TOC
-function extractNotionHeadings(recordMap: any): { id: string; label: string; level: number }[] {
+function extractNotionHeadings(recordMap: ExtendedRecordMap | undefined): { id: string; label: string; level: number }[] {
   const headings: { id: string; label: string; level: number }[] = []
   
   if (!recordMap?.block) return headings
 
   for (const [blockId, block] of Object.entries(recordMap.block)) {
-    const blockValue = (block as any)?.value
+    const blockValue = (block as { value?: { type?: string; properties?: { title?: string[][] } } })?.value
     if (!blockValue) continue
 
     const { type, properties } = blockValue
@@ -63,7 +63,7 @@ interface ProjectDetailPageProps {
 }
 
 export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
-  const contentRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLElement>(null)
   
   // Check if this project has Notion content (recordMap)
   const hasNotionContent = project.recordMap && Object.keys(project.recordMap).length > 0
@@ -90,7 +90,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                 Back
               </BackButton>
             </div>
-            <EnhancedTableOfContents sections={sections} containerRef={contentRef} />
+            <EnhancedTableOfContents sections={sections} containerRef={contentRef as React.RefObject<HTMLElement>} />
           </div>
         </aside>
 

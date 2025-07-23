@@ -1,16 +1,16 @@
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { BlogPreview } from "@/types/notion-unified"
+import type { BlogPreview } from "@/schemas"
 import { Button } from "@/components/ui/button"
 import { Section } from "@/components/common/section"
 import { BlogContentCard } from "@/components/blog/blog-post-card"
 import { BLOG_PREVIEW_LIMITS } from "@/lib/blog"
 
-interface BlogPreviewProps {
+interface BlogPreviewSectionProps {
   posts: BlogPreview[]
 }
 
-export function BlogPreview({ posts }: BlogPreviewProps) {
+export function BlogPreview({ posts }: BlogPreviewSectionProps) {
   if (posts.length === 0) {
     return null // Don't show section if no posts
   }
