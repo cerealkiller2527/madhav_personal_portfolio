@@ -10,9 +10,7 @@ import {
   BlogContent,
   BlogPreview,
   ProjectContent,
-  NotionProjectPreview,
-  NotionError,
-  NotionErrorCode
+  NotionProjectPreview
 } from "@/schemas"
 
 // =============================================================================
@@ -147,13 +145,18 @@ export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
       published: true,
       readingTime: Math.ceil(Math.random() * 10 + 2), // Placeholder
     }
-  } catch (error) {
-    throw new NotionError(
-      "Failed to transform blog preview",
-      NotionErrorCode.TRANSFORM_ERROR,
-      undefined,
-      error instanceof Error ? error : new Error(String(error))
-    )
+  } catch {
+    // Return minimal valid object on transform error
+    return {
+      id: page.id,
+      slug: page.id,
+      title: "Untitled",
+      publishedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      tags: [],
+      published: true,
+      readingTime: 5,
+    }
   }
 }
 
@@ -227,13 +230,22 @@ export function transformToProjectPreview(page: NotionPage): NotionProjectPrevie
       published: true,
       coverImage: heroImage || undefined,
     }
-  } catch (error) {
-    throw new NotionError(
-      "Failed to transform project preview",
-      NotionErrorCode.TRANSFORM_ERROR,
-      undefined,
-      error instanceof Error ? error : new Error(String(error))
-    )
+  } catch {
+    // Return minimal valid object on transform error
+    return {
+      id: page.id,
+      slug: page.id,
+      title: "Untitled",
+      description: "",
+      publishedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      tags: [],
+      published: true,
+      category: "Software" as const,
+      subtitle: "",
+      stats: [],
+      coverImage: undefined,
+    }
   }
 }
 

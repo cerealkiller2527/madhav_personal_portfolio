@@ -28,7 +28,6 @@ import {
   getBlogCacheKey,
   getProjectsCacheKey
 } from "@/lib/core/cache"
-import { logError } from "@/lib/errors"
 
 // =============================================================================
 // CACHE CONFIGURATION
@@ -159,8 +158,7 @@ export async function getAllBlogPosts(): Promise<BlogPreview[]> {
       CACHE_DURATION.BLOG_POSTS_LIST,
       []
     )
-  } catch (error) {
-    logError(error instanceof Error ? error : new Error(String(error)), "fetch-all-blog-posts")
+  } catch {
     return []
   }
 }
@@ -173,8 +171,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogContent | nul
       CACHE_DURATION.BLOG_SINGLE_POST,
       null
     )
-  } catch (error) {
-    logError(error instanceof Error ? error : new Error(String(error)), "fetch-blog-post-by-slug")
+  } catch {
     return null
   }
 }
@@ -187,8 +184,7 @@ export async function getAllProjects(): Promise<NotionProjectPreview[]> {
       CACHE_DURATION.PROJECTS_LIST,
       []
     )
-  } catch (error) {
-    logError(error instanceof Error ? error : new Error(String(error)), "fetch-all-projects")
+  } catch {
     return []
   }
 }
@@ -201,8 +197,7 @@ export async function getProjectById(id: string): Promise<ProjectContent | null>
       CACHE_DURATION.SINGLE_PROJECT,
       null
     )
-  } catch (error) {
-    logError(error instanceof Error ? error : new Error(String(error)), "fetch-project-by-id")
+  } catch {
     return null
   }
 }
@@ -215,8 +210,7 @@ export async function getFeaturedProjects(limit: number = 4): Promise<NotionProj
       CACHE_DURATION.FEATURED_PROJECTS,
       []
     )
-  } catch (error) {
-    logError(error instanceof Error ? error : new Error(String(error)), "fetch-featured-projects")
+  } catch {
     return []
   }
 }

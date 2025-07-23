@@ -134,22 +134,6 @@ export const validationResultSchema = z.object({
 })
 export type ValidationResult<T = unknown> = z.infer<typeof validationResultSchema> & { data?: T }
 
-/**
- * Notion error codes
- */
-export const notionErrorCodeSchema = z.enum([
-  'CONFIGURATION_ERROR',
-  'VALIDATION_ERROR',
-  'NOT_FOUND',
-  'NETWORK_ERROR',
-  'CACHE_ERROR',
-  'TRANSFORM_ERROR',
-  'UNKNOWN_ERROR'
-])
-export type NotionErrorCode = z.infer<typeof notionErrorCodeSchema>
-
-// Export enum values for runtime use
-export const NotionErrorCode = notionErrorCodeSchema.enum
 
 // ============================================================================
 // Configuration Schemas
@@ -179,18 +163,3 @@ export const cacheEntrySchema = z.object({
 })
 export type CacheEntry<T> = Omit<z.infer<typeof cacheEntrySchema>, 'data'> & { data: T }
 
-// ============================================================================
-// Error Class (kept as class for compatibility)
-// ============================================================================
-
-export class NotionError extends Error {
-  constructor(
-    message: string,
-    public readonly code: NotionErrorCode,
-    public readonly statusCode?: number,
-    public readonly originalError?: Error
-  ) {
-    super(message)
-    this.name = 'NotionError'
-  }
-}

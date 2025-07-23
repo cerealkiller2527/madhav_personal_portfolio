@@ -129,9 +129,8 @@ export {
   projectContentSchema,
   notionProjectPreviewSchema,
   
-  // Validation & Error Schemas
+  // Validation Schemas
   validationResultSchema,
-  notionErrorCodeSchema,
   
   // Configuration Schemas
   notionConfigSchema,
@@ -145,13 +144,7 @@ export {
   type NotionProjectPreview,
   type ValidationResult,
   type NotionConfig,
-  type CacheEntry,
-  
-  // Error Class
-  NotionError,
-  
-  // Enum Values (Note: NotionErrorCode as const is exported separately)
-  NotionErrorCode
+  type CacheEntry
 } from './notion.schemas'
 
 // ============================================================================
