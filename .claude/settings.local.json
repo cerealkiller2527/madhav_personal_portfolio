@@ -17,7 +17,8 @@
       "Bash(pnpm dev:*)",
       "Bash(npx next:*)",
       "Bash(npm run build:*)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(find:*)"
     ],
     "deny": []
   }

@@ -25,9 +25,9 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project & 
     tags: notionProject.tags,
     liveLink: notionProject.liveLink,
     githubLink: notionProject.githubLink,
-    heroImage: notionProject.heroImage || "/placeholder.svg",
+    heroImage: notionProject.heroImage || "/assets/placeholders/placeholder-logo.svg",
     // Preserve coverImage for navigation components
-    coverImage: notionProject.coverImage || notionProject.heroImage || "/placeholder.svg",
+    coverImage: notionProject.coverImage || notionProject.heroImage || "/assets/placeholders/placeholder-logo.svg",
     gallery: notionProject.gallery || [],
     detailedDescription: notionProject.description || "", // Use description as fallback
     vectaryEmbedUrl: notionProject.vectaryEmbedUrl,

@@ -75,7 +75,7 @@ const InteractiveMarqueeItem = ({
           <div className="relative h-28 w-full rounded-md overflow-hidden mb-3 flex-shrink-0">
             <Image
               src={
-                project.heroImage || `/placeholder.svg?height=112&width=256&text=${encodeURIComponent(project.title)}`
+                project.heroImage || `/assets/placeholders/placeholder-logo.svg`
               }
               alt={project.title}
               fill

@@ -71,7 +71,7 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
         />
       ) : (
         <Image
-          src={project.heroImage || "/placeholder.svg"}
+          src={project.heroImage || "/assets/placeholders/placeholder-logo.svg"}
           alt={project.title}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"

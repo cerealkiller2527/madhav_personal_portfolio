@@ -115,7 +115,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
             <div id="overview" className="scroll-mt-28">
               <div className="relative w-full h-64 md:h-96 mb-12 rounded-lg overflow-hidden shadow-lg bg-secondary">
                 <Image
-                  src={project.heroImage || "/placeholder.svg"}
+                  src={project.heroImage || "/assets/placeholders/placeholder-logo.svg"}
                   alt={`${project.title} hero image`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 1024px"
@@ -177,7 +177,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                   {project.gallery.map((image: GalleryItem, index: number) => (
                     <div key={index} className="relative w-full h-56 rounded-md overflow-hidden bg-secondary">
                       <Image
-                        src={image.url || "/placeholder.svg"}
+                        src={image.url || "/assets/placeholders/placeholder-logo.svg"}
                         alt={image.caption}
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"

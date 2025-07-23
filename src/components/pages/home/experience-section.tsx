@@ -4,7 +4,7 @@ import { useState } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import type { Experience, ExperienceSectionProps } from "@/lib/schemas"
-import { Section } from "@/components/common/layout/section"
+import { Section } from "@/components/layout/section"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/core/utils"
 import { MapPin } from "lucide-react"
@@ -75,7 +75,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
                 <div className="flex flex-col sm:flex-row gap-6 mb-6">
                   <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
                     <Image
-                      src={selected.logo || "/placeholder.svg"}
+                      src={selected.logo || "/assets/placeholders/placeholder-logo.svg"}
                       alt={`${selected.company} logo`}
                       fill
                       sizes="96px"

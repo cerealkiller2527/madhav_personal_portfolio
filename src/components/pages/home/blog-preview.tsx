@@ -2,7 +2,7 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import type { BlogPreview } from "@/lib/schemas"
 import { Button } from "@/components/ui/button"
-import { Section } from "@/components/common/layout/section"
+import { Section } from "@/components/layout/section"
 import { BlogCard } from "@/components/pages/blog/blog-card"
 import { BLOG_PREVIEW_LIMITS } from "@/lib/utils/blog-utils"
 

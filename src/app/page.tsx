@@ -21,7 +21,7 @@ function transformNotionToLocalProject(notionProject: ProjectContent): Project {
     tags: notionProject.tags,
     liveLink: notionProject.liveLink,
     githubLink: notionProject.githubLink,
-    heroImage: notionProject.heroImage || notionProject.coverImage || "/placeholder.svg",
+    heroImage: notionProject.heroImage || notionProject.coverImage || "/assets/placeholders/placeholder-logo.svg",
     gallery: notionProject.gallery || [],
     detailedDescription: notionProject.description || "",
     vectaryEmbedUrl: notionProject.vectaryEmbedUrl,
