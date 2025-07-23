@@ -30,5 +30,5 @@ export type {
   BlogContent as BlogContent,
   BlogPreview as BlogPreview,
   ProjectContent as NotionProject,
-  ProjectPreview as NotionProjectPreview
-} from "@/types"
+  NotionProjectPreview as NotionProjectPreview
+} from "@/schemas"

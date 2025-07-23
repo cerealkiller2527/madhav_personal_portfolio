@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { Calendar, Clock, User, Tag } from "lucide-react"
-import { BlogContent } from "@/types"
+import { BlogContent } from "@/schemas"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { BlogImage } from "@/components/blog/blog-image"
@@ -85,7 +85,7 @@ export function BlogHeader({ post, author, readingTime }: BlogHeaderProps) {
           )}
         </div>
 
-        {post.tags.length > 0 && (
+        {post.tags && post.tags.length > 0 && (
           <>
             <Separator />
             <div className="flex flex-wrap gap-2">

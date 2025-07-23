@@ -3,8 +3,8 @@
  * Content helpers, UI styling, and display utilities for projects
  */
 
-import type { Project } from "@/types"
-import type { ProjectContent as NotionProject } from "@/types"
+import type { Project } from "@/schemas"
+import type { ProjectContent as NotionProject } from "@/schemas"
 import { createSlugFromTitle } from "@/lib/notion/transforms"
 
 // =============================================================================
@@ -40,7 +40,7 @@ export interface CategoryBadgeProps {
 // =============================================================================
 
 // Type guard to check if project has Notion content
-export function isNotionProject(project: Project): project is NotionProject {
+export function isNotionProject(project: Project | NotionProject): project is NotionProject {
   return 'recordMap' in project && project.recordMap !== undefined
 }
 
@@ -55,11 +55,12 @@ export function extractNotionHeadings(recordMap: unknown): NotionHeading[] {
     const blockValue = block?.value
     if (!blockValue) continue
 
-    const { type, properties } = blockValue
+    const { type, properties } = blockValue as { type?: string; properties?: Record<string, unknown> }
     
     // Check if it's a heading block
     if (type === 'header' || type === 'sub_header' || type === 'sub_sub_header') {
-      const title = properties?.title?.[0]?.[0] || ''
+      const titleProperty = properties?.title as unknown[][]
+      const title = titleProperty?.[0]?.[0] as string || ''
       if (title) {
         const id = createSlugFromTitle(title)
         const level = getHeadingLevel(type)

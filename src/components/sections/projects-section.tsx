@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import type { Project } from "@/types"
+import type { ProjectsSectionProps } from "@/schemas"
 import { ProjectGridCard } from "@/components/projects/project-grid-card"
 import { Section } from "@/components/common/section"
 import { Button } from "@/components/ui/button"
@@ -11,13 +11,6 @@ import { smoothScrollTo } from "@/lib/core/utils"
 
 const FILTERS = ["All", "Software", "Hardware", "Hybrid"] as const
 type FilterType = (typeof FILTERS)[number]
-
-interface ProjectsSectionProps {
-  projects: Project[]
-  onProjectSelect: (project: Project) => void
-  bounceProjectId: string | null
-  onBounceComplete: () => void
-}
 
 export function ProjectsSection({
   projects,

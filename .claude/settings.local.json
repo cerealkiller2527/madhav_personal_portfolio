@@ -14,7 +14,8 @@
       "Bash(pnpm lint:*)",
       "Bash(# Move pages component\nmv \"\"src/components/pages/home-page.tsx\"\" \"\"src/components/home-page.tsx\"\")",
       "Bash(# Move projects component\nmv \"\"src/components/projects/project-renderer.tsx\"\" \"\"src/components/project-renderer.tsx\"\")",
-      "Bash(pnpm dev:*)"
+      "Bash(pnpm dev:*)",
+      "Bash(npx next:*)"
     ],
     "deny": []
   }

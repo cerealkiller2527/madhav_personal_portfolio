@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ArrowRight, Calendar, Clock, FileText } from "lucide-react"
-import { BlogPreview } from "@/types"
+import { BlogPreview } from "@/schemas"
 import { Badge } from "@/components/ui/badge"
 import { BlogImage } from "@/components/blog/blog-image"
 import { formatBlogDate, getDisplayTags } from "@/lib/blog"
@@ -57,7 +57,7 @@ export function BlogContentCard({ post }: BlogContentCardProps) {
           </p>
         )}
 
-        {post.tags.length > 0 && (
+        {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-3">
             {visibleTags.map((tag) => (
               <Badge key={tag} variant="secondary" className="text-xs">

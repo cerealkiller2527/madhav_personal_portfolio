@@ -1,6 +1,6 @@
-import type { Project, Experience } from "@/types"
+import type { Project, Experience } from "@/schemas"
 
-export const experiences: Experience[] = [
+export const experiences: readonly Experience[] = [
   {
     id: "01",
     company: "Liger Mobility",
@@ -61,7 +61,7 @@ export const experiences: Experience[] = [
   },
 ]
 
-export const projects: Project[] = [
+export const projects: readonly Project[] = [
   {
     id: "01",
     title: "Underwater ROV - MATE Competition",

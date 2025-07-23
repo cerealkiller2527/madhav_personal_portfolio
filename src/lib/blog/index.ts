@@ -3,7 +3,7 @@
  * SEO generation, date formatting, display utilities, and constants
  */
 
-import { BlogContent, BlogPreview } from "@/types"
+import { BlogContent, BlogPreview } from "@/schemas"
 
 // =============================================================================
 // DATE AND DISPLAY UTILITIES
@@ -19,7 +19,11 @@ export function formatBlogDate(dateString: string): string {
 }
 
 // Tag display utilities
-export function getDisplayTags(tags: string[], maxTags = 2): { visible: string[]; overflow: number } {
+export function getDisplayTags(tags: string[] | undefined, maxTags = 2): { visible: string[]; overflow: number } {
+  if (!tags || !Array.isArray(tags)) {
+    return { visible: [], overflow: 0 }
+  }
+  
   const visible = tags.slice(0, maxTags)
   const overflow = Math.max(0, tags.length - maxTags)
   
