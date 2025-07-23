@@ -4,7 +4,7 @@ import { Component } from 'react'
 import Link from 'next/link'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import type { BlogErrorBoundaryProps } from '@/types/componentTypes'
+import type { BlogErrorBoundaryProps } from '@/schemas'
 
 interface State {
   hasError: boolean
@@ -35,7 +35,13 @@ export class BlogErrorBoundary extends Component<BlogErrorBoundaryProps, State> 
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback
+        const FallbackComponent = this.props.fallback
+        return (
+          <FallbackComponent 
+            error={this.state.error || new Error('Unknown error')} 
+            reset={this.handleRetry} 
+          />
+        )
       }
 
       return (

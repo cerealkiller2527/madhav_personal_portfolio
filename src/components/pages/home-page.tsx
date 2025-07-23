@@ -5,13 +5,13 @@ import { HeroSection } from "@/components/sections/hero-section"
 import { ExperienceSection } from "@/components/sections/experience-section"
 import { ProjectsSection } from "@/components/sections/projects-section"
 import { ProjectModal } from "@/components/projects/project-modal"
-import type { Project, Experience } from "@/types"
+import type { Project, Experience } from "@/schemas"
 import { CursorGlow } from "@/components/common/cursor-glow"
 import { smoothScrollToElement } from "@/lib/core/utils"
 
 interface HomePageProps {
-  projects: Project[]
-  experiences: Experience[]
+  projects: readonly Project[]
+  experiences: readonly Experience[]
 }
 
 /**

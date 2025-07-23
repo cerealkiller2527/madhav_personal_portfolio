@@ -6,7 +6,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ArrowDown } from "lucide-react"
 import { ProjectMarquee } from "@/components/projects/project-marquee"
-import type { HeroSectionProps } from "@/types/componentTypes"
+import type { HeroSectionProps } from "@/schemas"
 import { smoothScrollToElement } from "@/lib/core/utils"
 
 const containerVariants = {
@@ -19,7 +19,14 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
+  visible: { 
+    y: 0, 
+    opacity: 1, 
+    transition: { 
+      duration: 0.4, 
+      ease: [0.4, 0.0, 0.2, 1.0] as const 
+    } 
+  },
 }
 
 const sentence = {
@@ -40,7 +47,7 @@ const letter = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut",
+      ease: [0.4, 0.0, 0.2, 1.0] as const,
     },
   },
 }
@@ -131,7 +138,7 @@ export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSe
         className="w-full mt-16"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+        transition={{ duration: 0.6, ease: [0.4, 0.0, 0.2, 1.0] as const, delay: 0.3 }}
       >
         <ProjectMarquee projects={projects} onProjectSelect={onProjectSelect} />
       </motion.div>

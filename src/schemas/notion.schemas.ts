@@ -148,6 +148,9 @@ export const notionErrorCodeSchema = z.enum([
 ])
 export type NotionErrorCode = z.infer<typeof notionErrorCodeSchema>
 
+// Export enum values for runtime use
+export const NotionErrorCode = notionErrorCodeSchema.enum
+
 // ============================================================================
 // Configuration Schemas
 // ============================================================================

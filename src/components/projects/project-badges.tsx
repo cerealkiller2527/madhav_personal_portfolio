@@ -1,5 +1,5 @@
 import { Trophy } from "lucide-react"
-import type { Project } from "@/types"
+import type { Project } from "@/schemas"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/core/utils"
 import { 
@@ -15,7 +15,7 @@ interface ProjectBadgesProps {
 export function ProjectBadges({ project }: ProjectBadgesProps) {
   // Use award description for display, but awardRank for trophy styling
   const awardText = project.award
-  const trophyStyles = getTrophyStyles(project.awardRank)
+  const trophyStyles = project.awardRank ? getTrophyStyles(project.awardRank) : null
   const categoryVariant = getCategoryBadgeVariant(project.category)
   const categoryClasses = getCategoryBadgeClasses(project.category)
 

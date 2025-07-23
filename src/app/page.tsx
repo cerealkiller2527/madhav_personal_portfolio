@@ -3,12 +3,12 @@ import { projects as localProjects, experiences } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion"
 import HomePage from "@/components/pages/home-page"
 import Loading from "./loading"
-import type { Project, NotionProject } from "@/types"
+import type { Project, ProjectContent } from "@/schemas"
 
 export const revalidate = 60
 
 // Transform Notion project to local project structure
-function transformNotionToLocalProject(notionProject: NotionProject): Project {
+function transformNotionToLocalProject(notionProject: ProjectContent): Project {
   return {
     id: notionProject.id,
     title: notionProject.title,
@@ -34,7 +34,7 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project {
 
 export default async function PortfolioPage() {
   const useNotionProjects = process.env.NOTION_TOKEN && process.env.NOTION_PROJECTS_DATABASE_ID
-  let projects: Project[] = localProjects
+  let projects: readonly Project[] = localProjects
   
   if (useNotionProjects) {
     try {

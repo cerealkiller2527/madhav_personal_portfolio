@@ -4,8 +4,8 @@ import { Metadata } from "next"
 import { projects as localProjects } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion"
 import ProjectDetailPage from "./project-detail"
-import type { Project } from "@/types/portfolioTypes"
-import type { ProjectContent as NotionProject } from "@/types"
+import type { Project } from "@/schemas/project.schemas"
+import type { ProjectContent as NotionProject } from "@/schemas"
 import { LogoSpinner } from "@/components/ui/logo-spinner"
 
 // Add revalidation for ISR

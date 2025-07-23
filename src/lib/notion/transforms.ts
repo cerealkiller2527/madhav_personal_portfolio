@@ -10,10 +10,10 @@ import {
   BlogContent,
   BlogPreview,
   ProjectContent,
-  ProjectPreview,
+  NotionProjectPreview,
   NotionError,
   NotionErrorCode
-} from "@/types"
+} from "@/schemas"
 
 // =============================================================================
 // PROPERTY EXTRACTION UTILITIES
@@ -175,7 +175,7 @@ export async function transformToBlogContent(
 // PROJECT TRANSFORMS
 // =============================================================================
 
-export function transformToProjectPreview(page: NotionPage): ProjectPreview | null {
+export function transformToProjectPreview(page: NotionPage): NotionProjectPreview | null {
   try {
     const properties = page.properties
     
@@ -238,7 +238,7 @@ export function transformToProjectPreview(page: NotionPage): ProjectPreview | nu
 }
 
 export async function transformToProjectContent(
-  preview: ProjectPreview,
+  preview: NotionProjectPreview,
   recordMap: ExtendedRecordMap
 ): Promise<ProjectContent> {
   // Extract cover image from recordMap (more reliable than database properties)

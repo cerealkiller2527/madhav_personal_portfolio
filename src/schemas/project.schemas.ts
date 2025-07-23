@@ -11,6 +11,9 @@ import { uuidSchema, urlSchema, nonEmptyStringSchema, optionalSchema } from './c
 export const projectCategorySchema = z.enum(['Software', 'Hardware', 'Hybrid'])
 export type ProjectCategory = z.infer<typeof projectCategorySchema>
 
+// Export enum values for runtime use
+export const ProjectCategory = projectCategorySchema.enum
+
 /**
  * Technology category enum
  */

@@ -3,13 +3,13 @@ import { useMemo } from "react"
 import type React from "react"
 
 import Image from "next/image"
-import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame } from "framer-motion"
+import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame, MotionValue } from "framer-motion"
 import { Trophy, ChevronLeft, ChevronRight } from "lucide-react"
-import type { Project } from "@/types"
+import type { Project } from "@/schemas"
 import { cn } from "@/lib/core/utils"
 
 interface ProjectMarqueeProps {
-  projects: Project[]
+  projects: readonly Project[]
   className?: string
   onProjectSelect: (projectId: string) => void
 }
@@ -72,17 +72,21 @@ const InteractiveMarqueeItem = ({
   onProjectSelect,
 }: {
   project: Project
-  mouseX: ReturnType<typeof useMotionValue>
-  springX: ReturnType<typeof useSpring>
+  mouseX: MotionValue<number>
+  springX: MotionValue<number>
   index: number
   itemWidth: number
   onProjectSelect: (projectId: string) => void
 }) => {
-  const distance = useTransform([mouseX, springX], ([latestMouseX, latestSpringX]) => {
-    const cardLogicalCenter = index * itemWidth + itemWidth / 2
-    const cursorPositionInStrip = latestMouseX - latestSpringX
-    return cursorPositionInStrip - cardLogicalCenter
-  })
+  const distance = useTransform(
+    [mouseX, springX],
+    (values: number[]) => {
+      const [latestMouseX, latestSpringX] = values
+      const cardLogicalCenter = index * itemWidth + itemWidth / 2
+      const cursorPositionInStrip = latestMouseX - latestSpringX
+      return cursorPositionInStrip - cardLogicalCenter
+    }
+  )
 
   const scale = useTransform(distance, [-350, 0, 350], [1, 1.1, 1])
   const y = useTransform(distance, [-350, 0, 350], [0, -25, 0])
@@ -142,7 +146,7 @@ const InteractiveMarqueeItem = ({
   )
 }
 
-const SpeedIndicators = ({ velocityFactor }: { velocityFactor: ReturnType<typeof useMotionValue> }) => {
+const SpeedIndicators = ({ velocityFactor }: { velocityFactor: MotionValue<number> }) => {
   const velocity = useTransform(velocityFactor, [-1, 1], [-1, 1])
 
   // Always visible with base opacity, gets brighter towards edges
@@ -200,7 +204,7 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
   const velocityFactor = useMotionValue(0)
   const baseVelocity = -120 // Base scrolling speed
 
-  useAnimationFrame((time, delta) => {
+  useAnimationFrame((_time, delta) => {
     if (!singleSetWidth) return
 
     const deltaInSeconds = delta / 1000

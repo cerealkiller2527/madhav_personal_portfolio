@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-import type { NotionBlogContent } from "@/types"
+import type { BlogContent } from "@/schemas"
 import type { ExtendedRecordMap } from "notion-types"
 import { BlogRenderer } from "@/components/blog/blog-renderer"
 import { BlogHeader } from "@/components/blog/blog-header"
@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button"
 import { EnhancedTableOfContents } from "@/components/ui/enhanced-table-of-contents"
 
 interface BlogContentWithTOCProps {
-  post: NotionBlogContent
-  previousPost?: NotionBlogContent
-  nextPost?: NotionBlogContent
+  post: BlogContent
+  previousPost?: BlogContent
+  nextPost?: BlogContent
 }
 
 // Extract headings from Notion recordMap to generate TOC
@@ -56,7 +56,7 @@ function extractHeadings(recordMap: ExtendedRecordMap | undefined): { id: string
 }
 
 export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContentWithTOCProps) {
-  const contentRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLElement>(null)
   const headings = extractHeadings(post.recordMap)
   
   // Only show TOC if there are headings and it's a longer post
@@ -82,7 +82,7 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
                 <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto">
                   <EnhancedTableOfContents 
                     sections={headings.map(h => ({ id: h.id, label: h.label, level: h.level }))}
-                    containerRef={contentRef}
+                    containerRef={contentRef as React.RefObject<HTMLElement>}
                   />
                 </div>
               </aside>

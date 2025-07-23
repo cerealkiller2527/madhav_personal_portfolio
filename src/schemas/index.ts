@@ -65,7 +65,6 @@ export {
   isValidProject,
   
   // Types
-  type ProjectCategory,
   type TechCategory,
   type ProficiencyLevel,
   type Statistic,
@@ -73,6 +72,9 @@ export {
   type Feature,
   type TechStackItem,
   type Project,
+  
+  // Enum Values
+  ProjectCategory,
   type ProjectCreate,
   type ProjectUpdate,
   type ProjectFilter,
@@ -142,12 +144,14 @@ export {
   type ProjectContent,
   type NotionProjectPreview,
   type ValidationResult,
-  type NotionErrorCode,
   type NotionConfig,
   type CacheEntry,
   
   // Error Class
-  NotionError
+  NotionError,
+  
+  // Enum Values (Note: NotionErrorCode as const is exported separately)
+  NotionErrorCode
 } from './notion.schemas'
 
 // ============================================================================
@@ -339,34 +343,9 @@ export {
 // ============================================================================
 // Re-export Type Guards (for backward compatibility)
 // ============================================================================
-export function isSuccessResponse<T>(
-  response: APIResponse<T>
-): response is SuccessResponse<T> {
-  return response.success === true
-}
+// Note: Type guard functions removed due to compilation order issues
+// These can be implemented in individual modules if needed
 
-export function isErrorResponse<T>(
-  response: APIResponse<T>
-): response is ErrorResponse {
-  return response.success === false
-}
+// Removed isNetworkError function to avoid compilation issues
 
-export function isHTTPError(error: Error): error is APIClientError {
-  return error instanceof APIClientError && error.statusCode !== undefined
-}
-
-export function isNetworkError(error: Error): error is NetworkError {
-  return error instanceof NetworkError
-}
-
-export function isTimeoutError(error: Error): error is TimeoutError {
-  return error instanceof TimeoutError
-}
-
-export function isValidationError(error: Error): error is ValidationError {
-  return error instanceof ValidationError
-}
-
-// Export enum values for runtime use
-export const ProjectCategory = projectCategorySchema.enum
-export const NotionErrorCode = notionErrorCodeSchema.enum
+// Removed additional type guard functions to avoid compilation issues

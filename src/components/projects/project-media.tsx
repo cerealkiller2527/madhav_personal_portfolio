@@ -1,5 +1,5 @@
 import Image from "next/image"
-import type { Project } from "@/types"
+import type { Project } from "@/schemas"
 import { formatProjectIndex } from "@/lib/projects"
 
 interface ProjectMediaProps {
