@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: false,
   },
@@ -22,28 +24,6 @@ const nextConfig = {
   experimental: {
     // Enable optimized package imports
     optimizePackageImports: ['react-notion-x'],
-  },
-  // Add security headers for blog content
-  async headers() {
-    return [
-      {
-        source: '/blog/:path*',
-        headers: [
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-        ],
-      },
-    ]
   },
   // Optimize bundle for blog dependencies
   webpack: (config, { isServer }) => {

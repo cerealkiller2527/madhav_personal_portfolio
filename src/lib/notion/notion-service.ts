@@ -38,7 +38,7 @@ const CACHE_DURATION = {
 // TRANSFORMATION HELPERS
 // =============================================================================
 
-function safeTransform<T>(pages: any[], transformFn: (page: any) => T | null): T[] {
+function safeTransform<T>(pages: unknown[], transformFn: (page: unknown) => T | null): T[] {
   return pages
     .map(page => {
       try {
@@ -57,7 +57,7 @@ function safeTransform<T>(pages: any[], transformFn: (page: any) => T | null): T
 async function _getAllBlogPosts(): Promise<BlogPreview[]> {
   if (!notionClient.isBlogConfigured()) return []
   const pages = await notionClient.getBlogContents()
-  return safeTransform(pages, transformToBlogPreview)
+  return safeTransform(pages as unknown[], transformToBlogPreview)
 }
 
 async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
@@ -74,7 +74,7 @@ async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
 async function _getAllProjects(): Promise<NotionProjectPreview[]> {
   if (!notionClient.isProjectsConfigured()) return []
   const pages = await notionClient.getProjects()
-  return safeTransform(pages, transformToProjectPreview)
+  return safeTransform(pages as unknown[], transformToProjectPreview)
 }
 
 async function _getProjectById(id: string): Promise<ProjectContent | null> {
@@ -91,7 +91,7 @@ async function _getProjectById(id: string): Promise<ProjectContent | null> {
 async function _getFeaturedProjects(limit: number = 4): Promise<NotionProjectPreview[]> {
   if (!notionClient.isProjectsConfigured()) return []
   const pages = await notionClient.getFeaturedProjects(limit)
-  return safeTransform(pages, transformToProjectPreview).slice(0, limit)
+  return safeTransform(pages as unknown[], transformToProjectPreview).slice(0, limit)
 }
 
 // =============================================================================

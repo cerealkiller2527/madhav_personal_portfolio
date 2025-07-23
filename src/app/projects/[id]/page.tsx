@@ -8,9 +8,6 @@ import type { Project } from "@/lib/schemas/project.schemas"
 import type { ProjectContent as NotionProject } from "@/lib/schemas"
 import { LogoSpinner } from "@/components/common/ui/logo-spinner"
 
-// Add revalidation for ISR
-export const revalidate = 60
-
 // Transform Notion project to local project structure (shared with homepage)
 function transformNotionToLocalProject(notionProject: NotionProject): Project & { coverImage?: string } {
   return {
@@ -103,6 +100,8 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   }
 }
 
+export const dynamicParams = false
+
 // Generate static params for ISR
 export async function generateStaticParams() {
   try {
@@ -113,20 +112,23 @@ export async function generateStaticParams() {
       try {
         const notionProjects = await getAllProjects()
         if (notionProjects && notionProjects.length > 0) {
+          console.log(`Found ${notionProjects.length} Notion projects for static generation`)
           return notionProjects.map((project) => ({
             id: project.id,
           }))
         }
-      } catch {
-        // Failed to generate static params from Notion, using local data
+      } catch (error) {
+        console.error('Failed to fetch Notion projects, falling back to local data:', error)
       }
     }
     
     // Fallback to local projects
+    console.log(`Using ${localProjects.length} local projects for static generation`)
     return localProjects.map((project) => ({
       id: project.id,
     }))
-  } catch {
+  } catch (error) {
+    console.error('Error in generateStaticParams for projects:', error)
     return []
   }
 }

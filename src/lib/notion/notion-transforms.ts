@@ -77,7 +77,7 @@ export function normalizeImageUrl(url: string): string {
   return url
 }
 
-function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: any, imageProperty: string): string | undefined {
+function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: unknown, imageProperty: string): string | undefined {
   // Priority: Vectary URL > Database Image > Page Cover
   const vectaryUrl = getProperty(properties, "Vectary URL") as string
   if (vectaryUrl) return vectaryUrl
@@ -86,7 +86,8 @@ function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: any
   if (imageUrl) return normalizeImageUrl(imageUrl)
   
   if (cover) {
-    const pageCoverUrl = cover.external?.url || cover.file?.url
+    const coverObj = cover as { external?: { url?: string }, file?: { url?: string } }
+    const pageCoverUrl = coverObj.external?.url || coverObj.file?.url
     if (pageCoverUrl) return normalizeImageUrl(pageCoverUrl)
   }
   
@@ -97,8 +98,9 @@ function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: any
 // BLOG TRANSFORMATIONS
 // =============================================================================
 
-export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
-  const { properties, cover } = page
+export function transformToBlogPreview(page: unknown): BlogPreview | null {
+  const notionPage = page as NotionPage
+  const { properties, cover } = notionPage
   
   const title = getProperty(properties, "Name") || getProperty(properties, "Title")
   const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
@@ -108,7 +110,7 @@ export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
   }
 
   return {
-    id: page.id,
+    id: notionPage.id,
     slug: createSlug(title),
     title,
     description: getProperty(properties, "Description") as string,
@@ -136,8 +138,9 @@ export async function transformToBlogContent(
 // PROJECT TRANSFORMATIONS
 // =============================================================================
 
-export function transformToProjectPreview(page: NotionPage): NotionProjectPreview | null {
-  const { properties, cover } = page
+export function transformToProjectPreview(page: unknown): NotionProjectPreview | null {
+  const notionPage = page as NotionPage
+  const { properties, cover } = notionPage
   
   const title = getProperty(properties, "Name") || getProperty(properties, "Title")
   const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
@@ -153,7 +156,7 @@ export function transformToProjectPreview(page: NotionPage): NotionProjectPrevie
   const statistics = getProperty(properties, "Statistics") as string
   
   return {
-    id: page.id,
+    id: notionPage.id,
     slug: createSlug(title),
     title,
     subtitle: getProperty(properties, "Subtitle") as string || "",
@@ -193,6 +196,7 @@ export async function transformToProjectContent(
 
 export const createSlugFromTitle = createSlug
 export function calculateReadingTime(content: string, wordsPerMinute = 200): number {
-  const wordCount = content.split(/\s+/).length
+  if (!content || typeof content !== 'string') return 0
+  const wordCount = content.split(/\s+/).filter(word => word.length > 0).length
   return Math.ceil(wordCount / wordsPerMinute)
 }

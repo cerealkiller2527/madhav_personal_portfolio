@@ -39,7 +39,7 @@ export class UnifiedNotionClient {
   async getPage(pageId: string): Promise<ExtendedRecordMap> {
     try {
       return await this.notionAPI.getPage(pageId)
-    } catch (error) {
+    } catch {
       throw new Error(`Failed to fetch page: ${pageId}`)
     }
   }
@@ -58,7 +58,7 @@ export class UnifiedNotionClient {
         sorts,
       })
       return response.results as NotionPage[]
-    } catch (error) {
+    } catch {
       return []
     }
   }

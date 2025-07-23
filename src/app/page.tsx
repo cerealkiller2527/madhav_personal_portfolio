@@ -5,8 +5,6 @@ import HomePage from "@/components/pages/home/home-page"
 import Loading from "./loading"
 import type { Project, ProjectContent } from "@/lib/schemas"
 
-export const revalidate = 60
-
 // Transform Notion project to local project structure
 function transformNotionToLocalProject(notionProject: ProjectContent): Project {
   return {

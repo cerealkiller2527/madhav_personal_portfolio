@@ -1,7 +1,7 @@
 import { BlogPreview } from "@/lib/schemas"
-import { BlogCard } from "@/components/blog/blog-card"
-import { BlogLoading } from "@/components/blog/blog-loading"
-import { ContentGrid, GRID_CONFIGS } from "@/components/ui/custom/content-grid"
+import { BlogCard } from "@/components/pages/blog/blog-card"
+import { LoadingGrid } from "@/components/common/ui/loading-states"
+import { ContentGrid, GRID_CONFIGS } from "@/components/common/content/content-grid"
 
 interface BlogGridProps {
   posts: readonly BlogPreview[]
@@ -12,7 +12,7 @@ interface BlogGridProps {
 
 export function BlogGrid({ posts, loading, error, onRetry }: BlogGridProps) {
   if (loading) {
-    return <BlogLoading count={6} />
+    return <LoadingGrid variant="blog" count={6} />
   }
 
   if (error) {

@@ -12,8 +12,6 @@ interface BlogContentPageProps {
   }>
 }
 
-export const revalidate = 60 // Revalidate every 60 seconds
-
 export async function generateMetadata({ params }: BlogContentPageProps): Promise<Metadata> {
   const { slug } = await params
   const post = await getBlogPostBySlug(slug)
@@ -36,6 +34,24 @@ export async function generateMetadata({ params }: BlogContentPageProps): Promis
       authors: ["Madhav Lodha"],
       ...(post.coverImage && { images: [post.coverImage] }),
     },
+  }
+}
+
+export const dynamicParams = false
+
+export async function generateStaticParams() {
+  try {
+    const posts = await getAllBlogPosts()
+    if (!posts || posts.length === 0) {
+      console.log('No blog posts found for static generation')
+      return []
+    }
+    return posts.map((post) => ({
+      slug: post.slug,
+    }))
+  } catch (error) {
+    console.error('Error in generateStaticParams for blog:', error)
+    return []
   }
 }
 

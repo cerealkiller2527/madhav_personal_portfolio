@@ -1,58 +1,35 @@
 /**
- * Simple in-memory cache
- * Basic get/set/clear operations with TTL support
+ * Build-time only cache for static export
+ * In static export, caching happens at build time only
  */
 
-interface CacheEntry<T> {
-  data: T
-  expires: number
-}
-
-const cache = new Map<string, CacheEntry<unknown>>()
-
-// Simple cache key generator
-function cacheKey(namespace: string, type: string, id?: string): string {
-  return id ? `${namespace}:${type}:${id}` : `${namespace}:${type}`
-}
-
 // Cache key helpers for different namespaces
-export const getBlogCacheKey = (type: string, id?: string) => cacheKey("blog", type, id)
-export const getProjectsCacheKey = (type: string, id?: string) => cacheKey("projects", type, id)
+export const getBlogCacheKey = (type: string, id?: string): string => {
+  return id ? `blog:${type}:${id}` : `blog:${type}`
+}
 
-// Get cached data or fetch fresh data
+export const getProjectsCacheKey = (type: string, id?: string): string => {
+  return id ? `projects:${type}:${id}` : `projects:${type}`
+}
+
+// In static export, we don't need runtime caching
+// Data is fetched once at build time
 export async function getCachedData<T>(
-  key: string,
+  _key: string,
   fetcher: () => Promise<T>,
-  ttlSeconds: number,
+  _ttlSeconds: number,
   fallback?: T
 ): Promise<T> {
-  // Check cache
-  const entry = cache.get(key) as CacheEntry<T> | undefined
-  if (entry && Date.now() < entry.expires) {
-    return entry.data
-  }
-
   try {
-    // Fetch and cache
-    const data = await fetcher()
-    cache.set(key, { data, expires: Date.now() + ttlSeconds * 1000 })
-    return data
+    // Always fetch fresh data at build time
+    return await fetcher()
   } catch (error) {
     if (fallback !== undefined) return fallback
     throw error
   }
 }
 
-// Clear cache by pattern or all
-export function clearCache(pattern?: string): void {
-  if (!pattern) {
-    cache.clear()
-    return
-  }
-  
-  for (const key of cache.keys()) {
-    if (key.includes(pattern)) {
-      cache.delete(key)
-    }
-  }
+// No-op in static export
+export function clearCache(_pattern?: string): void {
+  // No caching in static export
 }

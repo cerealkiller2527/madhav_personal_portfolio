@@ -9,8 +9,6 @@ export const metadata: Metadata = {
   description: "Thoughts on software engineering, web development, and technology.",
 }
 
-export const revalidate = 60 // Revalidate every 60 seconds
-
 async function BlogContent() {
   try {
     const posts = await getAllBlogPosts()
