@@ -12,7 +12,7 @@ import { LogoSpinner } from "@/components/common/ui/logo-spinner"
 export const revalidate = 60
 
 // Transform Notion project to local project structure (shared with homepage)
-function transformNotionToLocalProject(notionProject: NotionProject): Project {
+function transformNotionToLocalProject(notionProject: NotionProject): Project & { coverImage?: string } {
   return {
     id: notionProject.id,
     title: notionProject.title,
@@ -26,6 +26,8 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project {
     liveLink: notionProject.liveLink,
     githubLink: notionProject.githubLink,
     heroImage: notionProject.heroImage || "/placeholder.svg",
+    // Preserve coverImage for navigation components
+    coverImage: notionProject.coverImage || notionProject.heroImage || "/placeholder.svg",
     gallery: notionProject.gallery || [],
     detailedDescription: notionProject.description || "", // Use description as fallback
     vectaryEmbedUrl: notionProject.vectaryEmbedUrl,

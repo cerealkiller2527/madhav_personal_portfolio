@@ -65,7 +65,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
             className="cursor-pointer"
           >
             <div className="relative w-10 h-10 flex-shrink-0 transition-transform hover:scale-110 rounded-full overflow-hidden bg-primary p-1.5">
-              <div className="w-full h-full rounded-full overflow-hidden">
+              <div className="relative w-full h-full rounded-full overflow-hidden">
                 <Image
                   src="/assets/portfolio/avatar-logo.png"
                   alt="Madhav Lodha Avatar"

@@ -1,16 +1,12 @@
 /**
- * Unified Notion Client
- * Handles all Notion API operations for both blog and projects
+ * Notion Client - Handles all Notion API operations
  */
 
 import { Client } from "@notionhq/client"
 import type { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints"
 import { NotionAPI } from "notion-client"
 import { ExtendedRecordMap } from "notion-types"
-import { 
-  NotionPage, 
-  NotionConfig
-} from "@/lib/schemas"
+import { NotionPage, NotionConfig } from "@/lib/schemas"
 
 // =============================================================================
 // NOTION CLIENT
@@ -41,7 +37,11 @@ export class UnifiedNotionClient {
   // =============================================================================
 
   async getPage(pageId: string): Promise<ExtendedRecordMap> {
-    return await this.notionAPI.getPage(pageId)
+    try {
+      return await this.notionAPI.getPage(pageId)
+    } catch (error) {
+      throw new Error(`Failed to fetch page: ${pageId}`)
+    }
   }
 
   private async queryDatabase(
@@ -49,96 +49,58 @@ export class UnifiedNotionClient {
     filter?: QueryDatabaseParameters["filter"],
     sorts?: QueryDatabaseParameters["sorts"]
   ): Promise<NotionPage[]> {
-    if (!this.client) {
+    if (!this.client) return []
+
+    try {
+      const response = await this.client.databases.query({
+        database_id: databaseId,
+        filter,
+        sorts,
+      })
+      return response.results as NotionPage[]
+    } catch (error) {
       return []
     }
-
-    const response = await this.client.databases.query({
-      database_id: databaseId,
-      filter,
-      sorts,
-    })
-
-    return response.results as NotionPage[]
-  }
-
-  async getPageWithCover(pageId: string): Promise<NotionPage | null> {
-    if (!this.client) {
-      return null
-    }
-
-    const page = await this.client.pages.retrieve({ page_id: pageId })
-    return page as NotionPage
   }
 
   // =============================================================================
-  // BLOG METHODS
+  // DATABASE METHODS
   // =============================================================================
 
   async getBlogContents(): Promise<NotionPage[]> {
-    if (!this.config.blogDatabaseId) {
-      return []
-    }
-
-    const filter = {
-      property: "Published",
-      checkbox: { equals: true }
-    }
-
-    const sorts = [{
-      property: "Published Date",
-      direction: "descending" as const
-    }]
-
-    return this.queryDatabase(this.config.blogDatabaseId, filter, sorts)
+    if (!this.config.blogDatabaseId) return []
+    
+    return this.queryDatabase(
+      this.config.blogDatabaseId,
+      { property: "Published", checkbox: { equals: true } },
+      [{ property: "Published Date", direction: "descending" }]
+    )
   }
 
-  // =============================================================================
-  // PROJECT METHODS
-  // =============================================================================
-
   async getProjects(): Promise<NotionPage[]> {
-    if (!this.config.projectsDatabaseId) {
-      return []
-    }
-
-    const filter = {
-      property: "Published",
-      checkbox: { equals: true }
-    }
-
-    const sorts = [{
-      property: "Published Date",
-      direction: "descending" as const
-    }]
-
-    return this.queryDatabase(this.config.projectsDatabaseId, filter, sorts)
+    if (!this.config.projectsDatabaseId) return []
+    
+    return this.queryDatabase(
+      this.config.projectsDatabaseId,
+      { property: "Published", checkbox: { equals: true } },
+      [{ property: "Published Date", direction: "descending" }]
+    )
   }
 
   async getFeaturedProjects(limit: number = 4): Promise<NotionPage[]> {
-    if (!this.config.projectsDatabaseId) {
-      return []
-    }
+    if (!this.config.projectsDatabaseId) return []
 
-    const filter = {
-      and: [
-        {
-          property: "Published",
-          checkbox: { equals: true }
-        },
-        {
-          property: "Featured",
-          checkbox: { equals: true }
-        }
-      ]
-    }
-
-    const sorts = [{
-      property: "Published Date",
-      direction: "descending" as const
-    }]
-
-    const pages = await this.queryDatabase(this.config.projectsDatabaseId, filter, sorts)
+    const pages = await this.queryDatabase(
+      this.config.projectsDatabaseId,
+      {
+        and: [
+          { property: "Published", checkbox: { equals: true } },
+          { property: "Featured", checkbox: { equals: true } }
+        ]
+      },
+      [{ property: "Published Date", direction: "descending" }]
+    )
+    
     return pages.slice(0, limit)
   }
 
@@ -152,14 +114,6 @@ export class UnifiedNotionClient {
 
   isProjectsConfigured(): boolean {
     return !!(this.config.token && this.config.projectsDatabaseId)
-  }
-
-  isConfigured(): boolean {
-    return !!this.config.token
-  }
-
-  getConfig(): NotionConfig {
-    return { ...this.config }
   }
 }
 

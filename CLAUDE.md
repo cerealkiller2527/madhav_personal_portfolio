@@ -216,24 +216,35 @@ portfolio-clone/
 
 ## Environment Configuration
 
-### Required Environment Variables
+The application uses a **single `.env` file** for all environment variables. Copy `.env.example` to `.env` and configure with your values.
+
+### Environment Variables
 ```bash
-# Core Application
-NODE_ENV=development|production|test
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
+# =============================================================================
+# NOTION CMS CONFIGURATION
+# =============================================================================
+NOTION_TOKEN=your_notion_token_here                    # Notion integration token
+NOTION_DATABASE_ID=your_blog_database_id_here          # Blog database ID
+NOTION_PROJECTS_DATABASE_ID=your_projects_database_id  # Projects database ID
 
-# Blog System (Optional - graceful degradation if not configured)
-NOTION_TOKEN=secret_notion_integration_token
-NOTION_DATABASE_ID=notion_database_id
+# =============================================================================
+# SITE CONFIGURATION
+# =============================================================================
+NEXT_PUBLIC_SITE_URL=https://your-domain.com          # Public site URL
+AUTHOR_EMAIL=your-email@example.com                   # Author email for RSS feeds
 
-# Blog Configuration (Optional with defaults)
-BLOG_REVALIDATE_TIME=60                    # ISR revalidation in seconds
-ENABLE_BLOG_CACHE=true                     # Enable blog caching
-CACHE_MAX_SIZE=100                         # Max cache entries
-AUTHOR_EMAIL=your-email@example.com        # RSS feed author
+# =============================================================================
+# PERFORMANCE & CACHING
+# =============================================================================
+BLOG_REVALIDATE_TIME=60                                # Blog ISR revalidation (seconds)
+PROJECT_REVALIDATE_TIME=300                            # Project ISR revalidation (seconds)
+ENABLE_BLOG_CACHE=true                                 # Enable blog caching
+CACHE_MAX_SIZE=100                                     # Maximum cache entries
 
-# Analytics (Optional)
-ANALYTICS_ID=your_analytics_id
+# =============================================================================
+# ANALYTICS & MONITORING (OPTIONAL)
+# =============================================================================
+NEXT_PUBLIC_GA_ID=your_google_analytics_id             # Google Analytics ID
 ```
 
 ### Environment Management

@@ -46,23 +46,10 @@ function ProjectMedia({ project, index }: { project: Project; index: number }) {
         </span>
       </div>
       
-      {/* Trophy Badge */}
-      {project.awardRank && (
-        <TrophyBadge awardRank={project.awardRank} />
-      )}
     </div>
   )
 }
 
-// Trophy badge component
-function TrophyBadge({ awardRank }: { awardRank: string }) {
-  const { badgeClasses, iconClasses } = BadgeUtil.getTrophyStyles(awardRank)
-  return (
-    <div className={cn("absolute top-4 right-4 rounded-full p-2", badgeClasses)}>
-      <Trophy className={cn("w-4 h-4", iconClasses)} />
-    </div>
-  )
-}
 
 // Badge section component
 function ProjectBadges({ project, trophyStyles }: { 

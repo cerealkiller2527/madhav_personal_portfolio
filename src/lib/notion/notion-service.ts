@@ -1,6 +1,5 @@
 /**
- * Unified Notion Service
- * High-level service layer that combines client, transforms, validation, and caching
+ * Notion Service - High-level service layer with caching
  */
 
 import { 
@@ -28,120 +27,75 @@ import {
 // =============================================================================
 
 const CACHE_DURATION = {
-  BLOG_POSTS_LIST: 60 * 5, // 5 minutes
-  BLOG_SINGLE_POST: 60 * 10, // 10 minutes
-  PROJECTS_LIST: 60 * 5, // 5 minutes
-  SINGLE_PROJECT: 60 * 10, // 10 minutes
-  FEATURED_PROJECTS: 60 * 15, // 15 minutes
+  BLOG_POSTS_LIST: 5 * 60,     // 5 minutes
+  BLOG_SINGLE_POST: 10 * 60,   // 10 minutes
+  PROJECTS_LIST: 5 * 60,       // 5 minutes
+  SINGLE_PROJECT: 10 * 60,     // 10 minutes
+  FEATURED_PROJECTS: 15 * 60,  // 15 minutes
 } as const
 
 // =============================================================================
-// BLOG SERVICE METHODS
+// TRANSFORMATION HELPERS
+// =============================================================================
+
+function safeTransform<T>(pages: any[], transformFn: (page: any) => T | null): T[] {
+  return pages
+    .map(page => {
+      try {
+        return transformFn(page)
+      } catch {
+        return null
+      }
+    })
+    .filter(Boolean) as T[]
+}
+
+// =============================================================================
+// CORE SERVICE METHODS
 // =============================================================================
 
 async function _getAllBlogPosts(): Promise<BlogPreview[]> {
-  if (!notionClient.isBlogConfigured()) {
-    return []
-  }
-
+  if (!notionClient.isBlogConfigured()) return []
   const pages = await notionClient.getBlogContents()
-  
-  const blogPosts = pages
-    .map(page => {
-      try {
-        const preview = transformToBlogPreview(page)
-        return preview
-      } catch {
-        return null
-      }
-    })
-    .filter(Boolean) as BlogPreview[]
-
-  return blogPosts
+  return safeTransform(pages, transformToBlogPreview)
 }
 
 async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
-  if (!notionClient.isBlogConfigured()) {
-    return null
-  }
+  if (!notionClient.isBlogConfigured()) return null
 
   const allPosts = await getAllBlogPosts()
   const matchingPost = allPosts.find(post => post.slug === slug)
-  
-  if (!matchingPost) {
-    return null
-  }
+  if (!matchingPost) return null
 
   const recordMap = await notionClient.getPage(matchingPost.id)
-  const blogContent = await transformToBlogContent(matchingPost, recordMap)
-  return blogContent
+  return await transformToBlogContent(matchingPost, recordMap)
 }
 
-// =============================================================================
-// PROJECT SERVICE METHODS
-// =============================================================================
-
 async function _getAllProjects(): Promise<NotionProjectPreview[]> {
-  if (!notionClient.isProjectsConfigured()) {
-    return []
-  }
-
+  if (!notionClient.isProjectsConfigured()) return []
   const pages = await notionClient.getProjects()
-  
-  const projects = pages
-    .map(page => {
-      try {
-        const preview = transformToProjectPreview(page)
-        return preview
-      } catch {
-        return null
-      }
-    })
-    .filter(Boolean) as NotionProjectPreview[]
-
-  return projects
+  return safeTransform(pages, transformToProjectPreview)
 }
 
 async function _getProjectById(id: string): Promise<ProjectContent | null> {
-  if (!notionClient.isProjectsConfigured()) {
-    return null
-  }
+  if (!notionClient.isProjectsConfigured()) return null
 
   const allProjects = await getAllProjects()
   const matchingProject = allProjects.find(project => project.id === id)
-  
-  if (!matchingProject) {
-    return null
-  }
+  if (!matchingProject) return null
 
   const recordMap = await notionClient.getPage(matchingProject.id)
-  const projectContent = await transformToProjectContent(matchingProject, recordMap)
-  return projectContent
+  return await transformToProjectContent(matchingProject, recordMap)
 }
 
 async function _getFeaturedProjects(limit: number = 4): Promise<NotionProjectPreview[]> {
-  if (!notionClient.isProjectsConfigured()) {
-    return []
-  }
-
+  if (!notionClient.isProjectsConfigured()) return []
   const pages = await notionClient.getFeaturedProjects(limit)
-  
-  const projects = pages
-    .map(page => {
-      try {
-        const preview = transformToProjectPreview(page)
-        return preview
-      } catch {
-        return null
-      }
-    })
-    .filter(Boolean) as NotionProjectPreview[]
-
-  return projects.slice(0, limit)
+  return safeTransform(pages, transformToProjectPreview).slice(0, limit)
 }
 
 // =============================================================================
-// PUBLIC API WITH CACHING AND ERROR HANDLING
+// PUBLIC API WITH CACHING
 // =============================================================================
 
 export async function getAllBlogPosts(): Promise<BlogPreview[]> {
