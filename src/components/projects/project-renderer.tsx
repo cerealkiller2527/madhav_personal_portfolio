@@ -3,6 +3,17 @@
 import { NotionRenderer } from "react-notion-x"
 import { ExtendedRecordMap } from "notion-types"
 
+// Custom Collection component to suppress warnings
+const Collection = () => {
+  return (
+    <div className="notion-collection-placeholder p-4 my-4 border rounded-lg bg-muted/50">
+      <p className="text-sm text-muted-foreground">
+        Collection view is not supported in this preview
+      </p>
+    </div>
+  )
+}
+
 interface ProjectRendererProps {
   recordMap: ExtendedRecordMap
   rootPageId?: string
@@ -26,8 +37,9 @@ export function ProjectRenderer({ recordMap, rootPageId, className }: ProjectRen
         defaultPageCoverPosition={0.5}
         className="notion-project-page"
         bodyClassName="notion-project-body"
-        // Custom styling for project content
-        // This will integrate with our portfolio theme
+        components={{
+          Collection,
+        }}
       />
     </div>
   )

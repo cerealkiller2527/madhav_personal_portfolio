@@ -3,12 +3,16 @@
 import { NotionRenderer } from "react-notion-x"
 import { ExtendedRecordMap } from "notion-types"
 
-// Optional: Import additional components for rich content
-// import { Code } from 'react-notion-x/build/third-party/code'
-// import { Collection } from 'react-notion-x/build/third-party/collection'
-// import { Equation } from 'react-notion-x/build/third-party/equation'
-// import { Modal } from 'react-notion-x/build/third-party/modal'
-// import { Pdf } from 'react-notion-x/build/third-party/pdf'
+// Custom Collection component to suppress warnings
+const Collection = () => {
+  return (
+    <div className="notion-collection-placeholder p-4 my-4 border rounded-lg bg-muted/50">
+      <p className="text-sm text-muted-foreground">
+        Collection view is not supported in this preview
+      </p>
+    </div>
+  )
+}
 
 interface BlogRendererProps {
   recordMap: ExtendedRecordMap
@@ -33,14 +37,9 @@ export function BlogRenderer({ recordMap, rootPageId, className }: BlogRendererP
         defaultPageCoverPosition={0.5}
         className="notion-page"
         bodyClassName="notion-page-body"
-        // Optional: Add custom components
-        // components={{
-        //   Code,
-        //   Collection,
-        //   Equation,
-        //   Modal,
-        //   Pdf,
-        // }}
+        components={{
+          Collection,
+        }}
         // Optional: Custom map for page URLs
         // mapPageUrl={(pageId) => `/blog/${pageId}`}
         // Optional: Custom map for image URLs
