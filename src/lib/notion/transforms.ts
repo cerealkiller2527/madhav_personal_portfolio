@@ -12,7 +12,7 @@ import {
   NotionProjectPreview
 } from "@/schemas"
 
-function getProperty(properties: Record<string, NotionPropertyValue>, name: string): any {
+function getProperty(properties: Record<string, NotionPropertyValue>, name: string): string | string[] | boolean | null {
   const prop = properties[name]
   if (!prop) return null
   
@@ -59,21 +59,38 @@ export const createSlugFromTitle = createSlug
 export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
   const { properties } = page
   
-  const title = getProperty(properties, "Name") || getProperty(properties, "Title")
-  const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
+  const titleValue = getProperty(properties, "Name") || getProperty(properties, "Title")
+  const publishedAtValue = getProperty(properties, "Published Date") || getProperty(properties, "Date")
   
-  if (!title || !publishedAt) return null
+  // Ensure title is a string
+  if (typeof titleValue !== 'string' || !titleValue) return null
+  if (typeof publishedAtValue !== 'string' || !publishedAtValue) return null
+  
+  const title = titleValue
+  const publishedAt = publishedAtValue
+
+  const descriptionValue = getProperty(properties, "Description")
+  const description = typeof descriptionValue === 'string' ? descriptionValue : undefined
+  
+  const tagsValue = getProperty(properties, "Tags")
+  const tags = Array.isArray(tagsValue) ? tagsValue : []
+  
+  const categoryValue = getProperty(properties, "Category")
+  const category = typeof categoryValue === 'string' ? categoryValue : undefined
+  
+  const coverImageValue = getProperty(properties, "Cover")
+  const coverImage = typeof coverImageValue === 'string' ? coverImageValue : undefined
 
   return {
     id: page.id,
     slug: createSlug(title),
     title,
-    description: getProperty(properties, "Description"),
+    description,
     publishedAt,
     updatedAt: publishedAt,
-    tags: getProperty(properties, "Tags") || [],
-    category: getProperty(properties, "Category"),
-    coverImage: getProperty(properties, "Cover"),
+    tags,
+    category,
+    coverImage,
     published: true,
     readingTime: 5,
   }
@@ -92,36 +109,69 @@ export async function transformToBlogContent(
 export function transformToProjectPreview(page: NotionPage): NotionProjectPreview | null {
   const { properties } = page
   
-  const title = getProperty(properties, "Name") || getProperty(properties, "Title")
-  const subtitle = getProperty(properties, "Subtitle")
-  const description = getProperty(properties, "Description")
-  const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
-  const categoryValue = getProperty(properties, "Category")
+  const titleValue = getProperty(properties, "Name") || getProperty(properties, "Title")
+  const publishedAtValue = getProperty(properties, "Published Date") || getProperty(properties, "Date")
   
-  if (!title || !publishedAt) return null
-
-  const category = ['Software', 'Hardware', 'Hybrid'].includes(categoryValue) 
-    ? categoryValue : 'Software'
+  // Ensure required fields are strings
+  if (typeof titleValue !== 'string' || !titleValue) return null
+  if (typeof publishedAtValue !== 'string' || !publishedAtValue) return null
+  
+  const title = titleValue
+  const publishedAt = publishedAtValue
+  
+  const subtitleValue = getProperty(properties, "Subtitle")
+  const subtitle = typeof subtitleValue === 'string' ? subtitleValue : ""
+  
+  const descriptionValue = getProperty(properties, "Description")
+  const description = typeof descriptionValue === 'string' ? descriptionValue : ""
+  
+  const categoryValue = getProperty(properties, "Category")
+  const category = (typeof categoryValue === 'string' && ['Software', 'Hardware', 'Hybrid'].includes(categoryValue)) 
+    ? categoryValue as 'Software' | 'Hardware' | 'Hybrid' : 'Software'
+  
+  const awardValue = getProperty(properties, "Award")
+  const award = typeof awardValue === 'string' ? awardValue : undefined
+  
+  const awardRankValue = getProperty(properties, "Award Rank")
+  const awardRank = typeof awardRankValue === 'string' ? awardRankValue : undefined
+  
+  const tagsValue = getProperty(properties, "Tags")
+  const tags = Array.isArray(tagsValue) ? tagsValue : []
+  
+  const liveLinkValue = getProperty(properties, "Live Link")
+  const liveLink = typeof liveLinkValue === 'string' ? liveLinkValue : undefined
+  
+  const githubLinkValue = getProperty(properties, "GitHub Link")
+  const githubLink = typeof githubLinkValue === 'string' ? githubLinkValue : undefined
+  
+  const heroImageValue = getProperty(properties, "Hero Image")
+  const heroImage = typeof heroImageValue === 'string' ? heroImageValue : undefined
+  
+  const vectaryEmbedUrlValue = getProperty(properties, "Vectary Embed URL")
+  const vectaryEmbedUrl = typeof vectaryEmbedUrlValue === 'string' ? vectaryEmbedUrlValue : undefined
+  
+  const coverImageValue = getProperty(properties, "Cover")
+  const coverImage = typeof coverImageValue === 'string' ? coverImageValue : undefined
 
   return {
     id: page.id,
     slug: createSlug(title),
     title,
-    subtitle: subtitle || "",
-    description: description || "",
+    subtitle,
+    description,
     publishedAt,
     updatedAt: publishedAt,
-    category: category as 'Software' | 'Hardware' | 'Hybrid',
-    award: getProperty(properties, "Award"),
-    awardRank: getProperty(properties, "Award Rank"),
-    tags: getProperty(properties, "Tags") || [],
-    liveLink: getProperty(properties, "Live Link"),
-    githubLink: getProperty(properties, "GitHub Link"),
-    heroImage: getProperty(properties, "Hero Image"),
-    vectaryEmbedUrl: getProperty(properties, "Vectary Embed URL"),
+    category,
+    award,
+    awardRank,
+    tags,
+    liveLink,
+    githubLink,
+    heroImage,
+    vectaryEmbedUrl,
     stats: [],
     published: true,
-    coverImage: getProperty(properties, "Cover"),
+    coverImage,
   }
 }
 
