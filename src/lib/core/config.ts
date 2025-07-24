@@ -1,6 +1,7 @@
 // Environment Configuration
 // Centralizes all environment variable access with type safety
 
+// Main site configuration
 export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   author: {
@@ -8,18 +9,22 @@ export const siteConfig = {
   }
 }
 
+// Notion API configuration
+// Requires token and database IDs from environment
 export const notionConfig = {
   token: process.env.NOTION_TOKEN || '',
   blogDatabaseId: process.env.NOTION_DATABASE_ID || '',
   projectsDatabaseId: process.env.NOTION_PROJECTS_DATABASE_ID || '',
 }
 
+// Giscus comments configuration
+// Used for blog post comments via GitHub discussions
 export const commentsConfig = {
   repo: process.env.NEXT_PUBLIC_GISCUS_REPO as `${string}/${string}`,
   repoId: process.env.NEXT_PUBLIC_GISCUS_REPO_ID || "",
   category: process.env.NEXT_PUBLIC_GISCUS_CATEGORY || "General",
   categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID || "",
-  mapping: "pathname" as const,
+  mapping: "pathname" as const, // Maps comments to URL path
   strict: "0" as const,
   reactionsEnabled: "1" as const,
   emitMetadata: "0" as const,
@@ -29,5 +34,6 @@ export const commentsConfig = {
 
 // Helper to check if comments are properly configured
 export const isCommentsEnabled = () => {
+  // All three values required for comments to work
   return !!(commentsConfig.repo && commentsConfig.repoId && commentsConfig.categoryId)
 }

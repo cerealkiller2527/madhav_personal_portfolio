@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/common/theme/theme-toggle"
 import { smoothScrollToElement } from "@/lib/core/utils"
 
+// Navigation items with icons and routing info
 const navItems = [
   { name: "Home", id: "home", icon: <Home className="h-4 w-4" />, href: "/" },
   { name: "Experience", id: "experience", icon: <Briefcase className="h-4 w-4" />, href: "/#experience" },
@@ -38,12 +39,12 @@ export function Header({ onResumeOpen }: HeaderProps) {
       return
     }
 
-    // Handle section navigation
+    // Handle section navigation (Experience, Projects, Contact)
     if (pathname === "/") {
-      // We are on the homepage, so just scroll smoothly
+      // Already on homepage - just scroll to section
       smoothScrollToElement(item.id, 800)
     } else {
-      // We are on another page, so navigate to home and tell it to scroll
+      // On different page - save scroll target and navigate home
       sessionStorage.setItem("scrollTo", item.id)
       router.push("/")
     }
@@ -58,6 +59,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
     >
       <div className="mx-auto max-w-screen-xl px-4 pt-3 md:pt-4">
         <div className="flex h-14 w-full items-center justify-between rounded-xl border border-white/10 bg-black/30 dark:bg-white/10 px-4 shadow-xl backdrop-blur-lg">
+          {/* Logo/Avatar link */}
           <Link
             href="/"
             onClick={(e) => handleNavClick(e, navItems[0])}
@@ -78,6 +80,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
             </div>
           </Link>
 
+          {/* Main navigation */}
           <nav className="flex items-center justify-center">
             {navItems.map((item) => (
               <Link
@@ -92,6 +95,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
             ))}
           </nav>
 
+          {/* Actions: Resume button & Theme toggle */}
           <div className="flex items-center gap-2">
             <Button
               onClick={onResumeOpen}

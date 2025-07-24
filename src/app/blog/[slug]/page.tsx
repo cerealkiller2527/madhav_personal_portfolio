@@ -12,6 +12,7 @@ interface BlogContentPageProps {
   }>
 }
 
+// Generate metadata for each blog post page
 export async function generateMetadata({ params }: BlogContentPageProps): Promise<Metadata> {
   const { slug } = await params
   const post = await getBlogPostBySlug(slug)
@@ -23,6 +24,7 @@ export async function generateMetadata({ params }: BlogContentPageProps): Promis
     }
   }
 
+  // Return SEO-optimized metadata for the post
   return {
     title: `${post.title} - Blog - Madhav Lodha`,
     description: post.description || "Blog post by Madhav Lodha",
@@ -37,8 +39,10 @@ export async function generateMetadata({ params }: BlogContentPageProps): Promis
   }
 }
 
+// Disable dynamic params to only allow pre-generated pages
 export const dynamicParams = false
 
+// Generate static pages for all blog posts at build time
 export async function generateStaticParams() {
   try {
     const posts = await getAllBlogPosts()
@@ -46,6 +50,7 @@ export async function generateStaticParams() {
       console.log('No blog posts found for static generation')
       return []
     }
+    // Return array of slugs for Next.js to pre-generate
     return posts.map((post) => ({
       slug: post.slug,
     }))
@@ -56,6 +61,7 @@ export async function generateStaticParams() {
 }
 
 async function BlogContentContent({ slug }: { slug: string }) {
+  // Fetch post and all posts for navigation
   const [post, allPosts] = await Promise.all([
     getBlogPostBySlug(slug),
     getAllBlogPosts()
@@ -65,7 +71,7 @@ async function BlogContentContent({ slug }: { slug: string }) {
     notFound()
   }
 
-  // Find previous and next posts
+  // Find previous and next posts for navigation
   const currentIndex = allPosts.findIndex((p: BlogPreview) => p.slug === slug)
   const previousPost = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined
   const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : undefined

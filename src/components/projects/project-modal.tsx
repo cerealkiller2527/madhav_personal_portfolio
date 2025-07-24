@@ -20,11 +20,14 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
-  const contentRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null) // For scroll spy in TOC
   
+  // Check if project has Notion content or is local
   const notionProject = project && isNotionProject(project) ? project : null
   const hasNotionContent = notionProject?.recordMap
   const displayProject = project ? getDisplayProject(project) : null
+  
+  // Generate table of contents from either Notion or local content
   const { sections } = useContentTOC({ 
     recordMap: notionProject?.recordMap,
     project: hasNotionContent ? undefined : displayProject || undefined
@@ -40,12 +43,15 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         <ProjectModalHeader project={displayProject!} onClose={onClose} />
 
         <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-0 overflow-hidden">
+          {/* Sidebar with table of contents - hidden on mobile */}
           <aside className="hidden md:block md:col-span-1 p-6 border-r">
             <TableOfContents sections={sections} containerRef={contentRef as React.RefObject<HTMLElement>} />
           </aside>
 
+          {/* Main content area */}
           <main className="md:col-span-4 overflow-y-auto p-8" ref={contentRef}>
             <div id="overview" className="scroll-mt-24">
+              {/* Hero image */}
               <div className="relative w-full h-64 md:h-80 mb-8 rounded-md overflow-hidden">
                 <ContentImage
                   src={displayProject!.heroImage || ""}
@@ -75,6 +81,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               )}
             </div>
 
+            {/* Additional project sections (features, tech stack, etc) */}
             <ProjectContentSections 
               project={displayProject!} 
               hasNotionContent={hasNotionContent} 

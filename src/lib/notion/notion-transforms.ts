@@ -1,5 +1,6 @@
 /**
  * Notion Data Transformations
+ * Converts Notion API responses to our app's data structures
  */
 
 import { ExtendedRecordMap } from "notion-types"
@@ -21,15 +22,18 @@ type NotionCover = {
   file?: { url?: string }
 }
 
+// Check if an object is a valid Notion cover image
 function isNotionCover(cover: unknown): cover is NotionCover {
   if (!cover || typeof cover !== 'object') return false
   const c = cover as Record<string, unknown>
   
+  // Check for external URL (linked images)
   if (c.external && typeof c.external === 'object') {
     const ext = c.external as Record<string, unknown>
     if (typeof ext.url === 'string') return true
   }
   
+  // Check for file URL (uploaded images)
   if (c.file && typeof c.file === 'object') {
     const file = c.file as Record<string, unknown>
     if (typeof file.url === 'string') return true
@@ -42,10 +46,12 @@ function isNotionCover(cover: unknown): cover is NotionCover {
 // UTILITY FUNCTIONS
 // =============================================================================
 
+// Extract value from Notion property based on its type
 function getProperty(properties: Record<string, NotionPropertyValue>, name: string): string | string[] | boolean | null {
   const prop = properties[name]
   if (!prop) return null
   
+  // Handle different Notion property types
   switch (prop.type) {
     case "title": return prop.title?.[0]?.plain_text || null
     case "rich_text": {
@@ -62,16 +68,18 @@ function getProperty(properties: Record<string, NotionPropertyValue>, name: stri
   }
 }
 
+// Parse statistics from JSON or formatted text
 function parseStatistics(text: string | null): Array<{value: string, label: string}> {
   if (!text) return []
   
   try {
+    // Try parsing as JSON first
     const parsed = JSON.parse(text)
     if (Array.isArray(parsed)) {
       return parsed.filter(stat => stat.value && stat.label)
     }
   } catch {
-    // Parse "label: value" or "label|value" format
+    // Fallback: Parse "label: value" or "label|value" format
     return text.split(',')
       .map(s => s.trim())
       .map(pair => {
@@ -88,13 +96,15 @@ function parseStatistics(text: string | null): Array<{value: string, label: stri
   return []
 }
 
+// Generate URL-friendly slug from title
 function createSlug(title: string): string {
   return title.toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")  // Remove special characters
     .trim()
-    .replace(/\s+/g, "-")
+    .replace(/\s+/g, "-")          // Replace spaces with hyphens
 }
 
+// Ensure image URLs are absolute
 export function normalizeImageUrl(url: string): string {
   if (!url || url.startsWith('data:')) return ''
   if (url.startsWith('http://') || url.startsWith('https://')) return url
@@ -103,6 +113,7 @@ export function normalizeImageUrl(url: string): string {
   return url
 }
 
+// Extract cover image URL from Notion page
 function getCoverImageUrl(cover: unknown): string | undefined {
   if (!isNotionCover(cover)) return undefined
   
@@ -110,6 +121,7 @@ function getCoverImageUrl(cover: unknown): string | undefined {
   return url ? normalizeImageUrl(url) : undefined
 }
 
+// Get image URL with fallback to cover
 function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: unknown, imageProperty: string): string | undefined {
   // Priority: Database Image Property > Page Cover
   const imageUrl = getProperty(properties, imageProperty) as string
@@ -122,12 +134,15 @@ function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: unk
 // BLOG TRANSFORMATIONS
 // =============================================================================
 
+// Convert Notion page to blog preview format
 export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
   const { properties, cover } = page
   
+  // Extract required fields
   const title = getProperty(properties, "Name") || getProperty(properties, "Title")
   const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
   
+  // Validate required fields
   if (typeof title !== 'string' || !title || typeof publishedAt !== 'string' || !publishedAt) {
     return null
   }
@@ -143,17 +158,18 @@ export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
     category: getProperty(properties, "Category") as string,
     coverImage: getImageUrl(properties, cover, "Cover"),
     published: true,
-    readingTime: 5,
+    readingTime: 5, // Default estimate
   }
 }
 
+// Add full content to blog preview
 export async function transformToBlogContent(
   preview: BlogPreview,
   recordMap: ExtendedRecordMap
 ): Promise<BlogContent> {
   return {
     ...preview,
-    recordMap,
+    recordMap, // Full Notion page content
   }
 }
 
@@ -161,16 +177,20 @@ export async function transformToBlogContent(
 // PROJECT TRANSFORMATIONS
 // =============================================================================
 
+// Convert Notion page to project preview format
 export function transformToProjectPreview(page: NotionPage): NotionProjectPreview | null {
   const { properties, cover } = page
   
+  // Extract required fields
   const title = getProperty(properties, "Name") || getProperty(properties, "Title")
   const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
   
+  // Validate required fields
   if (typeof title !== 'string' || !title || typeof publishedAt !== 'string' || !publishedAt) {
     return null
   }
   
+  // Ensure valid category
   const category = getProperty(properties, "Category") as string
   const validCategory = ['Software', 'Hardware', 'Hybrid'].includes(category) ? category : 'Software'
   
@@ -199,16 +219,17 @@ export function transformToProjectPreview(page: NotionPage): NotionProjectPrevie
   }
 }
 
+// Add full content to project preview
 export async function transformToProjectContent(
   preview: NotionProjectPreview,
   recordMap: ExtendedRecordMap
 ): Promise<ProjectContent> {
   return {
     ...preview,
-    recordMap,
-    gallery: [],
-    keyFeatures: [],
-    techStack: [],
+    recordMap, // Full Notion page content
+    gallery: [], // Could be populated from page content
+    keyFeatures: [], // Could be extracted from content
+    techStack: [], // Could be parsed from properties
   }
 }
 
@@ -217,6 +238,8 @@ export async function transformToProjectContent(
 // =============================================================================
 
 export const createSlugFromTitle = createSlug
+
+// Calculate reading time based on word count
 export function calculateReadingTime(content: string, wordsPerMinute = 200): number {
   if (!content || typeof content !== 'string') return 0
   const wordCount = content.split(/\s+/).filter(word => word.length > 0).length

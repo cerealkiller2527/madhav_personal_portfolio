@@ -1,6 +1,7 @@
 import type { Experience } from "@/lib/schemas"
 
 // Site Information
+// Core metadata and branding for the portfolio
 export const siteInfo = {
   name: "Madhav Lodha",
   title: "Madhav Lodha",
@@ -16,6 +17,7 @@ export const siteInfo = {
 }
 
 // Button Labels
+// Centralized text for UI buttons across the app
 export const buttonLabels = {
   viewResume: "View Résumé",
   viewMyWork: "View My Work",
@@ -29,6 +31,7 @@ export const buttonLabels = {
 }
 
 // Footer Data
+// Links and social media for footer component
 export const footerData = {
   sections: {
     connect: {
@@ -68,6 +71,8 @@ export const footerData = {
   ]
 }
 
+// Professional Experience Timeline
+// Work experiences displayed in chronological order
 export const experiences: readonly Experience[] = [
   {
     id: "01",

@@ -3,7 +3,7 @@ import type { Config } from "tailwindcss";
 // all in fixtures is set to tailwind v3 as interims solutions
 
 const config: Config = {
-    darkMode: ["class"],
+    darkMode: ["class"], // Enable dark mode via class strategy
     content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -13,9 +13,10 @@ const config: Config = {
   theme: {
   	extend: {
   		screens: {
-  			'xs': '475px',
+  			'xs': '475px', // Extra small breakpoint for mobile
   		},
   		colors: {
+  			// CSS variables defined in globals.css for theme switching
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -49,6 +50,7 @@ const config: Config = {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
+  			// Chart colors for data visualization
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
@@ -56,6 +58,7 @@ const config: Config = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
+  			// Sidebar-specific colors (if sidebar is added)
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',
   				foreground: 'hsl(var(--sidebar-foreground))',
@@ -73,6 +76,7 @@ const config: Config = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		keyframes: {
+  			// Accordion animations for expandable content
   			'accordion-down': {
   				from: {
   					height: '0'
@@ -96,6 +100,6 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate")], // Animation utilities
 };
 export default config;

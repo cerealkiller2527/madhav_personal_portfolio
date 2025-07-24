@@ -6,15 +6,20 @@ interface CursorGlowProps {
   readonly isVisible: boolean
 }
 
+// Creates a glowing effect that follows the mouse cursor
 export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
+  // Track raw mouse position
   const mouseX = useMotionValue(-1000)
   const mouseY = useMotionValue(-1000)
+  
+  // Smooth the movement with spring physics
   const smoothX = useSpring(mouseX, { stiffness: 200, damping: 50 })
   const smoothY = useSpring(mouseY, { stiffness: 200, damping: 50 })
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
       if (!isVisible) return
+      // Update position values on mouse move
       mouseX.set(event.clientX)
       mouseY.set(event.clientY)
     }
@@ -33,7 +38,7 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
         top: smoothY,
         width: 300,
         height: 300,
-        transform: "translate(-50%, -50%)",
+        transform: "translate(-50%, -50%)", // Center the glow on cursor
         opacity: 0.8
       }}
     />
