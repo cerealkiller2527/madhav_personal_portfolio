@@ -8,6 +8,7 @@ import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { ProjectNavigation } from "@/components/common/content/content-navigation"
 import { BackButton } from "@/components/common/content/content-navigation"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
+import { Comments } from "@/components/common/comments/comments"
 import { ArrowLeft } from "lucide-react"
 import type { ExtendedRecordMap } from "notion-types"
 
@@ -194,6 +195,8 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               previousProject={previousProject}
               nextProject={nextProject}
             />
+
+            <Comments />
           </article>
         </main>
       </div>

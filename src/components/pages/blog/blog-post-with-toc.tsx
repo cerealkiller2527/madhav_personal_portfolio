@@ -10,6 +10,7 @@ import { BlogNavigation } from "@/components/common/content/content-navigation"
 import { Button } from "@/components/ui/button"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
+import { Comments } from "@/components/common/comments/comments"
 
 interface BlogContentWithTOCProps {
   post: BlogContent
@@ -68,6 +69,8 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
                 previousPost={previousPost}
                 nextPost={nextPost}
               />
+
+              <Comments />
             </main>
           </div>
         </div>
