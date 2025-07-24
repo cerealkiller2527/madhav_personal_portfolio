@@ -4,6 +4,8 @@
  */
 
 import { ContentGrid, GRID_CONFIGS, type GridConfigName } from "@/components/common/content/content-grid"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface LoadingGridProps {
   variant: GridConfigName
@@ -22,50 +24,52 @@ interface LoadingCardProps {
 export function LoadingCard({ variant, className = "" }: LoadingCardProps) {
   const variants = {
     blog: (
-      <div className={`animate-pulse ${className}`}>
-        <div className="h-48 bg-muted rounded-lg mb-4"></div>
-        <div className="space-y-2">
-          <div className="h-5 bg-muted rounded w-3/4"></div>
-          <div className="h-4 bg-muted rounded w-full"></div>
-          <div className="h-3 bg-muted rounded w-1/2"></div>
-        </div>
-      </div>
+      <Card className={className}>
+        <Skeleton className="h-48 rounded-lg mb-4" />
+        <CardContent className="space-y-2 p-6">
+          <Skeleton className="h-5 w-3/4" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-3 w-1/2" />
+        </CardContent>
+      </Card>
     ),
     project: (
-      <div className={`animate-pulse ${className}`}>
-        <div className="h-64 bg-muted rounded-xl mb-6"></div>
-        <div className="space-y-3">
+      <Card className={className}>
+        <Skeleton className="h-64 rounded-xl mb-6" />
+        <CardContent className="space-y-3 p-6">
           <div className="flex gap-2">
-            <div className="h-6 bg-muted rounded w-20"></div>
-            <div className="h-6 bg-muted rounded w-16"></div>
+            <Skeleton className="h-6 w-20" />
+            <Skeleton className="h-6 w-16" />
           </div>
-          <div className="h-6 bg-muted rounded w-3/4"></div>
-          <div className="h-4 bg-muted rounded w-full"></div>
-          <div className="h-4 bg-muted rounded w-2/3"></div>
-        </div>
-      </div>
+          <Skeleton className="h-6 w-3/4" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-2/3" />
+        </CardContent>
+      </Card>
     ),
     experience: (
-      <div className={`animate-pulse ${className}`}>
-        <div className="flex gap-4">
-          <div className="h-16 w-16 bg-muted rounded-full flex-shrink-0"></div>
-          <div className="flex-1 space-y-2">
-            <div className="h-5 bg-muted rounded w-2/3"></div>
-            <div className="h-4 bg-muted rounded w-1/2"></div>
-            <div className="h-4 bg-muted rounded w-full"></div>
-            <div className="h-4 bg-muted rounded w-3/4"></div>
+      <Card className={className}>
+        <CardContent className="p-6">
+          <div className="flex gap-4">
+            <Skeleton className="h-16 w-16 rounded-full flex-shrink-0" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-5 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+            </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     ),
     generic: (
-      <div className={`animate-pulse ${className}`}>
-        <div className="h-32 bg-muted rounded-lg mb-4"></div>
-        <div className="space-y-2">
-          <div className="h-4 bg-muted rounded w-3/4"></div>
-          <div className="h-4 bg-muted rounded w-1/2"></div>
-        </div>
-      </div>
+      <Card className={className}>
+        <Skeleton className="h-32 rounded-lg mb-4" />
+        <CardContent className="space-y-2 p-6">
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+        </CardContent>
+      </Card>
     )
   }
 

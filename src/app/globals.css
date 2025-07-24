@@ -1,20 +1,217 @@
+/**
+ * Global Styles and Design System
+ * ================================
+ * 
+ * This file contains all global styles, CSS variables, and utility classes
+ * for the portfolio website. It follows shadcn/ui conventions and provides
+ * a consistent design system throughout the application.
+ * 
+ * Structure:
+ * ----------
+ * 1. Tailwind directives
+ * 2. CSS imports for Notion content
+ * 3. Utility classes (@layer utilities)
+ * 4. Base styles and CSS variables (@layer base)
+ * 5. Component-specific overrides
+ * 
+ * Utility Classes:
+ * ----------------
+ * - Layout: .section-container, .page-padding, .content-container
+ * - Cards: .card-base, .card-hover
+ * - Typography: .heading-1, .heading-2, .heading-3, .text-gradient
+ * - Spacing: .section-spacing, .content-spacing
+ * - Animations: .animate-in, .hover-scale, .hover-lift
+ * - Patterns: .bg-grid-pattern, .bg-dot-pattern
+ * - States: .skeleton-shimmer, .focus-ring
+ * - Transitions: .transition-base, .transition-fast, .transition-slow
+ * 
+ * CSS Variables:
+ * --------------
+ * - Colors: --primary, --secondary, --accent, --success, --warning, --info
+ * - Spacing: --spacing-xs through --spacing-3xl
+ * - Animation: --duration-fast, --duration-base, --duration-slow
+ * - Z-index: --z-base through --z-tooltip
+ * 
+ * Usage Examples:
+ * ---------------
+ * <div className="section-container page-padding">
+ * <h1 className="heading-1 text-gradient">
+ * <div className="card-base card-hover">
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Blog-specific styles */
-@import '../styles/blog/notion-overrides.css';
-@import '../styles/blog/blog-layout.css';
-@import '../styles/blog/blog-components.css';
+/* Notion-specific styles */
+@import '../styles/notion-overrides.css';
 
-/* Project-specific styles */
-@import '../styles/projects/notion-overrides.css';
+@layer components {
+  /* Blog Layout Components */
+  .blog-header-center {
+    @apply text-center max-w-3xl mx-auto mb-12;
+  }
+
+  .blog-meta {
+    @apply flex flex-wrap gap-4 items-center text-sm text-muted-foreground;
+  }
+
+  .blog-meta-item {
+    @apply flex items-center gap-1.5;
+  }
+
+  .blog-tags {
+    @apply flex flex-wrap gap-2;
+  }
+
+  /* Blog Navigation */
+  .blog-nav {
+    @apply flex justify-between items-center gap-4 mt-12 pt-8 border-t;
+  }
+
+  .blog-nav-item {
+    @apply flex-1 max-w-sm;
+  }
+
+  /* Table of Contents */
+  .blog-toc {
+    @apply bg-card border rounded-lg p-6;
+  }
+
+  .blog-toc-title {
+    @apply font-semibold mb-3;
+  }
+
+  .blog-toc-link {
+    @apply block py-1 text-sm text-muted-foreground hover:text-primary transition-colors;
+  }
+
+  .blog-toc-link.active {
+    @apply text-primary font-medium;
+  }
+
+  /* Blog Search */
+  .blog-search-input {
+    @apply w-full pl-10 pr-4 py-2 border rounded-lg bg-background text-foreground focus-ring;
+  }
+
+  /* Blog Filters */
+  .blog-filter-tag {
+    @apply px-3 py-1.5 border rounded-full text-sm cursor-pointer transition-base;
+    @apply hover:bg-primary hover:text-primary-foreground hover:border-primary;
+  }
+
+  .blog-filter-tag.active {
+    @apply bg-primary text-primary-foreground border-primary;
+  }
+
+  /* Blog Author Card */
+  .blog-author {
+    @apply bg-muted/50 border rounded-xl p-6 my-8;
+  }
+
+  .blog-author-header {
+    @apply flex items-center gap-4 mb-4;
+  }
+
+  .blog-author-avatar {
+    @apply w-16 h-16 rounded-full border-2;
+  }
+
+  /* Blog Share Buttons */
+  .blog-share-button {
+    @apply flex items-center gap-2 px-4 py-2 border rounded-lg text-sm transition-base;
+    @apply hover:bg-muted;
+  }
+
+  /* Blog Loading States */
+  .blog-skeleton {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--muted) / 0.8) 50%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: blog-skeleton-loading 1.5s ease-in-out infinite;
+  }
+}
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 
+  /* Layout utilities */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-padding {
+    @apply pt-20 md:pt-24;
+  }
+
+  .content-container {
+    @apply max-w-4xl mx-auto;
+  }
+
+  .blog-container {
+    @apply max-w-6xl mx-auto;
+  }
+
+  /* Card utilities */
+  .card-hover {
+    @apply hover:shadow-lg transition-all duration-300;
+  }
+
+  .card-base {
+    @apply bg-card border rounded-lg overflow-hidden;
+  }
+
+  /* Text utilities */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  .heading-1 {
+    @apply text-4xl md:text-5xl font-bold;
+  }
+
+  .heading-2 {
+    @apply text-3xl md:text-4xl font-bold;
+  }
+
+  .heading-3 {
+    @apply text-2xl md:text-3xl font-semibold;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Spacing utilities */
+  .section-spacing {
+    @apply py-16 md:py-24;
+  }
+
+  .content-spacing {
+    @apply space-y-6 md:space-y-8;
+  }
+
+  /* Animation utilities */
+  .animate-in {
+    @apply animate-fade-in;
+  }
+
+  .hover-scale {
+    @apply hover:scale-105 transition-transform duration-300;
+  }
+
+  .hover-lift {
+    @apply hover:-translate-y-1 transition-transform duration-300;
+  }
+
+  /* Grid patterns */
   .bg-grid-pattern {
     background-image: linear-gradient(to right, hsl(var(--border) / 0.4) 2px, transparent 2px),
       linear-gradient(to bottom, hsl(var(--border) / 0.4) 2px, transparent 2px);
@@ -24,6 +221,29 @@
   .bg-dot-pattern {
     background-image: radial-gradient(hsl(var(--foreground) / 0.15) 1px, transparent 1px);
     background-size: 16px 16px;
+  }
+
+  /* Loading states */
+  .skeleton-shimmer {
+    @apply animate-pulse bg-muted;
+  }
+
+  /* Focus states */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+
+  /* Transitions */
+  .transition-base {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .transition-fast {
+    @apply transition-all duration-150 ease-in-out;
+  }
+
+  .transition-slow {
+    @apply transition-all duration-300 ease-in-out;
   }
 
   .animate-fade-in {
@@ -155,6 +375,39 @@
     --input: 25 10% 88%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
+    
+    /* Semantic color additions */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+    
+    /* Spacing scale */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --spacing-3xl: 4rem;
+    
+    /* Animation durations */
+    --duration-fast: 150ms;
+    --duration-base: 200ms;
+    --duration-slow: 300ms;
+    --duration-slower: 500ms;
+    
+    /* Z-index scale */
+    --z-base: 0;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-fixed: 300;
+    --z-modal-backdrop: 400;
+    --z-modal: 500;
+    --z-popover: 600;
+    --z-tooltip: 700;
   }
 
   .dark {
@@ -177,6 +430,14 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 0 0% 83.1%;
+    
+    /* Semantic colors for dark mode */
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 90% 60%;
+    --warning-foreground: 0 0% 0%;
+    --info: 217 80% 70%;
+    --info-foreground: 0 0% 0%;
   }
 }
 
@@ -186,5 +447,14 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes blog-skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }

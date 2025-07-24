@@ -81,7 +81,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
       })
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28">
+    <div className="section-container page-padding">
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
         <aside className="hidden lg:block lg:col-span-1 py-16">
           <div className="sticky top-28">

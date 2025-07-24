@@ -87,7 +87,7 @@ export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSe
               variants={sentence}
               initial="hidden"
               animate="visible"
-              className="text-5xl md:text-7xl font-bold mb-6 text-foreground"
+              className="heading-1 mb-6 text-foreground md:text-7xl"
             >
               {siteInfo.heroTitle.split("").map((char, index) => (
                 <motion.span key={`${char}-${index}`} variants={letter}>

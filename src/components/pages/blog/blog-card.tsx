@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ArrowRight, Calendar, Clock, FileText } from "lucide-react"
 import { BlogPreview } from "@/lib/schemas"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import { ContentImage } from "@/components/common/content/content-image"
 import { ContentGrid, GRID_CONFIGS } from "@/components/common/content/content-grid"
 import { formatBlogDate, getDisplayTags } from "@/lib/utils/blog-utils"
@@ -24,28 +25,26 @@ export function BlogCard({
   )
 
   return (
-    <Link 
-      href={`/blog/${post.slug}`}
-      className="group block bg-card border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300"
-    >
-      <div className={`relative overflow-hidden ${isCompact ? "h-40" : "h-48"}`}>
-        {post.coverImage ? (
-          <ContentImage
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            fallbackType="blog"
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
-        ) : (
-          <div className={`relative ${isCompact ? "h-40" : "h-48"} bg-muted flex items-center justify-center group-hover:bg-muted/80 transition-colors duration-300`}>
-            <FileText className={`${isCompact ? "h-8 w-8" : "h-12 w-12"} text-muted-foreground/50`} />
-          </div>
-        )}
-      </div>
-      
-      <div className="p-6">
+    <Link href={`/blog/${post.slug}`}>
+      <Card className="group h-full card-hover">
+        <div className={`relative overflow-hidden ${isCompact ? "h-40" : "h-48"}`}>
+          {post.coverImage ? (
+            <ContentImage
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              className="object-cover hover-scale"
+              fallbackType="blog"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          ) : (
+            <div className={`relative ${isCompact ? "h-40" : "h-48"} bg-muted flex items-center justify-center group-hover:bg-muted/80 transition-colors`}>
+              <FileText className={`${isCompact ? "h-8 w-8" : "h-12 w-12"} text-muted-foreground/50`} />
+            </div>
+          )}
+        </div>
+        
+        <CardContent className="p-6">
         <div className={`flex items-center ${isCompact ? "gap-3" : "gap-4"} text-sm text-muted-foreground mb-3`}>
           <div className="flex items-center gap-1">
             <Calendar className="h-4 w-4" />
@@ -90,7 +89,8 @@ export function BlogCard({
             <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
           </div>
         )}
-      </div>
+        </CardContent>
+      </Card>
     </Link>
   )
 }
