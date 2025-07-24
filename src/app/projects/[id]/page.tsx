@@ -1,7 +1,6 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { Metadata } from "next"
-import { projects as localProjects } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion/notion-service"
 import ProjectDetailPage from "./project-detail"
 import type { Project, TechStackItem } from "@/lib/schemas/project.schemas"
@@ -42,35 +41,24 @@ interface ProjectPageProps {
 }
 
 async function getProjectData(id: string) {
-  // First try to get project from Notion
-  const useNotionProjects = process.env.NOTION_TOKEN && process.env.NOTION_PROJECTS_DATABASE_ID
-  
-  if (useNotionProjects) {
-    try {
-      // Try to get full Notion project with content
-      const notionProject = await getProjectById(id)
-      if (notionProject) {
-        return transformNotionToLocalProject(notionProject)
-      }
-      
-      // If not found by ID, try to get from projects list (in case of slug mismatch)
-      const allNotionProjects = await getAllProjects()
-      const foundProject = allNotionProjects.find(p => p.id === id || p.slug === id)
-      if (foundProject) {
-        const fullProject = await getProjectById(foundProject.id)
-        if (fullProject) {
-          return transformNotionToLocalProject(fullProject)
-        }
-      }
-    } catch {
-      // Failed to fetch Notion project, will try local data
+  try {
+    // Try to get full Notion project with content
+    const notionProject = await getProjectById(id)
+    if (notionProject) {
+      return transformNotionToLocalProject(notionProject)
     }
-  }
-  
-  // Fallback to local project data
-  const localProject = localProjects.find((p) => p.id === id)
-  if (localProject) {
-    return localProject
+    
+    // If not found by ID, try to get from projects list (in case of slug mismatch)
+    const allNotionProjects = await getAllProjects()
+    const foundProject = allNotionProjects.find(p => p.id === id || p.slug === id)
+    if (foundProject) {
+      const fullProject = await getProjectById(foundProject.id)
+      if (fullProject) {
+        return transformNotionToLocalProject(fullProject)
+      }
+    }
+  } catch (error) {
+    console.error('Failed to fetch project from Notion:', error)
   }
   
   return null
@@ -104,28 +92,16 @@ export const dynamicParams = false
 // Generate static params for ISR
 export async function generateStaticParams() {
   try {
-    // Try to get Notion projects first
-    const useNotionProjects = process.env.NOTION_TOKEN && process.env.NOTION_PROJECTS_DATABASE_ID
-    
-    if (useNotionProjects) {
-      try {
-        const notionProjects = await getAllProjects()
-        if (notionProjects && notionProjects.length > 0) {
-          console.log(`Found ${notionProjects.length} Notion projects for static generation`)
-          return notionProjects.map((project) => ({
-            id: project.id,
-          }))
-        }
-      } catch (error) {
-        console.error('Failed to fetch Notion projects, falling back to local data:', error)
-      }
+    const notionProjects = await getAllProjects()
+    if (notionProjects && notionProjects.length > 0) {
+      console.log(`Found ${notionProjects.length} Notion projects for static generation`)
+      return notionProjects.map((project) => ({
+        id: project.id,
+      }))
     }
     
-    // Fallback to local projects
-    console.log(`Using ${localProjects.length} local projects for static generation`)
-    return localProjects.map((project) => ({
-      id: project.id,
-    }))
+    console.log('No projects found for static generation')
+    return []
   } catch (error) {
     console.error('Error in generateStaticParams for projects:', error)
     return []
@@ -133,55 +109,49 @@ export async function generateStaticParams() {
 }
 
 async function getAllProjectsWithOrder(): Promise<Project[]> {
-  // Check if Notion projects should be used (environment flag)
-  const useNotionProjects = process.env.NOTION_TOKEN && process.env.NOTION_PROJECTS_DATABASE_ID
-  
-  if (useNotionProjects) {
-    try {
-      const notionProjects = await getAllProjects()
-      if (notionProjects && notionProjects.length > 0) {
-        // Transform all Notion projects to local project structure for consistency
-        const transformedProjects = await Promise.all(
-          notionProjects.map(async (preview) => {
-            try {
-              const fullProject = await getProjectById(preview.id)
-              if (fullProject) {
-                return transformNotionToLocalProject(fullProject)
-              } else {
-                // Fallback: transform preview to local project structure
-                const fallbackProject: NotionProject = {
-                  ...preview,
-                  keyFeatures: [],
-                  techStack: [],
-                  gallery: [],
-                  updatedAt: preview.publishedAt,
-                  recordMap: undefined, // Empty recordMap for preview fallback
-                }
-                return transformNotionToLocalProject(fallbackProject)
-              }
-            } catch {
-              // Fallback: transform preview to local project structure
-              const fallbackProject: NotionProject = {
+  try {
+    const notionProjects = await getAllProjects()
+    if (notionProjects && notionProjects.length > 0) {
+      // Transform all Notion projects to local project structure for consistency
+      const transformedProjects = await Promise.all(
+        notionProjects.map(async (preview) => {
+          try {
+            const fullProject = await getProjectById(preview.id)
+            if (fullProject) {
+              return transformNotionToLocalProject(fullProject)
+            } else {
+              // Transform preview to local project structure
+              const projectFromPreview: NotionProject = {
                 ...preview,
                 keyFeatures: [],
                 techStack: [],
                 gallery: [],
                 updatedAt: preview.publishedAt,
-                recordMap: undefined, // Empty recordMap for preview fallback
+                recordMap: undefined,
               }
-              return transformNotionToLocalProject(fallbackProject)
+              return transformNotionToLocalProject(projectFromPreview)
             }
-          })
-        )
-        return transformedProjects
-      }
-    } catch {
-      // Failed to fetch Notion projects for navigation, using local data
+          } catch {
+            // Transform preview to local project structure
+            const projectFromPreview: NotionProject = {
+              ...preview,
+              keyFeatures: [],
+              techStack: [],
+              gallery: [],
+              updatedAt: preview.publishedAt,
+              recordMap: undefined,
+            }
+            return transformNotionToLocalProject(projectFromPreview)
+          }
+        })
+      )
+      return transformedProjects
     }
+  } catch (error) {
+    console.error('Failed to fetch projects for navigation:', error)
   }
   
-  // Fallback to local projects
-  return localProjects as Project[]
+  return []
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {

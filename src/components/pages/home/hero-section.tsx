@@ -8,6 +8,7 @@ import { ArrowDown } from "lucide-react"
 import { ProjectMarquee } from "@/components/projects/project-marquee"
 import type { HeroSectionProps } from "@/lib/schemas"
 import { smoothScrollToElement } from "@/lib/core/utils"
+import { siteInfo, buttonLabels } from "@/lib/core/data"
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -53,7 +54,6 @@ const letter = {
 }
 
 export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSectionProps) {
-  const line1 = "Hey, I'm Madhav Lodha"
 
   const handleViewWorkClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -79,7 +79,7 @@ export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSe
           >
             <motion.div className="mb-6" variants={itemVariants}>
               <span className="text-sm uppercase tracking-widest font-medium text-muted-foreground">
-                Innovating at the Intersection of Hardware and Code
+                {siteInfo.tagline}
               </span>
             </motion.div>
 
@@ -89,7 +89,7 @@ export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSe
               animate="visible"
               className="text-5xl md:text-7xl font-bold mb-6 text-foreground"
             >
-              {line1.split("").map((char, index) => (
+              {siteInfo.heroTitle.split("").map((char, index) => (
                 <motion.span key={`${char}-${index}`} variants={letter}>
                   {char}
                 </motion.span>
@@ -97,12 +97,12 @@ export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSe
             </motion.h1>
 
             <motion.p variants={itemVariants} className="text-xl md:text-2xl mb-12 text-balance text-muted-foreground">
-              I bring intelligent machines to life, crafting both the code and the hardware that powers them.
+              {siteInfo.bio}
             </motion.p>
 
             <motion.div variants={itemVariants}>
               <Button onClick={handleViewWorkClick} size="lg">
-                View My Work
+                {buttonLabels.viewMyWork}
                 <ArrowDown className="ml-2 h-4 w-4 animate-bounce" />
               </Button>
             </motion.div>
@@ -121,8 +121,8 @@ export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSe
 
               <div className="relative w-full h-full flex items-center justify-center p-4">
                 <Image
-                  src="/assets/portfolio/avatar-transparent.png"
-                  alt="Madhav Lodha"
+                  src={siteInfo.avatarTransparent}
+                  alt={siteInfo.avatarAlt}
                   width={280}
                   height={280}
                   className="object-contain"

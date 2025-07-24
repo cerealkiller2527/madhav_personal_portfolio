@@ -2,19 +2,7 @@
 import type React from "react"
 import Link from "next/link"
 import { Linkedin, Github, Mail } from "lucide-react"
-
-const connectLinks = [
-  { href: "https://www.linkedin.com/in/madhavlodha/", label: "LinkedIn" },
-  { href: "https://github.com/MadhavLodha", label: "GitHub" },
-  { href: "mailto:madhavlodha2503@gmail.com", label: "Email" },
-]
-
-const workLinks = [
-  { href: "#", label: "Underwater ROV" },
-  { href: "#", label: "Tomo AI Game" },
-  { href: "#", label: "Frappe Fridge Manager" },
-  { href: "#", label: "T-Bot FRC Robot" },
-]
+import { siteInfo, footerData } from "@/lib/core/data"
 
 const FooterLink = ({
   href,
@@ -53,46 +41,36 @@ export function Footer() {
       <div className="relative mx-auto w-full max-w-7xl px-6 md:px-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
-            <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight tracking-tight">Madhav Lodha</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight tracking-tight">{siteInfo.name}</h1>
             <p className="text-white/80 text-base mt-2 max-w-2xl">
-              Robotics Engineering & Computer Science Major at WPI.
+              {siteInfo.description}
             </p>
             <p className="text-sm text-white/60 mt-6">
-              © {new Date().getFullYear()} Madhav Lodha. All Rights Reserved.
+              {siteInfo.copyright}
             </p>
           </div>
 
           <div className="md:col-span-1 lg:col-span-2 flex flex-col sm:flex-row sm:justify-end gap-8">
             <div className="flex gap-8">
-              <LinkSection title="Connect" links={connectLinks} />
-              <LinkSection title="Work" links={workLinks} />
+              <LinkSection title={footerData.sections.connect.title} links={footerData.sections.connect.links} />
+              <LinkSection title={footerData.sections.work.title} links={footerData.sections.work.links} />
             </div>
             <div className="flex items-start gap-3">
-              <a
-                href="https://www.linkedin.com/in/madhavlodha/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 border border-white/30 rounded flex items-center justify-center text-white/80 hover:text-white hover:border-white/50 transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a
-                href="https://github.com/MadhavLodha"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 border border-white/30 rounded flex items-center justify-center text-white/80 hover:text-white hover:border-white/50 transition-colors"
-                aria-label="GitHub"
-              >
-                <Github className="w-4 h-4" />
-              </a>
-              <a
-                href="mailto:madhavlodha2503@gmail.com"
-                className="w-8 h-8 border border-white/30 rounded flex items-center justify-center text-white/80 hover:text-white hover:border-white/50 transition-colors"
-                aria-label="Email"
-              >
-                <Mail className="w-4 h-4" />
-              </a>
+              {footerData.socialIcons.map((social) => {
+                const IconComponent = social.icon === 'linkedin' ? Linkedin : social.icon === 'github' ? Github : Mail
+                return (
+                  <a
+                    key={social.icon}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 border border-white/30 rounded flex items-center justify-center text-white/80 hover:text-white hover:border-white/50 transition-colors"
+                    aria-label={social.ariaLabel}
+                  >
+                    <IconComponent className="w-4 h-4" />
+                  </a>
+                )
+              })}
             </div>
           </div>
         </div>

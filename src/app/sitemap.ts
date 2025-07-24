@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next'
 import { getAllBlogPosts, getAllProjects } from '@/lib/notion/notion-service'
-import { projects as localProjects } from '@/lib/core/data'
 
 export const dynamic = 'force-static'
 
@@ -17,7 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }))
 
-    // Get projects (Notion or local)
+    // Get projects from Notion
     let projectUrls: MetadataRoute.Sitemap = []
     try {
       const notionProjects = await getAllProjects()
@@ -28,22 +27,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           changeFrequency: 'monthly',
           priority: 0.7,
         }))
-      } else {
-        projectUrls = localProjects.map((project) => ({
-          url: `${baseUrl}/projects/${project.id}/`,
-          lastModified: new Date(),
-          changeFrequency: 'monthly',
-          priority: 0.7,
-        }))
       }
-    } catch {
-      // Use local projects if Notion fails
-      projectUrls = localProjects.map((project) => ({
-        url: `${baseUrl}/projects/${project.id}/`,
-        lastModified: new Date(),
-        changeFrequency: 'monthly',
-        priority: 0.7,
-      }))
+    } catch (error) {
+      console.error('Failed to fetch projects for sitemap:', error)
     }
 
     return [
