@@ -1,10 +1,19 @@
 import { z } from 'zod'
 import { uuidSchema, urlSchema, nonEmptyStringSchema, optionalSchema, dateStringSchema } from './common.schemas'
 import { projectCategorySchema, statisticSchema, galleryItemSchema, featureSchema, techStackItemSchema } from './project.schemas'
+import type { ExtendedRecordMap } from 'notion-types'
 
 // ============================================================================
 // Notion API Types
 // ============================================================================
+
+/**
+ * Extended record map schema - properly typed wrapper for notion-types
+ */
+export const extendedRecordMapSchema = z.custom<ExtendedRecordMap>(
+  (val) => val !== null && typeof val === 'object',
+  { message: 'Invalid ExtendedRecordMap' }
+)
 
 /**
  * Notion property value schema
@@ -75,7 +84,7 @@ export type BaseContent = z.infer<typeof baseContentSchema>
 export const blogContentSchema = baseContentSchema.extend({
   category: optionalSchema(z.string()),
   readingTime: z.number().int().positive().optional(),
-  recordMap: z.any().optional() // ExtendedRecordMap from notion-types
+  recordMap: extendedRecordMapSchema.optional()
 })
 export type BlogContent = z.infer<typeof blogContentSchema>
 
@@ -105,7 +114,7 @@ export const projectContentSchema = baseContentSchema.extend({
   gallery: z.array(galleryItemSchema),
   keyFeatures: z.array(featureSchema),
   techStack: z.array(techStackItemSchema),
-  recordMap: z.any().optional() // ExtendedRecordMap from notion-types
+  recordMap: extendedRecordMapSchema.optional()
 })
 export type ProjectContent = z.infer<typeof projectContentSchema>
 
@@ -127,12 +136,16 @@ export type NotionProjectPreview = z.infer<typeof notionProjectPreviewSchema>
 /**
  * Validation result schema
  */
-export const validationResultSchema = z.object({
+export const validationResultSchema = <T extends z.ZodTypeAny>(dataSchema: T) => z.object({
   isValid: z.boolean(),
   errors: z.array(z.string()),
-  data: z.unknown().optional()
+  data: dataSchema.optional()
 })
-export type ValidationResult<T = unknown> = z.infer<typeof validationResultSchema> & { data?: T }
+export type ValidationResult<T> = {
+  isValid: boolean
+  errors: string[]
+  data?: T
+}
 
 
 // ============================================================================
@@ -155,11 +168,16 @@ export type NotionConfig = z.infer<typeof notionConfigSchema>
 /**
  * Cache entry schema
  */
-export const cacheEntrySchema = z.object({
-  data: z.unknown(),
+export const cacheEntrySchema = <T extends z.ZodTypeAny>(dataSchema: T) => z.object({
+  data: dataSchema,
   timestamp: z.number(),
   ttl: z.number(),
   key: z.string()
 })
-export type CacheEntry<T> = Omit<z.infer<typeof cacheEntrySchema>, 'data'> & { data: T }
+export type CacheEntry<T> = {
+  data: T
+  timestamp: number
+  ttl: number
+  key: string
+}
 

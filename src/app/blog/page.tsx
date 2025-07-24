@@ -24,7 +24,17 @@ async function BlogContent() {
               </p>
             </div>
             
-            <BlogGrid posts={posts} />
+            {posts.length > 0 ? (
+              <BlogGrid posts={posts} />
+            ) : (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📝</div>
+                <h3 className="text-lg font-semibold mb-2">No Blog Posts Yet</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  Check back later for new content.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

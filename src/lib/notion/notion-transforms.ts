@@ -13,6 +13,32 @@ import {
 } from "@/lib/schemas"
 
 // =============================================================================
+// TYPE GUARDS
+// =============================================================================
+
+type NotionCover = {
+  external?: { url?: string }
+  file?: { url?: string }
+}
+
+function isNotionCover(cover: unknown): cover is NotionCover {
+  if (!cover || typeof cover !== 'object') return false
+  const c = cover as Record<string, unknown>
+  
+  if (c.external && typeof c.external === 'object') {
+    const ext = c.external as Record<string, unknown>
+    if (typeof ext.url === 'string') return true
+  }
+  
+  if (c.file && typeof c.file === 'object') {
+    const file = c.file as Record<string, unknown>
+    if (typeof file.url === 'string') return true
+  }
+  
+  return false
+}
+
+// =============================================================================
 // UTILITY FUNCTIONS
 // =============================================================================
 
@@ -70,37 +96,34 @@ function createSlug(title: string): string {
 }
 
 export function normalizeImageUrl(url: string): string {
-  if (url.startsWith('data:')) return '' // Skip base64 images
+  if (!url || url.startsWith('data:')) return ''
   if (url.startsWith('http://') || url.startsWith('https://')) return url
   if (url.startsWith('/')) return `https://www.notion.so${url}`
-  if (!url.includes('://') && url.length > 0) return `https://www.notion.so/${url}`
+  if (!url.includes('://')) return `https://www.notion.so/${url}`
   return url
 }
 
-function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: unknown, imageProperty: string): string | undefined {
-  // Priority: Vectary URL > Database Image > Page Cover
-  const vectaryUrl = getProperty(properties, "Vectary URL") as string
-  if (vectaryUrl) return vectaryUrl
+function getCoverImageUrl(cover: unknown): string | undefined {
+  if (!isNotionCover(cover)) return undefined
   
+  const url = cover.external?.url || cover.file?.url
+  return url ? normalizeImageUrl(url) : undefined
+}
+
+function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: unknown, imageProperty: string): string | undefined {
+  // Priority: Database Image Property > Page Cover
   const imageUrl = getProperty(properties, imageProperty) as string
   if (imageUrl) return normalizeImageUrl(imageUrl)
   
-  if (cover) {
-    const coverObj = cover as { external?: { url?: string }, file?: { url?: string } }
-    const pageCoverUrl = coverObj.external?.url || coverObj.file?.url
-    if (pageCoverUrl) return normalizeImageUrl(pageCoverUrl)
-  }
-  
-  return undefined
+  return getCoverImageUrl(cover)
 }
 
 // =============================================================================
 // BLOG TRANSFORMATIONS
 // =============================================================================
 
-export function transformToBlogPreview(page: unknown): BlogPreview | null {
-  const notionPage = page as NotionPage
-  const { properties, cover } = notionPage
+export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
+  const { properties, cover } = page
   
   const title = getProperty(properties, "Name") || getProperty(properties, "Title")
   const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
@@ -110,7 +133,7 @@ export function transformToBlogPreview(page: unknown): BlogPreview | null {
   }
 
   return {
-    id: notionPage.id,
+    id: page.id,
     slug: createSlug(title),
     title,
     description: getProperty(properties, "Description") as string,
@@ -138,9 +161,8 @@ export async function transformToBlogContent(
 // PROJECT TRANSFORMATIONS
 // =============================================================================
 
-export function transformToProjectPreview(page: unknown): NotionProjectPreview | null {
-  const notionPage = page as NotionPage
-  const { properties, cover } = notionPage
+export function transformToProjectPreview(page: NotionPage): NotionProjectPreview | null {
+  const { properties, cover } = page
   
   const title = getProperty(properties, "Name") || getProperty(properties, "Title")
   const publishedAt = getProperty(properties, "Published Date") || getProperty(properties, "Date")
@@ -156,7 +178,7 @@ export function transformToProjectPreview(page: unknown): NotionProjectPreview |
   const statistics = getProperty(properties, "Statistics") as string
   
   return {
-    id: notionPage.id,
+    id: page.id,
     slug: createSlug(title),
     title,
     subtitle: getProperty(properties, "Subtitle") as string || "",

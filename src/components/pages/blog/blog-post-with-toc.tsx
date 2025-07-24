@@ -60,7 +60,7 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
                 />
 
                 <div className="prose prose-lg max-w-none dark:prose-invert">
-                  <NotionRenderer recordMap={post.recordMap} contentType="blog" />
+                  {post.recordMap && <NotionRenderer recordMap={post.recordMap} contentType="blog" />}
                 </div>
               </article>
 

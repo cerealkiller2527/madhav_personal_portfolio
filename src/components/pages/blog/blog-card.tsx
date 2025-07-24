@@ -4,8 +4,6 @@ import { BlogPreview } from "@/lib/schemas"
 import { Badge } from "@/components/ui/badge"
 import { ContentImage } from "@/components/common/content/content-image"
 import { ContentGrid, GRID_CONFIGS } from "@/components/common/content/content-grid"
-import { LoadingGrid } from "@/components/common/ui/loading-states"
-import { ErrorMessage, NotFoundError } from "@/components/common/ui/error-boundaries"
 import { formatBlogDate, getDisplayTags } from "@/lib/utils/blog-utils"
 
 interface BlogCardProps {
@@ -103,35 +101,9 @@ export { BlogCard as BlogContentCard }
 // BlogGrid functionality (consolidated from blog-grid.tsx)
 export interface BlogGridProps {
   posts: readonly BlogPreview[]
-  loading?: boolean
-  error?: string
-  onRetry?: () => void
 }
 
-export function BlogGrid({ posts, loading, error, onRetry }: BlogGridProps) {
-  if (loading) {
-    return <LoadingGrid variant="blog" count={6} />
-  }
-
-  if (error) {
-    return (
-      <ErrorMessage
-        title="Something went wrong"
-        message={error}
-        onRetry={onRetry}
-      />
-    )
-  }
-
-  if (posts.length === 0) {
-    return (
-      <NotFoundError
-        resource="blog posts"
-        onGoBack={() => window.location.reload()}
-      />
-    )
-  }
-
+export function BlogGrid({ posts }: BlogGridProps) {
   return (
     <ContentGrid config={GRID_CONFIGS.blog}>
       {posts.map((post) => (

@@ -30,6 +30,6 @@ export async function getCachedData<T>(
 }
 
 // No-op in static export
-export function clearCache(_pattern?: string): void {
+export function clearCache(): void {
   // No caching in static export
 }

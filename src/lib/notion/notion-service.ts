@@ -21,6 +21,7 @@ import {
   getBlogCacheKey,
   getProjectsCacheKey
 } from "@/lib/core/cache"
+import { NotionPage } from "@/lib/schemas"
 
 // =============================================================================
 // CACHE CONFIGURATION
@@ -38,7 +39,7 @@ const CACHE_DURATION = {
 // TRANSFORMATION HELPERS
 // =============================================================================
 
-function safeTransform<T>(pages: unknown[], transformFn: (page: unknown) => T | null): T[] {
+function safeTransform<T>(pages: NotionPage[], transformFn: (page: NotionPage) => T | null): T[] {
   return pages
     .map(page => {
       try {
@@ -57,7 +58,7 @@ function safeTransform<T>(pages: unknown[], transformFn: (page: unknown) => T | 
 async function _getAllBlogPosts(): Promise<BlogPreview[]> {
   if (!notionClient.isBlogConfigured()) return []
   const pages = await notionClient.getBlogContents()
-  return safeTransform(pages as unknown[], transformToBlogPreview)
+  return safeTransform(pages, transformToBlogPreview)
 }
 
 async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
@@ -74,7 +75,7 @@ async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
 async function _getAllProjects(): Promise<NotionProjectPreview[]> {
   if (!notionClient.isProjectsConfigured()) return []
   const pages = await notionClient.getProjects()
-  return safeTransform(pages as unknown[], transformToProjectPreview)
+  return safeTransform(pages, transformToProjectPreview)
 }
 
 async function _getProjectById(id: string): Promise<ProjectContent | null> {
@@ -91,7 +92,7 @@ async function _getProjectById(id: string): Promise<ProjectContent | null> {
 async function _getFeaturedProjects(limit: number = 4): Promise<NotionProjectPreview[]> {
   if (!notionClient.isProjectsConfigured()) return []
   const pages = await notionClient.getFeaturedProjects(limit)
-  return safeTransform(pages as unknown[], transformToProjectPreview).slice(0, limit)
+  return safeTransform(pages, transformToProjectPreview).slice(0, limit)
 }
 
 // =============================================================================
@@ -179,18 +180,12 @@ export function clearAllCache(): void {
   clearCache()
 }
 
-export function clearBlogCache(slug?: string): void {
-  clearCache("blog")
-  if (slug) {
-    clearCache(getBlogCacheKey("single_post", slug))
-  }
+export function clearBlogCache(): void {
+  clearCache()
 }
 
-export function clearProjectsCache(id?: string): void {
-  clearCache("projects")
-  if (id) {
-    clearCache(getProjectsCacheKey("single_project", id))
-  }
+export function clearProjectsCache(): void {
+  clearCache()
 }
 
 // Export client for direct access if needed

@@ -3,10 +3,10 @@ import { projects as localProjects, experiences } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion/notion-service"
 import HomePage from "@/components/pages/home/home-page"
 import Loading from "./loading"
-import type { Project, ProjectContent } from "@/lib/schemas"
+import type { Project, ProjectContent, TechStackItem } from "@/lib/schemas"
 
 // Transform Notion project to local project structure
-function transformNotionToLocalProject(notionProject: ProjectContent): Project {
+function transformNotionToLocalProject(notionProject: ProjectContent): Project & { recordMap?: ProjectContent['recordMap'] } {
   return {
     id: notionProject.id,
     title: notionProject.title,
@@ -24,8 +24,7 @@ function transformNotionToLocalProject(notionProject: ProjectContent): Project {
     detailedDescription: notionProject.description || "",
     vectaryEmbedUrl: notionProject.vectaryEmbedUrl,
     keyFeatures: notionProject.keyFeatures || [],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    techStack: notionProject.techStack as any || [],
+    techStack: notionProject.techStack as TechStackItem[] || [],
     recordMap: notionProject.recordMap,
   }
 }

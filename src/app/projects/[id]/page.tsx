@@ -4,12 +4,12 @@ import { Metadata } from "next"
 import { projects as localProjects } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion/notion-service"
 import ProjectDetailPage from "./project-detail"
-import type { Project } from "@/lib/schemas/project.schemas"
+import type { Project, TechStackItem } from "@/lib/schemas/project.schemas"
 import type { ProjectContent as NotionProject } from "@/lib/schemas"
 import { LogoSpinner } from "@/components/common/ui/logo-spinner"
 
 // Transform Notion project to local project structure (shared with homepage)
-function transformNotionToLocalProject(notionProject: NotionProject): Project & { coverImage?: string } {
+function transformNotionToLocalProject(notionProject: NotionProject): Project & { coverImage?: string; recordMap?: NotionProject['recordMap'] } {
   return {
     id: notionProject.id,
     title: notionProject.title,
@@ -29,8 +29,7 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project & 
     detailedDescription: notionProject.description || "", // Use description as fallback
     vectaryEmbedUrl: notionProject.vectaryEmbedUrl,
     keyFeatures: notionProject.keyFeatures || [],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    techStack: notionProject.techStack as any || [],
+    techStack: notionProject.techStack as TechStackItem[] || [],
     // Preserve recordMap for Notion content rendering
     recordMap: notionProject.recordMap,
   }
@@ -182,8 +181,7 @@ async function getAllProjectsWithOrder(): Promise<Project[]> {
   }
   
   // Fallback to local projects
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return localProjects as any
+  return localProjects as Project[]
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
@@ -211,12 +209,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </div>
     }>
       <ProjectDetailPage 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        project={project as any}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        previousProject={previousProject as any}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        nextProject={nextProject as any}
+        project={project}
+        previousProject={previousProject}
+        nextProject={nextProject}
       />
     </Suspense>
   )

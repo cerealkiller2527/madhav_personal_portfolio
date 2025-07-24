@@ -4,6 +4,18 @@ import { experienceSchema } from './experience.schemas'
 import { blogPreviewSchema, blogContentSchema } from './blog.schemas'
 
 // ============================================================================
+// React Node Schema
+// ============================================================================
+
+/**
+ * React node schema - accepts any valid React child
+ */
+export const reactNodeSchema = z.custom<React.ReactNode>(
+  () => true, // React nodes can be many types
+  { message: 'Invalid React node' }
+)
+
+// ============================================================================
 // Base Component Props
 // ============================================================================
 
@@ -12,7 +24,7 @@ import { blogPreviewSchema, blogContentSchema } from './blog.schemas'
  */
 export const baseComponentPropsSchema = z.object({
   className: z.string().optional(),
-  children: z.any().optional(), // React.ReactNode
+  children: reactNodeSchema.optional(),
   id: z.string().optional()
 })
 export type BaseComponentProps = z.infer<typeof baseComponentPropsSchema>
