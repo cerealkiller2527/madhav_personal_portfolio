@@ -47,25 +47,7 @@ async function _getAllBlogPosts(): Promise<BlogPreview[]> {
   if (!notionClient.isBlogConfigured()) return []
   const pages = await notionClient.getBlogContents()
   
-  const previews = await Promise.all(
-    pages.map(async (page) => {
-      try {
-        const preview = transformToBlogPreview(page)
-        if (!preview) return null
-        
-        const recordMap = await notionClient.getPage(preview.id)
-        const fullContent = await transformToBlogContent(preview, recordMap)
-        
-        return {
-          ...preview,
-          readingTime: fullContent.readingTime
-        }
-      } catch {
-        return transformToBlogPreview(page)
-      }
-    })
-  )
-  
+  const previews = pages.map(page => transformToBlogPreview(page))
   return previews.filter(Boolean) as BlogPreview[]
 }
 

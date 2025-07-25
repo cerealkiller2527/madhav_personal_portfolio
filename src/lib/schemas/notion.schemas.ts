@@ -20,7 +20,7 @@ export const extendedRecordMapSchema = z.custom<ExtendedRecordMap>(
  */
 export const notionPropertyValueSchema = z.object({
   id: z.string(),
-  type: z.enum(['title', 'rich_text', 'date', 'checkbox', 'select', 'multi_select', 'files', 'url']),
+  type: z.enum(['title', 'rich_text', 'date', 'checkbox', 'select', 'multi_select', 'files', 'url', 'number']),
   title: z.array(z.object({ plain_text: z.string() })).optional(),
   rich_text: z.array(z.object({ plain_text: z.string() })).optional(),
   date: z.object({ start: z.string() }).nullable().optional(),
@@ -31,7 +31,8 @@ export const notionPropertyValueSchema = z.object({
     file: z.object({ url: urlSchema }).optional(),
     external: z.object({ url: urlSchema }).optional()
   })).optional(),
-  url: z.string().nullable().optional()
+  url: z.string().nullable().optional(),
+  number: z.number().nullable().optional()
 })
 export type NotionPropertyValue = z.infer<typeof notionPropertyValueSchema>
 

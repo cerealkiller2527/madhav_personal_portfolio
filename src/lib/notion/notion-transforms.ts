@@ -31,7 +31,7 @@ function isNotionCover(cover: unknown): cover is NotionCover {
 }
 
 
-function getProperty(properties: Record<string, NotionPropertyValue>, name: string): string | string[] | boolean | null {
+function getProperty(properties: Record<string, NotionPropertyValue>, name: string): string | string[] | boolean | number | null {
   const prop = properties[name]
   if (!prop) return null
   
@@ -47,6 +47,7 @@ function getProperty(properties: Record<string, NotionPropertyValue>, name: stri
     case "select": return prop.select?.name || null
     case "url": return prop.url || null
     case "files": return prop.files?.[0]?.file?.url || prop.files?.[0]?.external?.url || null
+    case "number": return prop.number || null
     default: return null
   }
 }
@@ -106,6 +107,8 @@ function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: unk
 }
 
 
+// Note: Reading time is calculated dynamically when full content is loaded
+// This avoids expensive operations during preview generation
 export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
   const { properties, cover } = page
   
@@ -115,6 +118,10 @@ export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
   if (typeof title !== 'string' || !title || typeof publishedAt !== 'string' || !publishedAt) {
     return null
   }
+
+  // Get reading time from Notion property, fallback to calculated or default
+  const readingTimeFromNotion = getProperty(properties, "Reading Time") as number | null
+  const readingTime = readingTimeFromNotion && readingTimeFromNotion > 0 ? readingTimeFromNotion : 1
 
   return {
     id: page.id,
@@ -127,7 +134,7 @@ export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
     category: getProperty(properties, "Category") as string,
     coverImage: getImageUrl(properties, cover, "Cover"),
     published: true,
-    readingTime: 1,
+    readingTime,
   }
 }
 
@@ -205,47 +212,39 @@ function extractTextFromRecordMap(recordMap: ExtendedRecordMap): string {
     const textContent: string[] = []
     
     if (recordMap.block) {
-      for (const blockId in recordMap.block) {
-        const block = recordMap.block[blockId]?.value
-        if (!block) continue
+      // Process all blocks efficiently using the proper structure
+      Object.values(recordMap.block).forEach(blockWrapper => {
+        const block = blockWrapper?.value
+        if (!block || !block.properties) return
         
-        const properties = block.properties || {}
+        const properties = block.properties
         
-        if (properties.title && Array.isArray(properties.title)) {
-          textContent.push(properties.title.map(item => item[0] || '').join(''))
-        }
+        // Extract text from common text-containing properties
+        const textProperties = ['title', 'rich_text', 'caption'] as const
         
-        if (properties.rich_text && Array.isArray(properties.rich_text)) {
-          textContent.push(properties.rich_text.map(item => item[0] || '').join(''))
-        }
-        
-        if (properties.caption && Array.isArray(properties.caption)) {
-          textContent.push(properties.caption.map(item => item[0] || '').join(''))
-        }
-        
-        if (properties.code && Array.isArray(properties.code)) {
-          textContent.push(properties.code.map(item => item[0] || '').join(''))
-        }
-        
-        if (properties.language && Array.isArray(properties.language)) {
-          textContent.push(properties.language.map(item => item[0] || '').join(''))
-        }
-        
-        if (properties.url && Array.isArray(properties.url)) {
-          textContent.push(properties.url.map(item => item[0] || '').join(''))
-        }
-        
-        for (const [key, value] of Object.entries(properties)) {
-          if (Array.isArray(value) && !['title', 'rich_text', 'caption', 'code', 'language', 'url'].includes(key)) {
-            textContent.push(value.map(item => item && item[0] ? item[0] : '').join(''))
+        for (const prop of textProperties) {
+          if (properties[prop] && Array.isArray(properties[prop])) {
+            // Each property is an array of rich text elements
+            // Each element is typically [text, decorations] format
+            const text = properties[prop]
+              .map((item: unknown) => {
+                if (Array.isArray(item) && item.length > 0) {
+                  return String(item[0] || '')
+                } else if (typeof item === 'string') {
+                  return item
+                }
+                return ''
+              })
+              .join('')
+              .trim()
+            
+            if (text) textContent.push(text)
           }
         }
-      }
+      })
     }
     
-    const extractedText = textContent.filter(text => text.trim().length > 0).join(' ').trim()
-    
-    return extractedText
+    return textContent.join(' ').trim()
   } catch (error) {
     console.error('Error extracting text from recordMap:', error)
     return ''
