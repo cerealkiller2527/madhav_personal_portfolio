@@ -1,4 +1,3 @@
-// Notion service - high-level service layer with caching
 
 import { 
   BlogContent, 
@@ -47,7 +46,27 @@ function safeTransform<T>(pages: NotionPage[], transformFn: (page: NotionPage) =
 async function _getAllBlogPosts(): Promise<BlogPreview[]> {
   if (!notionClient.isBlogConfigured()) return []
   const pages = await notionClient.getBlogContents()
-  return safeTransform(pages, transformToBlogPreview)
+  
+  const previews = await Promise.all(
+    pages.map(async (page) => {
+      try {
+        const preview = transformToBlogPreview(page)
+        if (!preview) return null
+        
+        const recordMap = await notionClient.getPage(preview.id)
+        const fullContent = await transformToBlogContent(preview, recordMap)
+        
+        return {
+          ...preview,
+          readingTime: fullContent.readingTime
+        }
+      } catch {
+        return transformToBlogPreview(page)
+      }
+    })
+  )
+  
+  return previews.filter(Boolean) as BlogPreview[]
 }
 
 async function _getBlogPostBySlug(slug: string): Promise<BlogContent | null> {

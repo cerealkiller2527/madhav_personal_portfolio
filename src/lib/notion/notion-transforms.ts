@@ -1,5 +1,3 @@
-// Notion data transformations
-
 import { ExtendedRecordMap } from "notion-types"
 import { 
   NotionPage, 
@@ -9,7 +7,6 @@ import {
   ProjectContent,
   NotionProjectPreview
 } from "@/lib/schemas"
-
 
 type NotionCover = {
   external?: { url?: string }
@@ -130,7 +127,7 @@ export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
     category: getProperty(properties, "Category") as string,
     coverImage: getImageUrl(properties, cover, "Cover"),
     published: true,
-    readingTime: 5,
+    readingTime: 1,
   }
 }
 
@@ -138,9 +135,13 @@ export async function transformToBlogContent(
   preview: BlogPreview,
   recordMap: ExtendedRecordMap
 ): Promise<BlogContent> {
+  const textContent = extractTextFromRecordMap(recordMap)
+  const calculatedReadingTime = calculateReadingTime(textContent)
+  
   return {
     ...preview,
     recordMap,
+    readingTime: calculatedReadingTime,
   }
 }
 
@@ -198,8 +199,66 @@ export async function transformToProjectContent(
 
 
 export const createSlugFromTitle = createSlug
-export function calculateReadingTime(content: string, wordsPerMinute = 200): number {
-  if (!content || typeof content !== 'string') return 0
-  const wordCount = content.split(/\s+/).filter(word => word.length > 0).length
-  return Math.ceil(wordCount / wordsPerMinute)
+
+function extractTextFromRecordMap(recordMap: ExtendedRecordMap): string {
+  try {
+    const textContent: string[] = []
+    
+    if (recordMap.block) {
+      for (const blockId in recordMap.block) {
+        const block = recordMap.block[blockId]?.value
+        if (!block) continue
+        
+        const properties = block.properties || {}
+        
+        if (properties.title && Array.isArray(properties.title)) {
+          textContent.push(properties.title.map(item => item[0] || '').join(''))
+        }
+        
+        if (properties.rich_text && Array.isArray(properties.rich_text)) {
+          textContent.push(properties.rich_text.map(item => item[0] || '').join(''))
+        }
+        
+        if (properties.caption && Array.isArray(properties.caption)) {
+          textContent.push(properties.caption.map(item => item[0] || '').join(''))
+        }
+        
+        if (properties.code && Array.isArray(properties.code)) {
+          textContent.push(properties.code.map(item => item[0] || '').join(''))
+        }
+        
+        if (properties.language && Array.isArray(properties.language)) {
+          textContent.push(properties.language.map(item => item[0] || '').join(''))
+        }
+        
+        if (properties.url && Array.isArray(properties.url)) {
+          textContent.push(properties.url.map(item => item[0] || '').join(''))
+        }
+        
+        for (const [key, value] of Object.entries(properties)) {
+          if (Array.isArray(value) && !['title', 'rich_text', 'caption', 'code', 'language', 'url'].includes(key)) {
+            textContent.push(value.map(item => item && item[0] ? item[0] : '').join(''))
+          }
+        }
+      }
+    }
+    
+    const extractedText = textContent.filter(text => text.trim().length > 0).join(' ').trim()
+    
+    return extractedText
+  } catch (error) {
+    console.error('Error extracting text from recordMap:', error)
+    return ''
+  }
+}
+
+export function calculateReadingTime(content: string, wordsPerMinute = 160): number {
+  if (!content || typeof content !== 'string') return 1
+  
+  const words = content.trim().split(/\s+/).filter(word => word.length > 0)
+  const wordCount = words.length
+  
+  if (wordCount === 0) return 1
+  
+  return Math.max(1, Math.ceil(wordCount / wordsPerMinute))
 }
