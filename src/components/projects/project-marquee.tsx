@@ -145,9 +145,18 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
   const mouseX = useMotionValue(Number.POSITIVE_INFINITY)
   const itemWidth = 280 // w-64 (256px) + mx-3 (24px) = 280px
 
-  // Triple the projects for seamless infinite scroll
+  // Create enough copies for seamless scrolling
   const extendedProjects = useMemo(
-    () => (projects.length > 0 ? [...projects, ...projects, ...projects] : []),
+    () => {
+      if (projects.length === 0) return []
+      // Create enough copies to ensure seamless scrolling
+      const copies = []
+      const minCopies = 5 // Ensure we have enough for smooth transitions
+      for (let i = 0; i < minCopies; i++) {
+        copies.push(...projects)
+      }
+      return copies
+    },
     [projects],
   )
   const singleSetWidth = projects.length * itemWidth
@@ -155,24 +164,30 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
   // Animation values
   const x = useMotionValue(0)
   const velocityFactor = useMotionValue(0)
-  const baseVelocity = -120 // Base scrolling speed
+  const baseVelocity = -100 // Base scrolling speed
 
   useAnimationFrame((_time, delta) => {
     if (!singleSetWidth) return
 
     const deltaInSeconds = delta / 1000
-    let moveBy = baseVelocity * deltaInSeconds
-    moveBy += velocityFactor.get() * 200 * deltaInSeconds // Velocity from mouse position
-
+    const vf = velocityFactor.get()
+    
+    // Calculate movement - positive vf moves right (reverse), negative moves left (faster forward)
+    const baseMove = baseVelocity * deltaInSeconds
+    const mouseInfluence = vf * 300 * deltaInSeconds // Increased for more responsive control
+    const totalMove = baseMove + mouseInfluence
+    
     const currentX = x.get()
-    const newX = currentX + moveBy
+    let newX = currentX + totalMove
 
-    // When we've scrolled one full set width, jump back seamlessly
+    // Seamless wrapping - wrap when we've moved one full set width in either direction
     if (newX <= -singleSetWidth) {
-      x.set(newX + singleSetWidth)
-    } else {
-      x.set(newX)
+      newX = newX + singleSetWidth
+    } else if (newX >= 0) {
+      newX = newX - singleSetWidth
     }
+    
+    x.set(newX)
   })
 
   return (
@@ -182,8 +197,8 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
           mouseX.set(e.clientX)
           const { left, width } = e.currentTarget.getBoundingClientRect()
           const normalizedPosition = (e.clientX - (left + width / 2)) / (width / 2)
-          const edgeEnhanced = Math.sign(normalizedPosition) * Math.pow(Math.abs(normalizedPosition), 0.7)
-          velocityFactor.set(edgeEnhanced)
+          // Linear scaling for consistent speed, positive on right (reverse), negative on left (faster forward)
+          velocityFactor.set(normalizedPosition)
         }}
         onMouseLeave={() => {
           mouseX.set(Number.POSITIVE_INFINITY)
