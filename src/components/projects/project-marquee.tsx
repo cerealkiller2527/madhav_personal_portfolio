@@ -23,6 +23,8 @@ const InteractiveMarqueeItem = ({
   index,
   itemWidth,
   onProjectSelect,
+  totalItems,
+  singleSetWidth,
 }: {
   project: Project
   mouseX: MotionValue<number>
@@ -30,14 +32,41 @@ const InteractiveMarqueeItem = ({
   index: number
   itemWidth: number
   onProjectSelect: (projectId: string) => void
+  totalItems: number
+  singleSetWidth: number
 }) => {
   const distance = useTransform(
     [mouseX, springX],
     (values: number[]) => {
       const [latestMouseX, latestSpringX] = values
-      const cardLogicalCenter = index * itemWidth + itemWidth / 2
-      const cursorPositionInStrip = latestMouseX - latestSpringX
-      return cursorPositionInStrip - cardLogicalCenter
+      
+      // Calculate the card's absolute position
+      const cardAbsolutePosition = index * itemWidth + itemWidth / 2
+      
+      // Get the current scroll position and normalize it
+      const scrollPos = -latestSpringX
+      
+      // Calculate which "virtual" position the mouse is at in the infinite scroll
+      const virtualMousePos = latestMouseX + scrollPos
+      
+      // Find the closest instance of this card to the mouse
+      const cardSetIndex = Math.floor(index / totalItems)
+      const cardIndexInSet = index % totalItems
+      
+      // Calculate all possible positions of this card in the infinite scroll
+      const baseCardPos = cardIndexInSet * itemWidth + itemWidth / 2
+      
+      // Find the closest virtual position of this card to the mouse
+      let minDistance = Number.MAX_VALUE
+      for (let i = -2; i <= 2; i++) {
+        const virtualCardPos = baseCardPos + (cardSetIndex + i) * singleSetWidth
+        const dist = virtualMousePos - virtualCardPos
+        if (Math.abs(dist) < Math.abs(minDistance)) {
+          minDistance = dist
+        }
+      }
+      
+      return minDistance
     }
   )
 
@@ -225,6 +254,8 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
                 index={index}
                 itemWidth={itemWidth}
                 onProjectSelect={onProjectSelect}
+                totalItems={projects.length}
+                singleSetWidth={singleSetWidth}
               />
             ))}
           </motion.div>
