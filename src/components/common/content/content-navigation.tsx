@@ -1,8 +1,4 @@
-/**
- * Universal Content Navigation Component
- * Meta Engineering Standards: DRY, reusable, type-safe
- * Handles navigation for both Blog and Project content with consistent UI
- */
+// Universal navigation for Blog and Project content with consistent UI
 
 "use client"
 
@@ -158,9 +154,7 @@ export function ContentNavigation<T extends NavigationItem>({
   )
 }
 
-// Consolidated navigation components (from blog-navigation.tsx, project-navigation.tsx, back-button.tsx)
 
-// Blog Navigation Component
 interface BlogNavigationProps {
   previousPost?: BlogPreview
   nextPost?: BlogPreview
@@ -178,7 +172,6 @@ export function BlogNavigation({ previousPost, nextPost }: BlogNavigationProps) 
   )
 }
 
-// Project Navigation Component
 interface ProjectNavigationProps {
   nextProject?: Project | null
   previousProject?: Project | null
@@ -194,7 +187,6 @@ export function ProjectNavigation({ nextProject, previousProject }: ProjectNavig
   )
 }
 
-// Back Button Component
 interface BackButtonProps {
   sectionId: string
   children: React.ReactNode
@@ -208,7 +200,6 @@ export function BackButton({ sectionId, children, className, variant = "outline"
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
-    // Store the section to scroll to and navigate smoothly
     sessionStorage.setItem("scrollTo", sectionId)
     router.push("/")
   }

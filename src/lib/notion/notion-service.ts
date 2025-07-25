@@ -1,6 +1,4 @@
-/**
- * Notion Service - High-level service layer with caching
- */
+// Notion service - high-level service layer with caching
 
 import { 
   BlogContent, 
@@ -23,9 +21,6 @@ import {
 } from "@/lib/core/cache"
 import { NotionPage } from "@/lib/schemas"
 
-// =============================================================================
-// CACHE CONFIGURATION
-// =============================================================================
 
 const CACHE_DURATION = {
   BLOG_POSTS_LIST: 5 * 60,     // 5 minutes
@@ -35,9 +30,6 @@ const CACHE_DURATION = {
   FEATURED_PROJECTS: 15 * 60,  // 15 minutes
 } as const
 
-// =============================================================================
-// TRANSFORMATION HELPERS
-// =============================================================================
 
 function safeTransform<T>(pages: NotionPage[], transformFn: (page: NotionPage) => T | null): T[] {
   return pages
@@ -51,9 +43,6 @@ function safeTransform<T>(pages: NotionPage[], transformFn: (page: NotionPage) =
     .filter(Boolean) as T[]
 }
 
-// =============================================================================
-// CORE SERVICE METHODS
-// =============================================================================
 
 async function _getAllBlogPosts(): Promise<BlogPreview[]> {
   if (!notionClient.isBlogConfigured()) return []
@@ -95,9 +84,6 @@ async function _getFeaturedProjects(limit: number = 4): Promise<NotionProjectPre
   return safeTransform(pages, transformToProjectPreview).slice(0, limit)
 }
 
-// =============================================================================
-// PUBLIC API WITH CACHING
-// =============================================================================
 
 export async function getAllBlogPosts(): Promise<BlogPreview[]> {
   try {
@@ -164,9 +150,6 @@ export async function getFeaturedProjects(limit: number = 4): Promise<NotionProj
   }
 }
 
-// =============================================================================
-// UTILITY METHODS
-// =============================================================================
 
 export function isBlogConfigured(): boolean {
   return notionClient.isBlogConfigured()
@@ -188,5 +171,4 @@ export function clearProjectsCache(): void {
   clearCache()
 }
 
-// Export client for direct access if needed
 export { notionClient }

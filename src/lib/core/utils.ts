@@ -5,18 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/**
- * Enhanced smooth scroll function with better easing and performance.
- * Uses the same smooth scrolling as the navigation for consistency.
- * @param {number} targetY - The target Y coordinate to scroll to.
- * @param {number} duration - The duration of the scroll animation in milliseconds.
- */
+// Enhanced smooth scroll with better easing and performance
 export function smoothScrollTo(targetY: number, duration = 800) {
   const startY = window.pageYOffset
   const distance = targetY - startY
   let startTime: number | null = null
 
-  // Enhanced easing function for smoother animation
   const easeInOutQuart = (t: number): number => {
     return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t
   }
@@ -37,12 +31,7 @@ export function smoothScrollTo(targetY: number, duration = 800) {
   requestAnimationFrame(animation)
 }
 
-/**
- * Smooth scroll to element with consistent behavior across the app.
- * @param {string} elementId - The ID of the element to scroll to.
- * @param {number} duration - The duration of the scroll animation in milliseconds.
- * @param {number} offset - Additional offset from the top (for fixed headers).
- */
+// Smooth scroll to element with consistent behavior
 export function smoothScrollToElement(elementId: string, duration = 800, offset = 90) {
   const element = document.getElementById(elementId)
   if (element) {

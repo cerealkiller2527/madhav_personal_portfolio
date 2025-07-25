@@ -1,6 +1,4 @@
-/* Blog-specific component styles */
 
-/* Blog card hover effects */
 .blog-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform, box-shadow;
@@ -21,7 +19,6 @@
   transform: scale(1.05);
 }
 
-/* Blog loading skeletons */
 .blog-skeleton {
   background: linear-gradient(
     90deg,
@@ -42,14 +39,12 @@
   }
 }
 
-/* Blog error states */
 .blog-error {
   background: hsl(var(--destructive) / 0.1);
   border: 1px solid hsl(var(--destructive) / 0.2);
   color: hsl(var(--destructive));
 }
 
-/* Blog search and filters */
 .blog-search {
   position: relative;
   max-width: 24rem;
@@ -108,7 +103,6 @@
   border-color: hsl(var(--primary));
 }
 
-/* Blog pagination */
 .blog-pagination {
   display: flex;
   justify-content: center;
@@ -145,7 +139,6 @@
   pointer-events: none;
 }
 
-/* Blog author card */
 .blog-author {
   background: hsl(var(--muted) / 0.5);
   border: 1px solid hsl(var(--border));
@@ -186,7 +179,6 @@
   line-height: 1.6;
 }
 
-/* Blog social sharing */
 .blog-share {
   display: flex;
   gap: 0.5rem;
@@ -211,7 +203,6 @@
   background: hsl(var(--muted));
 }
 
-/* Blog reading progress indicator */
 .blog-reading-progress {
   position: sticky;
   top: 1rem;
@@ -244,7 +235,6 @@
   text-align: center;
 }
 
-/* Responsive utilities */
 @media (max-width: 640px) {
   .blog-filters {
     justify-content: flex-start;

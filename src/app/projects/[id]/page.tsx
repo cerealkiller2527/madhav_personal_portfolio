@@ -7,7 +7,6 @@ import type { Project, TechStackItem } from "@/lib/schemas/project.schemas"
 import type { ProjectContent as NotionProject } from "@/lib/schemas"
 import { LogoSpinner } from "@/components/common/ui/logo-spinner"
 
-// Transform Notion project to local project structure (shared with homepage)
 function transformNotionToLocalProject(notionProject: NotionProject): Project & { coverImage?: string; recordMap?: NotionProject['recordMap'] } {
   return {
     id: notionProject.id,
@@ -22,14 +21,12 @@ function transformNotionToLocalProject(notionProject: NotionProject): Project & 
     liveLink: notionProject.liveLink,
     githubLink: notionProject.githubLink,
     heroImage: notionProject.heroImage || "/assets/placeholders/placeholder-logo.svg",
-    // Preserve coverImage for navigation components
     coverImage: notionProject.coverImage || notionProject.heroImage || "/assets/placeholders/placeholder-logo.svg",
     gallery: notionProject.gallery || [],
-    detailedDescription: notionProject.description || "", // Use description as fallback
+    detailedDescription: notionProject.description || "",
     vectaryEmbedUrl: notionProject.vectaryEmbedUrl,
     keyFeatures: notionProject.keyFeatures || [],
     techStack: notionProject.techStack as TechStackItem[] || [],
-    // Preserve recordMap for Notion content rendering
     recordMap: notionProject.recordMap,
   }
 }
@@ -42,13 +39,11 @@ interface ProjectPageProps {
 
 async function getProjectData(id: string) {
   try {
-    // Try to get full Notion project with content
     const notionProject = await getProjectById(id)
     if (notionProject) {
       return transformNotionToLocalProject(notionProject)
     }
     
-    // If not found by ID, try to get from projects list (in case of slug mismatch)
     const allNotionProjects = await getAllProjects()
     const foundProject = allNotionProjects.find(p => p.id === id || p.slug === id)
     if (foundProject) {
@@ -89,7 +84,6 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
 export const dynamicParams = false
 
-// Generate static params for ISR
 export async function generateStaticParams() {
   try {
     const notionProjects = await getAllProjects()
@@ -112,7 +106,6 @@ async function getAllProjectsWithOrder(): Promise<Project[]> {
   try {
     const notionProjects = await getAllProjects()
     if (notionProjects && notionProjects.length > 0) {
-      // Transform all Notion projects to local project structure for consistency
       const transformedProjects = await Promise.all(
         notionProjects.map(async (preview) => {
           try {
@@ -120,7 +113,6 @@ async function getAllProjectsWithOrder(): Promise<Project[]> {
             if (fullProject) {
               return transformNotionToLocalProject(fullProject)
             } else {
-              // Transform preview to local project structure
               const projectFromPreview: NotionProject = {
                 ...preview,
                 keyFeatures: [],
@@ -165,7 +157,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound()
   }
   
-  // Find previous and next projects
   const currentIndex = allProjects.findIndex((p: Project) => p.id === id)
   const previousProject = currentIndex > 0 ? allProjects[currentIndex - 1] : undefined
   const nextProject = currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : undefined

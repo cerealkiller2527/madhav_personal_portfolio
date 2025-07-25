@@ -34,12 +34,10 @@ export function useBounceAnimation({
     const element = document.querySelector(`[data-project-id="${bounceProjectId}"]`)
     if (!element) return
 
-    // Scroll to element
     const elementRect = element.getBoundingClientRect()
     const targetPosition = elementRect.top + window.pageYOffset - window.innerHeight / 2
     smoothScrollTo(targetPosition, 1000)
 
-    // Start bounce animation
     setTimeout(() => {
       setActiveBounceId(bounceProjectId)
       setTimeout(() => {

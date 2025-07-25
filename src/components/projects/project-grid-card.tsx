@@ -16,7 +16,6 @@ interface ProjectGridCardProps {
   onCardClick?: (projectId: string) => void
 }
 
-// Media component for 3D model or image
 function ProjectMedia({ project, index }: { project: Project; index: number }) {
   return (
     <div className="relative w-full aspect-video bg-secondary/10 overflow-hidden rounded-t-2xl">
@@ -39,7 +38,6 @@ function ProjectMedia({ project, index }: { project: Project; index: number }) {
         />
       )}
       
-      {/* Index Badge */}
       <div className="absolute top-4 left-4 bg-black/20 dark:bg-black/40 backdrop-blur-sm w-10 h-10 flex items-center justify-center rounded-lg border border-black/10 dark:border-white/10">
         <span className="text-lg font-bold text-white dark:text-primary">
           {String(index + 1).padStart(2, "0")}
@@ -51,7 +49,6 @@ function ProjectMedia({ project, index }: { project: Project; index: number }) {
 }
 
 
-// Badge section component
 function ProjectBadges({ project, trophyStyles }: { 
   project: Project
   trophyStyles: ReturnType<typeof BadgeUtil.getTrophyStyles> | null 

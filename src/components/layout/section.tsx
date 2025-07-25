@@ -12,7 +12,6 @@ interface SectionProps {
   description?: string
 }
 
-// Grid background component
 function GridBackground() {
   return (
     <motion.div
@@ -24,11 +23,6 @@ function GridBackground() {
   )
 }
 
-/**
- * A core, reusable component for creating consistent section layouts
- * throughout the application. It includes optional backgrounds and
- * standardized animations.
- */
 export function Section({ children, className, title, id, hasBackground = false, description }: SectionProps) {
   return (
     <motion.section

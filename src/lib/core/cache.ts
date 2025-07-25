@@ -1,9 +1,5 @@
-/**
- * Build-time only cache for static export
- * In static export, caching happens at build time only
- */
+// Build-time only cache for static export
 
-// Cache key helpers for different namespaces
 export const getBlogCacheKey = (type: string, id?: string): string => {
   return id ? `blog:${type}:${id}` : `blog:${type}`
 }
@@ -12,8 +8,7 @@ export const getProjectsCacheKey = (type: string, id?: string): string => {
   return id ? `projects:${type}:${id}` : `projects:${type}`
 }
 
-// In static export, we don't need runtime caching
-// Data is fetched once at build time
+// Data is fetched once at build time in static export
 export async function getCachedData<T>(
   _key: string,
   fetcher: () => Promise<T>,
@@ -21,7 +16,6 @@ export async function getCachedData<T>(
   fallback?: T
 ): Promise<T> {
   try {
-    // Always fetch fresh data at build time
     return await fetcher()
   } catch (error) {
     if (fallback !== undefined) return fallback
@@ -29,7 +23,5 @@ export async function getCachedData<T>(
   }
 }
 
-// No-op in static export
 export function clearCache(): void {
-  // No caching in static export
 }

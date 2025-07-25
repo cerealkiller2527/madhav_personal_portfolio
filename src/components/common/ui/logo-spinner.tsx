@@ -56,7 +56,6 @@ export function LogoSpinner({
           ease: "easeInOut",
         }}
       >
-        {/* Rotating border effect */}
         <motion.div
           className="absolute inset-0 rounded-full"
           style={{
@@ -72,7 +71,6 @@ export function LogoSpinner({
           }}
         />
         
-        {/* Inner logo container */}
         <div className="absolute inset-1 rounded-full overflow-hidden bg-background/80 backdrop-blur-sm flex items-center justify-center">
           <motion.div
             className="relative w-full h-full p-1"
@@ -119,7 +117,6 @@ export function LogoSpinner({
   )
 }
 
-// Full-screen loading overlay
 export function LogoSpinnerOverlay({ 
   text = "Loading...", 
   className 
@@ -138,7 +135,6 @@ export function LogoSpinnerOverlay({
   )
 }
 
-// Inline loading for smaller spaces
 export function LogoSpinnerInline({ 
   size = "sm", 
   text,

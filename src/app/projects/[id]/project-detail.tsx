@@ -19,7 +19,6 @@ const defaultSections = [
   { id: "gallery", label: "Gallery" },
 ]
 
-// Extract headings from Notion recordMap to generate TOC
 function extractNotionHeadings(recordMap: ExtendedRecordMap | undefined): { id: string; label: string; level: number }[] {
   const headings: { id: string; label: string; level: number }[] = []
   
@@ -31,11 +30,9 @@ function extractNotionHeadings(recordMap: ExtendedRecordMap | undefined): { id: 
 
     const { type, properties } = blockValue
     
-    // Check if it's a heading block
     if (type === 'header' || type === 'sub_header' || type === 'sub_sub_header') {
       const title = properties?.title?.[0]?.[0] || ''
       if (title) {
-        // Generate a URL-friendly ID from the title
         const id = title
           .toLowerCase()
           .replace(/[^a-z0-9\s-]/g, '')
@@ -66,18 +63,15 @@ interface ProjectDetailPageProps {
 export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
   const contentRef = useRef<HTMLElement>(null)
   
-  // Check if this project has Notion content (recordMap)
   const hasNotionContent = project.recordMap && Object.keys(project.recordMap).length > 0
   
-  // Generate sections based on content type
   const sections = hasNotionContent 
     ? extractNotionHeadings(project.recordMap).map(h => ({ id: h.id, label: h.label, level: h.level }))
     : defaultSections.filter(section => {
-        // Only show sections that have content
         if (section.id === 'features') return project.keyFeatures?.length > 0
         if (section.id === 'tech-stack') return project.techStack?.length > 0
         if (section.id === 'gallery') return project.gallery?.length > 0
-        return true // Always show overview
+        return true
       })
 
   return (
@@ -125,7 +119,6 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                 />
               </div>
               
-              {/* Render Notion content if available, otherwise use local content */}
               {hasNotionContent ? (
                 <div className="notion-project-full-page">
                   <NotionRenderer 
@@ -143,7 +136,6 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               )}
             </div>
 
-            {/* Only show additional sections if we don't have Notion content or if local data has content */}
             {(!hasNotionContent && project.keyFeatures?.length > 0) && (
               <section id="features" className="mt-12 scroll-mt-28">
                 <h2 className="text-3xl font-bold mb-4 border-b pb-3">Key Features</h2>
@@ -190,7 +182,6 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               </section>
             )}
 
-            {/* Project Navigation */}
             <ProjectNavigation 
               previousProject={previousProject}
               nextProject={nextProject}

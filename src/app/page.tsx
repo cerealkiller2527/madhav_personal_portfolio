@@ -5,7 +5,6 @@ import HomePage from "@/components/pages/home/home-page"
 import Loading from "./loading"
 import type { Project, ProjectContent, TechStackItem } from "@/lib/schemas"
 
-// Transform Notion project to local project structure
 function transformNotionToLocalProject(notionProject: ProjectContent): Project & { recordMap?: ProjectContent['recordMap'] } {
   return {
     id: notionProject.id,

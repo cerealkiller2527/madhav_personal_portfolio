@@ -1,7 +1,4 @@
-/**
- * Badge Utility Class - Centralized badge logic for consistent styling
- * Meta Engineering Standards: OOP design, type-safe, extensible
- */
+// Badge utility class for consistent styling
 
 import type { Project } from "@/lib/schemas"
 
@@ -10,9 +7,6 @@ export type CategoryType = Project['category']
 export type AwardRank = string
 
 export class BadgeUtil {
-  /**
-   * Get badge variant for project category
-   */
   static getCategoryVariant(category: CategoryType): BadgeVariant {
     const categoryMap: Record<CategoryType, BadgeVariant> = {
       "Software": "default",
@@ -22,9 +16,6 @@ export class BadgeUtil {
     return categoryMap[category] || "default"
   }
 
-  /**
-   * Get category-specific CSS classes
-   */
   static getCategoryClasses(category: CategoryType): string {
     const classMap: Record<CategoryType, string> = {
       "Software": "bg-blue-500/10 text-blue-600 border-blue-500/20 hover:bg-blue-500/20",
@@ -34,9 +25,6 @@ export class BadgeUtil {
     return classMap[category] || "bg-muted/80 text-muted-foreground"
   }
 
-  /**
-   * Get trophy badge styling based on award rank
-   */
   static getTrophyStyles(awardRank: AwardRank) {
     const lowerRank = awardRank.toLowerCase()
     
@@ -67,7 +55,6 @@ export class BadgeUtil {
       }
     }
 
-    // Default for any other award
     return {
       badgeClasses: "bg-primary/20 border-primary/30 hover:bg-primary/30 text-black dark:text-white",
       containerClasses: "bg-primary/20 backdrop-blur-sm",
@@ -76,23 +63,14 @@ export class BadgeUtil {
     }
   }
 
-  /**
-   * Get tech stack badge styling
-   */
   static getTechStackClasses(): string {
     return "bg-secondary/80 text-secondary-foreground hover:bg-secondary border-secondary"
   }
 
-  /**
-   * Validation: Check if badge variant is valid
-   */
   static isValidVariant(variant: string): variant is BadgeVariant {
     return ["default", "secondary", "destructive", "outline"].includes(variant)
   }
 
-  /**
-   * Validation: Check if category is valid
-   */
   static isValidCategory(category: string): category is CategoryType {
     return ["Software", "Hardware", "Hybrid"].includes(category)
   }

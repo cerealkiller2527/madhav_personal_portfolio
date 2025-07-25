@@ -1,6 +1,4 @@
-/**
- * Notion Data Transformations
- */
+// Notion data transformations
 
 import { ExtendedRecordMap } from "notion-types"
 import { 
@@ -12,9 +10,6 @@ import {
   NotionProjectPreview
 } from "@/lib/schemas"
 
-// =============================================================================
-// TYPE GUARDS
-// =============================================================================
 
 type NotionCover = {
   external?: { url?: string }
@@ -38,9 +33,6 @@ function isNotionCover(cover: unknown): cover is NotionCover {
   return false
 }
 
-// =============================================================================
-// UTILITY FUNCTIONS
-// =============================================================================
 
 function getProperty(properties: Record<string, NotionPropertyValue>, name: string): string | string[] | boolean | null {
   const prop = properties[name]
@@ -71,7 +63,6 @@ function parseStatistics(text: string | null): Array<{value: string, label: stri
       return parsed.filter(stat => stat.value && stat.label)
     }
   } catch {
-    // Parse "label: value" or "label|value" format
     return text.split(',')
       .map(s => s.trim())
       .map(pair => {
@@ -111,16 +102,12 @@ function getCoverImageUrl(cover: unknown): string | undefined {
 }
 
 function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: unknown, imageProperty: string): string | undefined {
-  // Priority: Database Image Property > Page Cover
   const imageUrl = getProperty(properties, imageProperty) as string
   if (imageUrl) return normalizeImageUrl(imageUrl)
   
   return getCoverImageUrl(cover)
 }
 
-// =============================================================================
-// BLOG TRANSFORMATIONS
-// =============================================================================
 
 export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
   const { properties, cover } = page
@@ -157,9 +144,6 @@ export async function transformToBlogContent(
   }
 }
 
-// =============================================================================
-// PROJECT TRANSFORMATIONS
-// =============================================================================
 
 export function transformToProjectPreview(page: NotionPage): NotionProjectPreview | null {
   const { properties, cover } = page
@@ -212,9 +196,6 @@ export async function transformToProjectContent(
   }
 }
 
-// =============================================================================
-// EXPORTS
-// =============================================================================
 
 export const createSlugFromTitle = createSlug
 export function calculateReadingTime(content: string, wordsPerMinute = 200): number {

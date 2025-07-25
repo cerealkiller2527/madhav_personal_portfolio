@@ -1,6 +1,4 @@
-/**
- * Notion Client - Handles all Notion API operations
- */
+// Notion client - handles all Notion API operations
 
 import { Client } from "@notionhq/client"
 import type { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints"
@@ -8,9 +6,6 @@ import { NotionAPI } from "notion-client"
 import { ExtendedRecordMap } from "notion-types"
 import { NotionPage, NotionConfig } from "@/lib/schemas"
 
-// =============================================================================
-// NOTION CLIENT
-// =============================================================================
 
 export class UnifiedNotionClient {
   private readonly client: Client | null = null
@@ -32,9 +27,6 @@ export class UnifiedNotionClient {
     }
   }
 
-  // =============================================================================
-  // CORE METHODS
-  // =============================================================================
 
   async getPage(pageId: string): Promise<ExtendedRecordMap> {
     try {
@@ -63,9 +55,6 @@ export class UnifiedNotionClient {
     }
   }
 
-  // =============================================================================
-  // DATABASE METHODS
-  // =============================================================================
 
   async getBlogContents(): Promise<NotionPage[]> {
     if (!this.config.blogDatabaseId) return []
@@ -104,9 +93,6 @@ export class UnifiedNotionClient {
     return pages.slice(0, limit)
   }
 
-  // =============================================================================
-  // UTILITY METHODS
-  // =============================================================================
 
   isBlogConfigured(): boolean {
     return !!(this.config.token && this.config.blogDatabaseId)
@@ -117,9 +103,6 @@ export class UnifiedNotionClient {
   }
 }
 
-// =============================================================================
-// SINGLETON INSTANCE
-// =============================================================================
 
 export const notionClient = new UnifiedNotionClient()
 export default notionClient

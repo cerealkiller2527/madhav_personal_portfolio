@@ -37,7 +37,7 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
 
     const target = containerRef?.current || window
     target.addEventListener('scroll', handleScroll)
-    handleScroll() // Set initial active section
+    handleScroll()
 
     return () => target.removeEventListener('scroll', handleScroll)
   }, [sections, containerRef])

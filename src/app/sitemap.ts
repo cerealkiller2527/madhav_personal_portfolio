@@ -16,7 +16,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }))
 
-    // Get projects from Notion
     let projectUrls: MetadataRoute.Sitemap = []
     try {
       const notionProjects = await getAllProjects()
@@ -49,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...projectUrls,
     ]
   } catch {
-    // Return basic sitemap if blog fails
+    // Fallback sitemap
     return [
       {
         url: baseUrl,

@@ -1,5 +1,4 @@
-// Environment Configuration
-// Centralizes all environment variable access with type safety
+// Environment configuration with type safety
 
 export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
@@ -27,7 +26,6 @@ export const commentsConfig = {
   loading: "lazy" as const,
 }
 
-// Helper to check if comments are properly configured
 export const isCommentsEnabled = () => {
   return !!(commentsConfig.repo && commentsConfig.repoId && commentsConfig.categoryId)
 }

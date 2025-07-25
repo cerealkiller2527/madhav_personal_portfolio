@@ -1,6 +1,5 @@
 import type { Experience } from "@/lib/schemas"
 
-// Site Information
 export const siteInfo = {
   name: "Madhav Lodha",
   title: "Madhav Lodha",
@@ -15,7 +14,6 @@ export const siteInfo = {
   avatarAlt: "Madhav Lodha Avatar",
 }
 
-// Button Labels
 export const buttonLabels = {
   viewResume: "View Résumé",
   viewMyWork: "View My Work",
@@ -28,7 +26,6 @@ export const buttonLabels = {
   goBack: "Go Back",
 }
 
-// Footer Data
 export const footerData = {
   sections: {
     connect: {

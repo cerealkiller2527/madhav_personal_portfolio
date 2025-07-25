@@ -1,11 +1,7 @@
-/**
- * Animation Constants
- * Centralized animation configurations for consistent motion design
- */
+// Centralized animation configs for consistent motion design
 
 import type { Variants } from "framer-motion"
 
-// Timing constants
 export const ANIMATION_DURATIONS = {
   fast: 0.2,
   normal: 0.3,
@@ -14,7 +10,6 @@ export const ANIMATION_DURATIONS = {
   fadeIn: 1.0
 } as const
 
-// Easing functions
 export const ANIMATION_EASINGS = {
   easeOut: "easeOut",
   easeIn: "easeIn",
@@ -23,7 +18,6 @@ export const ANIMATION_EASINGS = {
   spring: { type: "spring", stiffness: 100, damping: 15 }
 } as const
 
-// Common transitions
 export const TRANSITIONS = {
   fadeIn: {
     duration: ANIMATION_DURATIONS.fadeIn,
@@ -40,7 +34,6 @@ export const TRANSITIONS = {
   spring: ANIMATION_EASINGS.spring
 } as const
 
-// Animation variants
 export const FADE_IN_VARIANTS: Variants = {
   hidden: { opacity: 0 },
   visible: { 
@@ -87,13 +80,11 @@ export const STAGGER_VARIANTS: Variants = {
   }
 }
 
-// Viewport configuration
 export const VIEWPORT_CONFIG = {
   once: true,
   amount: 0.2
 } as const
 
-// Common motion props
 export const MOTION_PROPS = {
   fadeIn: {
     initial: "hidden",
@@ -127,7 +118,6 @@ export const MOTION_PROPS = {
   }
 } as const
 
-// Hover animations
 export const HOVER_ANIMATIONS = {
   lift: {
     whileHover: { y: -4, transition: TRANSITIONS.bounce },
@@ -145,7 +135,6 @@ export const HOVER_ANIMATIONS = {
   }
 } as const
 
-// Loading animations
 export const LOADING_ANIMATIONS = {
   pulse: "animate-pulse",
   spin: "animate-spin",
@@ -153,7 +142,6 @@ export const LOADING_ANIMATIONS = {
   fadeIn: "animate-fade-in"
 } as const
 
-// CSS class mappings for Tailwind animations
 export const ANIMATION_CLASSES = {
   ...LOADING_ANIMATIONS,
   slideInLeft: "animate-slide-in-left",

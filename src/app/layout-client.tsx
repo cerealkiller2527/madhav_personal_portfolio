@@ -6,10 +6,6 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { ResumeModal } from "@/components/layout/resume-modal"
 
-/**
- * Client-side layout component that provides Header, Footer, and Resume modal.
- * Manages the resume modal state.
- */
 export function LayoutClient({ children }: { children: React.ReactNode }) {
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
 

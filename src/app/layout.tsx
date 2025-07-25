@@ -61,28 +61,20 @@ export const metadata: Metadata = {
   generator: 'v0.dev'
 }
 
-/**
- * Root layout for the application.
- * Sets up the theme provider and global font.
- * @param {object} props - The properties for the component.
- * @param {React.ReactNode} props.children - The child elements to render.
- * @returns {JSX.Element} The root layout component.
- */
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    // suppressHydrationWarning is required when using next-themes and to prevent
-    // hydration mismatches from browser extensions (e.g., Grammarly, password managers)
+    // Prevents hydration mismatches from next-themes and browser extensions
     <html lang="en" suppressHydrationWarning>
       <body className={robotoMono.className} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
-          disableTransitionOnChange // Disable transitions on theme change to prevent flashes
+          disableTransitionOnChange
         >
           <LayoutClient>{children}</LayoutClient>
           <SpeedInsights />

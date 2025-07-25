@@ -1,7 +1,4 @@
-/**
- * Universal Error Boundary Components
- * Provides consistent error handling across all domains
- */
+// Universal error boundary components for consistent error handling
 
 "use client"
 
@@ -20,9 +17,6 @@ interface ErrorBoundaryProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void
 }
 
-/**
- * Generic error boundary component
- */
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props)
@@ -52,9 +46,6 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 }
 
-/**
- * Default error fallback UI
- */
 function DefaultErrorFallback({ 
   error, 
   onRetry 
@@ -83,9 +74,6 @@ function DefaultErrorFallback({
   )
 }
 
-/**
- * Simple error message component
- */
 export function ErrorMessage({ 
   title = "Error", 
   message, 
@@ -112,9 +100,6 @@ export function ErrorMessage({
   )
 }
 
-/**
- * Network error component
- */
 export function NetworkError({ onRetry }: { onRetry?: () => void }) {
   return (
     <ErrorMessage
@@ -125,9 +110,6 @@ export function NetworkError({ onRetry }: { onRetry?: () => void }) {
   )
 }
 
-/**
- * Not found error component
- */
 export function NotFoundError({ 
   resource = "content",
   onGoBack
@@ -157,9 +139,6 @@ export function NotFoundError({
   )
 }
 
-/**
- * Loading timeout error
- */
 export function TimeoutError({ onRetry }: { onRetry?: () => void }) {
   return (
     <ErrorMessage
