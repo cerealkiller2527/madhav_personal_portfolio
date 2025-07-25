@@ -3,10 +3,11 @@ import { Metadata } from "next"
 import { getAllBlogPosts } from "@/lib/notion/notion-service"
 import { BlogGrid } from "@/components/pages/blog/blog-card"
 import { LoadingGrid } from "@/components/common/ui/loading-states"
+import { blogDescription } from "@/lib/core/data"
 
 export const metadata: Metadata = {
   title: "Blog - Madhav Lodha",
-  description: "Thoughts on software engineering, web development, and technology.",
+  description: blogDescription,
 }
 
 async function BlogContent() {
@@ -20,7 +21,7 @@ async function BlogContent() {
             <div className="text-center mb-12">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Thoughts on software engineering, web development, and technology.
+                {blogDescription}
               </p>
             </div>
             

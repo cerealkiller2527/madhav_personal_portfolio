@@ -65,6 +65,8 @@ export const footerData = {
   ]
 }
 
+export const blogDescription = "Thoughts on software engineering, web development, and technology.";
+
 export const experiences: readonly Experience[] = [
   {
     id: "01",
