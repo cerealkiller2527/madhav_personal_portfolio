@@ -40,9 +40,6 @@ const InteractiveMarqueeItem = ({
     (values: number[]) => {
       const [latestMouseX, latestSpringX] = values
       
-      // Calculate the card's absolute position
-      const cardAbsolutePosition = index * itemWidth + itemWidth / 2
-      
       // Get the current scroll position and normalize it
       const scrollPos = -latestSpringX
       
