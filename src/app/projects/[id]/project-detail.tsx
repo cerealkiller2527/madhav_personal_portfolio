@@ -1,14 +1,21 @@
+/**
+ * Project Detail Page Component
+ * 
+ * Full-page view for a single project with TOC sidebar,
+ * Notion content rendering, and navigation between projects.
+ */
+
 "use client"
 
 import { useRef } from "react"
-import Image from "next/image"
-import type { Project, Feature, TechStackItem, GalleryItem } from "@/lib/schemas"
-import { Badge } from "@/components/ui/badge"
+import type { Project } from "@/lib/schemas"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { ProjectNavigation } from "@/components/common/content/content-navigation"
 import { BackButton } from "@/components/common/content/content-navigation"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
+import { ContentImage } from "@/components/common/content/content-image"
 import { Comments } from "@/components/common/comments/comments"
+import { ProjectContentSections } from "@/components/projects/project-content-sections"
 import { ArrowLeft } from "lucide-react"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
 
@@ -62,18 +69,21 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               </p>
             </header>
 
+            {/* Hero Image */}
             <div id="overview" className="scroll-mt-28">
               <div className="relative w-full h-64 md:h-96 mb-12 rounded-lg overflow-hidden shadow-lg bg-secondary">
-                <Image
-                  src={project.heroImage || "/assets/placeholders/placeholder-logo.svg"}
+                <ContentImage
+                  src={project.heroImage || ""}
                   alt={`${project.title} hero image`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 1024px"
                   className="object-cover"
+                  fallbackType="project"
                   priority
                 />
               </div>
               
+              {/* Notion content or local description */}
               {hasNotionContent ? (
                 <div className="notion-project-full-page">
                   <NotionRenderer 
@@ -91,51 +101,12 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               )}
             </div>
 
-            {(!hasNotionContent && project.keyFeatures?.length > 0) && (
-              <section id="features" className="mt-12 scroll-mt-28">
-                <h2 className="text-3xl font-bold mb-4 border-b pb-3">Key Features</h2>
-                <ul className="space-y-6">
-                  {project.keyFeatures.map((feature: Feature) => (
-                    <li key={feature.title}>
-                      <p className="font-semibold text-lg text-foreground">{feature.title}</p>
-                      <p className="text-muted-foreground">{feature.description}</p>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {(!hasNotionContent && project.techStack?.length > 0) && (
-              <section id="tech-stack" className="mt-12 scroll-mt-28">
-                <h2 className="text-3xl font-bold mb-4 border-b pb-3">Tech Stack</h2>
-                <div className="flex flex-wrap gap-2">
-                  {project.techStack.map((tech: TechStackItem) => (
-                    <Badge key={tech.name} variant="secondary" className="text-sm px-3 py-1">
-                      {tech.name}
-                    </Badge>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {(!hasNotionContent && project.gallery?.length > 0) && (
-              <section id="gallery" className="mt-12 scroll-mt-28">
-                <h2 className="text-3xl font-bold mb-4 border-b pb-3">Gallery</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {project.gallery.map((image: GalleryItem, index: number) => (
-                    <div key={index} className="relative w-full h-56 rounded-md overflow-hidden bg-secondary">
-                      <Image
-                        src={image.url || "/assets/placeholders/placeholder-logo.svg"}
-                        alt={image.caption}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+            {/* Content sections (features, tech stack, gallery) */}
+            <ProjectContentSections 
+              project={project} 
+              hasNotionContent={hasNotionContent} 
+              variant="full-page"
+            />
 
             <ProjectNavigation 
               previousProject={previousProject}
