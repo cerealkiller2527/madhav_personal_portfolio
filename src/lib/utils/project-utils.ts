@@ -1,6 +1,6 @@
 // Project utility functions - display utilities and content helpers
 
-import type { Project } from "@/lib/schemas"
+import type { Project, TechStackItem } from "@/lib/schemas"
 import type { ProjectContent as NotionProject } from "@/lib/schemas"
 
 export function formatProjectIndex(index: number): string {
@@ -28,4 +28,31 @@ export function isNotionProject(project: unknown): project is NotionProject {
 
 export function getDisplayProject(project: Project): Project {
   return project
+}
+
+/**
+ * Transform Notion project to local Project format
+ * Centralized function to avoid duplication across pages
+ */
+export function transformNotionToLocalProject(notionProject: NotionProject): Project & { recordMap?: NotionProject['recordMap'] } {
+  return {
+    id: notionProject.id,
+    title: notionProject.title,
+    subtitle: notionProject.subtitle,
+    description: notionProject.description || "",
+    category: notionProject.category,
+    award: notionProject.award,
+    awardRank: notionProject.awardRank,
+    stats: notionProject.stats || [],
+    tags: notionProject.tags,
+    liveLink: notionProject.liveLink,
+    githubLink: notionProject.githubLink,
+    heroImage: notionProject.heroImage || notionProject.coverImage || "/assets/placeholders/placeholder-logo.svg",
+    gallery: notionProject.gallery || [],
+    detailedDescription: notionProject.description || "",
+    sketchfabEmbedUrl: notionProject.sketchfabEmbedUrl,
+    keyFeatures: notionProject.keyFeatures || [],
+    techStack: notionProject.techStack as TechStackItem[] || [],
+    recordMap: notionProject.recordMap,
+  }
 }

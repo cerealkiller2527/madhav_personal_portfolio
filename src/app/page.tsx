@@ -3,30 +3,8 @@ import { experiences } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion/notion-service"
 import HomePage from "@/components/pages/home/home-page"
 import Loading from "./loading"
-import type { Project, ProjectContent, TechStackItem } from "@/lib/schemas"
-
-function transformNotionToLocalProject(notionProject: ProjectContent): Project & { recordMap?: ProjectContent['recordMap'] } {
-  return {
-    id: notionProject.id,
-    title: notionProject.title,
-    subtitle: notionProject.subtitle,
-    description: notionProject.description || "",
-    category: notionProject.category,
-    award: notionProject.award,
-    awardRank: notionProject.awardRank,
-    stats: notionProject.stats || [],
-    tags: notionProject.tags,
-    liveLink: notionProject.liveLink,
-    githubLink: notionProject.githubLink,
-    heroImage: notionProject.heroImage || notionProject.coverImage || "/assets/placeholders/placeholder-logo.svg",
-    gallery: notionProject.gallery || [],
-    detailedDescription: notionProject.description || "",
-    sketchfabEmbedUrl: notionProject.sketchfabEmbedUrl,
-    keyFeatures: notionProject.keyFeatures || [],
-    techStack: notionProject.techStack as TechStackItem[] || [],
-    recordMap: notionProject.recordMap,
-  }
-}
+import { transformNotionToLocalProject } from "@/lib/utils/project-utils"
+import type { Project } from "@/lib/schemas"
 
 export default async function PortfolioPage() {
   let projects: readonly Project[] = []

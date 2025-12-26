@@ -10,49 +10,7 @@ import { BackButton } from "@/components/common/content/content-navigation"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { Comments } from "@/components/common/comments/comments"
 import { ArrowLeft } from "lucide-react"
-import type { ExtendedRecordMap } from "notion-types"
-
-const defaultSections = [
-  { id: "overview", label: "Overview" },
-  { id: "features", label: "Key Features" },
-  { id: "tech-stack", label: "Tech Stack" },
-  { id: "gallery", label: "Gallery" },
-]
-
-function extractNotionHeadings(recordMap: ExtendedRecordMap | undefined): { id: string; label: string; level: number }[] {
-  const headings: { id: string; label: string; level: number }[] = []
-  
-  if (!recordMap?.block) return headings
-
-  for (const [blockId, block] of Object.entries(recordMap.block)) {
-    const blockValue = (block as { value?: { type?: string; properties?: { title?: string[][] } } })?.value
-    if (!blockValue) continue
-
-    const { type, properties } = blockValue
-    
-    if (type === 'header' || type === 'sub_header' || type === 'sub_sub_header') {
-      const title = properties?.title?.[0]?.[0] || ''
-      if (title) {
-        const id = title
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '')
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-        
-        const level = type === 'header' ? 1 : type === 'sub_header' ? 2 : 3
-        
-        headings.push({
-          id: id || blockId,
-          label: title,
-          level
-        })
-      }
-    }
-  }
-
-  return headings
-}
+import { useContentTOC } from "@/lib/hooks/use-content-toc"
 
 interface ProjectDetailPageProps {
   project: Project
@@ -65,14 +23,11 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
   
   const hasNotionContent = project.recordMap && Object.keys(project.recordMap).length > 0
   
-  const sections = hasNotionContent 
-    ? extractNotionHeadings(project.recordMap).map(h => ({ id: h.id, label: h.label, level: h.level }))
-    : defaultSections.filter(section => {
-        if (section.id === 'features') return project.keyFeatures?.length > 0
-        if (section.id === 'tech-stack') return project.techStack?.length > 0
-        if (section.id === 'gallery') return project.gallery?.length > 0
-        return true
-      })
+  // Use the centralized TOC hook for extracting sections
+  const { sections } = useContentTOC({ 
+    recordMap: hasNotionContent ? project.recordMap : undefined,
+    project: hasNotionContent ? undefined : project
+  })
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28">
