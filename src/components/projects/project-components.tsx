@@ -60,14 +60,16 @@ interface ProjectMediaProps {
 
 export function ProjectMedia({ project, index }: ProjectMediaProps) {
   return (
-    <div className="relative w-full aspect-video bg-secondary/10 overflow-hidden rounded-t-2xl">
-      {project.vectaryEmbedUrl ? (
+    <div className={`relative w-full aspect-video overflow-hidden rounded-t-2xl ${project.sketchfabEmbedUrl ? '' : 'bg-secondary/10'}`}>
+      {project.sketchfabEmbedUrl ? (
         <iframe
-          src={project.vectaryEmbedUrl}
+          src={project.sketchfabEmbedUrl}
           title={`${project.title} 3D Model`}
           frameBorder="0"
-          className="w-full h-full"
-          allow="fullscreen; xr-spatial-tracking; camera; microphone"
+          allowFullScreen
+          className="w-full h-full bg-transparent"
+          style={{ colorScheme: 'light' }}
+          allow="autoplay; fullscreen; xr-spatial-tracking"
         />
       ) : (
         <Image

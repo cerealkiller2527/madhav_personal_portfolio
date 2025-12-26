@@ -102,7 +102,7 @@ export const projectSchema = z.object({
   heroImage: urlSchema,
   gallery: z.array(galleryItemSchema),
   detailedDescription: nonEmptyStringSchema,
-  vectaryEmbedUrl: optionalSchema(urlSchema),
+  sketchfabEmbedUrl: optionalSchema(urlSchema),
   keyFeatures: z.array(featureSchema),
   techStack: z.array(techStackItemSchema),
   // Optional Notion support - using z.any() for ExtendedRecordMap as it's from external lib

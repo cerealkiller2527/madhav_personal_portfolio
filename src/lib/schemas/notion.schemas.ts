@@ -111,7 +111,7 @@ export const projectContentSchema = baseContentSchema.extend({
   liveLink: optionalSchema(urlSchema),
   githubLink: optionalSchema(urlSchema),
   heroImage: optionalSchema(urlSchema),
-  vectaryEmbedUrl: optionalSchema(urlSchema),
+  sketchfabEmbedUrl: optionalSchema(urlSchema),
   gallery: z.array(galleryItemSchema),
   keyFeatures: z.array(featureSchema),
   techStack: z.array(techStackItemSchema),

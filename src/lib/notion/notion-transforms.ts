@@ -92,6 +92,59 @@ export function normalizeImageUrl(url: string): string {
   return url
 }
 
+/**
+ * Normalizes and enhances Sketchfab embed URLs with optimal parameters
+ * Adds: transparent background, slow auto-rotation, and hides UI elements
+ */
+export function normalizeSketchfabUrl(url: string | null | undefined): string | undefined {
+  if (!url || typeof url !== 'string' || !url.trim()) return undefined
+  
+  try {
+    const sketchfabUrl = new URL(url.trim())
+    
+    // Only process sketchfab.com URLs
+    if (!sketchfabUrl.hostname.includes('sketchfab.com')) {
+      return url
+    }
+    
+    // Parameters to add/override for optimal embedding
+    const params = new URLSearchParams(sketchfabUrl.search)
+    
+    // Transparent background
+    params.set('transparent', '1')
+    
+    // Slow auto-rotation (0.1 degrees per second - very slow)
+    params.set('autospin', '0.1')
+    
+    // Autostart the model
+    params.set('autostart', '1')
+    
+    // Hide UI elements
+    params.set('ui_hint', '0')          // Hide navigation hint on hover
+    params.set('ui_controls', '0')      // Hide bottom controls
+    params.set('ui_annotations', '0')   // Hide annotations
+    params.set('ui_infos', '0')         // Hide top info bar (model name, author)
+    params.set('ui_stop', '0')          // Hide stop button
+    params.set('ui_help', '0')          // Hide help button
+    params.set('ui_inspector', '0')     // Hide inspector button
+    params.set('ui_settings', '0')      // Hide settings button
+    params.set('ui_vr', '0')            // Hide VR button
+    params.set('ui_fullscreen', '0')    // Hide fullscreen button
+    params.set('ui_ar', '0')            // Hide AR button
+    params.set('ui_ar_help', '0')       // Hide AR help
+    params.set('ui_ar_qrcode', '0')     // Hide AR QR code
+    params.set('ui_watermark', '1')     // Keep watermark (user is fine with it)
+    
+    // Build the enhanced URL
+    sketchfabUrl.search = params.toString()
+    
+    return sketchfabUrl.toString()
+  } catch {
+    // If URL parsing fails, return original URL
+    return url
+  }
+}
+
 function getCoverImageUrl(cover: unknown): string | undefined {
   if (!isNotionCover(cover)) return undefined
   
@@ -184,7 +237,7 @@ export function transformToProjectPreview(page: NotionPage): NotionProjectPrevie
     liveLink: getProperty(properties, "Live Link") as string,
     githubLink: getProperty(properties, "GitHub") as string,
     heroImage,
-    vectaryEmbedUrl: getProperty(properties, "Vectary URL") as string,
+    sketchfabEmbedUrl: normalizeSketchfabUrl(getProperty(properties, "Sketchfab URL") as string),
     stats: parseStatistics(statistics),
     published: true,
     coverImage: heroImage,
