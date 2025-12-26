@@ -1,12 +1,42 @@
-// Project utility functions - display utilities and content helpers
+/**
+ * Project Utility Functions
+ * 
+ * Display utilities and content helpers for project data.
+ */
 
 import type { Project, TechStackItem } from "@/lib/schemas"
 import type { ProjectContent as NotionProject } from "@/lib/schemas"
 
+// ============================================================================
+// Display Formatting
+// ============================================================================
+
+/**
+ * Formats a zero-based index as a two-digit display string.
+ * 
+ * @param index - Zero-based project index
+ * @returns Formatted string like "01", "02", etc.
+ * 
+ * @example
+ * formatProjectIndex(0) // "01"
+ * formatProjectIndex(9) // "10"
+ */
 export function formatProjectIndex(index: number): string {
   return String(index + 1).padStart(2, "0")
 }
 
+// ============================================================================
+// Content Detection
+// ============================================================================
+
+/**
+ * Checks if a project has content for a specific section.
+ * Used to conditionally render sections in project displays.
+ * 
+ * @param project - The project to check
+ * @param sectionId - Section identifier ('features', 'tech-stack', 'gallery', 'statistics')
+ * @returns Whether the section has content to display
+ */
 export function hasProjectContent(project: Project, sectionId: string): boolean {
   switch (sectionId) {
     case 'features':
@@ -22,19 +52,49 @@ export function hasProjectContent(project: Project, sectionId: string): boolean 
   }
 }
 
+// ============================================================================
+// Type Guards
+// ============================================================================
+
+/**
+ * Type guard to check if a project has Notion content (recordMap).
+ * 
+ * @param project - Unknown project object
+ * @returns Whether the project has a Notion recordMap
+ */
 export function isNotionProject(project: unknown): project is NotionProject {
-  return typeof project === 'object' && project !== null && 'recordMap' in project && (project as NotionProject).recordMap !== undefined
+  return (
+    typeof project === 'object' && 
+    project !== null && 
+    'recordMap' in project && 
+    (project as NotionProject).recordMap !== undefined
+  )
 }
 
+/**
+ * Returns the project for display (identity function, kept for API compatibility).
+ * 
+ * @param project - The project to display
+ * @returns The same project
+ */
 export function getDisplayProject(project: Project): Project {
   return project
 }
 
+// ============================================================================
+// Data Transformation
+// ============================================================================
+
 /**
- * Transform Notion project to local Project format
- * Centralized function to avoid duplication across pages
+ * Transforms a Notion project (ProjectContent) to the local Project format.
+ * Handles missing fields with sensible defaults.
+ * 
+ * @param notionProject - The Notion project content
+ * @returns A Project object with recordMap for Notion rendering
  */
-export function transformNotionToLocalProject(notionProject: NotionProject): Project & { recordMap?: NotionProject['recordMap'] } {
+export function transformNotionToLocalProject(
+  notionProject: NotionProject
+): Project & { recordMap?: NotionProject['recordMap'] } {
   return {
     id: notionProject.id,
     title: notionProject.title,

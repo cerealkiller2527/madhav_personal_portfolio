@@ -1,27 +1,36 @@
 /**
  * Consolidated Project Components
- * Small utility components consolidated into a single file
+ * 
+ * Shared utility components used across project displays.
+ * Includes: ProjectBadges, ProjectMedia, ProjectModalHeader
  */
 
 import Link from "next/link"
-import Image from "next/image"
 import { Trophy, Maximize, X } from "lucide-react"
 import type { Project } from "@/lib/schemas"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { ContentImage } from "@/components/common/content/content-image"
 import { cn } from "@/lib/core/utils"
 import { BadgeUtil } from "@/components/common/utils/badge-utils"
 import { formatProjectIndex } from "@/lib/utils/project-utils"
 
-// Project Badges Component (from project-badges.tsx)
+// ============================================================================
+// Project Badges Component
+// ============================================================================
+
 interface ProjectBadgesProps {
+  /** The project to display badges for */
   project: Project
 }
 
+/**
+ * Displays category and award badges for a project.
+ * Award styling is determined by the awardRank (1st, 2nd, 3rd place).
+ */
 export function ProjectBadges({ project }: ProjectBadgesProps) {
-  // Use award description for display, but awardRank for trophy styling
   const awardText = project.award
   const trophyStyles = project.awardRank ? BadgeUtil.getTrophyStyles(project.awardRank) : null
   const categoryVariant = BadgeUtil.getCategoryVariant(project.category)
@@ -29,6 +38,7 @@ export function ProjectBadges({ project }: ProjectBadgesProps) {
 
   return (
     <div className="flex items-center gap-2 mb-3 flex-wrap">
+      {/* Category badge */}
       <Badge 
         variant={categoryVariant}
         className={categoryClasses}
@@ -36,6 +46,7 @@ export function ProjectBadges({ project }: ProjectBadgesProps) {
         {project.category}
       </Badge>
       
+      {/* Award badge with trophy icon */}
       {awardText && trophyStyles && (
         <Badge 
           className={cn(
@@ -52,12 +63,21 @@ export function ProjectBadges({ project }: ProjectBadgesProps) {
   )
 }
 
-// Project Media Component (from project-media.tsx)
+// ============================================================================
+// Project Media Component
+// ============================================================================
+
 interface ProjectMediaProps {
+  /** The project to display media for */
   project: Project
+  /** Zero-based index for display numbering */
   index: number
 }
 
+/**
+ * Displays project media - either a Sketchfab 3D embed or hero image.
+ * Shows project index in top-left corner.
+ */
 export function ProjectMedia({ project, index }: ProjectMediaProps) {
   return (
     <div className={`relative w-full aspect-video overflow-hidden rounded-t-2xl ${project.sketchfabEmbedUrl ? '' : 'bg-secondary/10'}`}>
@@ -72,14 +92,16 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
           allow="autoplay; fullscreen; xr-spatial-tracking"
         />
       ) : (
-        <Image
-          src={project.heroImage || "/assets/placeholders/placeholder-logo.svg"}
+        <ContentImage
+          src={project.heroImage || ""}
           alt={project.title}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 will-change-transform"
+          fallbackType="project"
         />
       )}
+      {/* Project index badge */}
       <div className="absolute top-4 left-4 bg-black/20 dark:bg-black/40 backdrop-blur-sm w-10 h-10 flex items-center justify-center rounded-lg border border-black/10 dark:border-white/10">
         <span className="text-lg font-bold text-white dark:text-primary">
           {formatProjectIndex(index)}
@@ -89,12 +111,21 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
   )
 }
 
-// Project Modal Header Component (from project-modal-header.tsx)
+// ============================================================================
+// Project Modal Header Component
+// ============================================================================
+
 interface ProjectModalHeaderProps {
+  /** The project being displayed */
   project: Project
+  /** Callback when modal is closed */
   onClose: () => void
 }
 
+/**
+ * Header component for the project modal dialog.
+ * Includes title, subtitle, expand to full page button, and close button.
+ */
 export function ProjectModalHeader({ project, onClose }: ProjectModalHeaderProps) {
   return (
     <DialogHeader className="px-6 py-4 border-b flex flex-row items-start justify-between">
