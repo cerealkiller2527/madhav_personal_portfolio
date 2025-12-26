@@ -8,10 +8,7 @@ import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { ProjectModalHeader } from "@/components/projects/project-components"
 import { ProjectContentSections } from "@/components/projects/project-content-sections"
-import { 
-  isNotionProject, 
-  getDisplayProject
-} from "@/lib/utils/project-utils"
+import { isNotionProject } from "@/lib/utils/project-utils"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
 
 interface ProjectModalProps {
@@ -24,10 +21,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   
   const notionProject = project && isNotionProject(project) ? project : null
   const hasNotionContent = notionProject?.recordMap
-  const displayProject = project ? getDisplayProject(project) : null
   const { sections } = useContentTOC({ 
     recordMap: notionProject?.recordMap,
-    project: hasNotionContent ? undefined : displayProject || undefined
+    project: hasNotionContent ? undefined : project || undefined
   })
 
   if (!project) {
@@ -37,7 +33,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   return (
     <Dialog open={!!project} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="w-[calc(100%-4rem)] max-w-6xl h-[90vh] max-h-[900px] flex flex-col p-0 gap-0 [&>button]:hidden">
-        <ProjectModalHeader project={displayProject!} onClose={onClose} />
+        <ProjectModalHeader project={project} onClose={onClose} />
 
         <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-0 overflow-hidden">
           <aside className="hidden md:block md:col-span-1 p-6 border-r">
@@ -48,8 +44,8 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             <div id="overview" className="scroll-mt-24">
               <div className="relative w-full h-64 md:h-80 mb-8 rounded-md overflow-hidden">
                 <ContentImage
-                  src={displayProject!.heroImage || ""}
-                  alt={`${displayProject!.title} hero image`}
+                  src={project.heroImage || ""}
+                  alt={`${project.title} hero image`}
                   fill
                   sizes="(max-width: 1200px) 100vw, 800px"
                   className="object-cover bg-secondary"
@@ -70,13 +66,13 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               ) : (
                 <div
                   className="prose dark:prose-invert max-w-none text-muted-foreground"
-                  dangerouslySetInnerHTML={{ __html: displayProject!.detailedDescription }}
+                  dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
                 />
               )}
             </div>
 
             <ProjectContentSections 
-              project={displayProject!} 
+              project={project} 
               hasNotionContent={hasNotionContent} 
             />
           </main>

@@ -71,16 +71,6 @@ export function isNotionProject(project: unknown): project is NotionProject {
   )
 }
 
-/**
- * Returns the project for display (identity function, kept for API compatibility).
- * 
- * @param project - The project to display
- * @returns The same project
- */
-export function getDisplayProject(project: Project): Project {
-  return project
-}
-
 // ============================================================================
 // Data Transformation
 // ============================================================================

@@ -84,7 +84,7 @@ function createSlug(title: string): string {
     .replace(/\s+/g, "-")
 }
 
-export function normalizeImageUrl(url: string): string {
+function normalizeImageUrl(url: string): string {
   if (!url || url.startsWith('data:')) return ''
   if (url.startsWith('http://') || url.startsWith('https://')) return url
   if (url.startsWith('/')) return `https://www.notion.so${url}`
@@ -96,7 +96,7 @@ export function normalizeImageUrl(url: string): string {
  * Normalizes and enhances Sketchfab embed URLs with optimal parameters
  * Adds: transparent background, slow auto-rotation, and hides UI elements
  */
-export function normalizeSketchfabUrl(url: string | null | undefined): string | undefined {
+function normalizeSketchfabUrl(url: string | null | undefined): string | undefined {
   if (!url || typeof url !== 'string' || !url.trim()) return undefined
   
   try {
@@ -258,8 +258,6 @@ export async function transformToProjectContent(
 }
 
 
-export const createSlugFromTitle = createSlug
-
 function extractTextFromRecordMap(recordMap: ExtendedRecordMap): string {
   try {
     const textContent: string[] = []
@@ -304,7 +302,7 @@ function extractTextFromRecordMap(recordMap: ExtendedRecordMap): string {
   }
 }
 
-export function calculateReadingTime(content: string, wordsPerMinute = 160): number {
+function calculateReadingTime(content: string, wordsPerMinute = 160): number {
   if (!content || typeof content !== 'string') return 1
   
   const words = content.trim().split(/\s+/).filter(word => word.length > 0)
