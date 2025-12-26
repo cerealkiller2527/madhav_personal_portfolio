@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import type { ProjectsSectionProps } from "@/lib/schemas"
+import type { Project } from "@/lib/schemas"
 import { ProjectGridCard } from "@/components/projects/project-grid-card"
 import { Section } from "@/components/layout/section"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,13 @@ import { useBounceAnimation } from "@/lib/hooks/use-bounce-animation"
 
 const FILTERS = ["All", "Software", "Hardware", "Hybrid"] as const
 type FilterType = (typeof FILTERS)[number]
+
+interface ProjectsSectionProps {
+  projects: readonly Project[]
+  onProjectSelect: (project: Project) => void
+  bounceProjectId: string | null
+  onBounceComplete: () => void
+}
 
 export function ProjectsSection({
   projects,

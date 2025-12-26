@@ -9,17 +9,16 @@ import type { Project } from "@/lib/schemas"
 import { Badge } from "@/components/ui/badge"
 import { hasProjectContent } from "@/lib/utils/project-utils"
 import { ContentImage } from "@/components/common/content/content-image"
+import { PROJECT_SECTIONS, PROJECT_IMAGE_HEIGHTS } from "@/lib/core/constants"
+import { cn } from "@/lib/core/utils"
 
 // ============================================================================
 // Types
 // ============================================================================
 
 interface ProjectContentSectionsProps {
-  /** The project data to display */
   project: Project
-  /** Whether the project has Notion content (sections are hidden if true) */
   hasNotionContent: boolean
-  /** Display variant - affects heading sizes and spacing */
   variant?: "modal" | "full-page"
 }
 
@@ -27,21 +26,15 @@ interface ProjectContentSectionsProps {
 // Component
 // ============================================================================
 
-/**
- * Renders project content sections when Notion content is not available.
- * Adapts styling based on whether it's displayed in a modal or full page.
- */
 export function ProjectContentSections({ 
   project, 
   hasNotionContent,
   variant = "modal"
 }: ProjectContentSectionsProps) {
-  // Don't render if Notion content is available (it includes these sections)
   if (hasNotionContent) {
     return null
   }
 
-  // Styling based on variant
   const isFullPage = variant === "full-page"
   const headingClass = isFullPage 
     ? "text-3xl font-bold mb-4 border-b pb-3" 
@@ -55,13 +48,14 @@ export function ProjectContentSections({
   const featureDescClass = isFullPage
     ? "text-muted-foreground"
     : "text-muted-foreground text-sm"
-  const galleryHeight = isFullPage ? "h-56" : "h-48"
+  const galleryHeight = isFullPage 
+    ? PROJECT_IMAGE_HEIGHTS.fullPage.gallery 
+    : PROJECT_IMAGE_HEIGHTS.modal.gallery
 
   return (
     <>
-      {/* Key Features Section */}
-      {hasProjectContent(project, 'features') && (
-        <section id="features" className={sectionClass}>
+      {hasProjectContent(project, PROJECT_SECTIONS.features) && (
+        <section id={PROJECT_SECTIONS.features} className={sectionClass}>
           <h2 className={headingClass}>Key Features</h2>
           <ul className="space-y-6">
             {project.keyFeatures?.map((feature) => (
@@ -74,9 +68,8 @@ export function ProjectContentSections({
         </section>
       )}
 
-      {/* Tech Stack Section */}
-      {hasProjectContent(project, 'tech-stack') && (
-        <section id="tech-stack" className={sectionClass}>
+      {hasProjectContent(project, PROJECT_SECTIONS.techStack) && (
+        <section id={PROJECT_SECTIONS.techStack} className={sectionClass}>
           <h2 className={headingClass}>Tech Stack</h2>
           <div className="flex flex-wrap gap-2">
             {project.techStack?.map((tech) => (
@@ -92,13 +85,12 @@ export function ProjectContentSections({
         </section>
       )}
 
-      {/* Gallery Section */}
-      {hasProjectContent(project, 'gallery') && (
-        <section id="gallery" className={sectionClass}>
+      {hasProjectContent(project, PROJECT_SECTIONS.gallery) && (
+        <section id={PROJECT_SECTIONS.gallery} className={sectionClass}>
           <h2 className={headingClass}>Gallery</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {project.gallery?.map((image, index) => (
-              <div key={index} className={`relative w-full ${galleryHeight} rounded-md overflow-hidden`}>
+              <div key={index} className={cn("relative w-full rounded-md overflow-hidden", galleryHeight)}>
                 <ContentImage
                   src={image.url || ""}
                   alt={image.caption}

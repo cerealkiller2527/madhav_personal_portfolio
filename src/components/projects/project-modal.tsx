@@ -17,7 +17,7 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
-  const contentRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLElement>(null)
   
   const notionProject = project && isNotionProject(project) ? project : null
   const hasNotionContent = notionProject?.recordMap
@@ -37,10 +37,10 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
         <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-0 overflow-hidden">
           <aside className="hidden md:block md:col-span-1 p-6 border-r">
-            <TableOfContents sections={sections} containerRef={contentRef as React.RefObject<HTMLElement>} />
+            <TableOfContents sections={sections} containerRef={contentRef} />
           </aside>
 
-          <main className="md:col-span-4 overflow-y-auto p-8" ref={contentRef}>
+          <main className="md:col-span-4 overflow-y-auto p-8" ref={contentRef as React.RefObject<HTMLElement>}>
             <div id="overview" className="scroll-mt-24">
               <div className="relative w-full h-64 md:h-80 mb-8 rounded-md overflow-hidden">
                 <ContentImage
@@ -54,7 +54,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               </div>
               
               {/* Render Notion content if available, otherwise use local content */}
-              {hasNotionContent ? (
+              {hasNotionContent && notionProject?.recordMap ? (
                 <div className="notion-project-modal">
                   <NotionRenderer 
                     recordMap={notionProject.recordMap}
@@ -73,7 +73,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
             <ProjectContentSections 
               project={project} 
-              hasNotionContent={hasNotionContent} 
+              hasNotionContent={Boolean(hasNotionContent)} 
             />
           </main>
         </div>

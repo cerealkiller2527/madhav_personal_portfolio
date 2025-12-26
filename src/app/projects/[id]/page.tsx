@@ -20,15 +20,6 @@ async function getProjectData(id: string) {
     if (notionProject) {
       return transformNotionToLocalProject(notionProject)
     }
-    
-    const allNotionProjects = await getAllProjects()
-    const foundProject = allNotionProjects.find(p => p.id === id || p.slug === id)
-    if (foundProject) {
-      const fullProject = await getProjectById(foundProject.id)
-      if (fullProject) {
-        return transformNotionToLocalProject(fullProject)
-      }
-    }
   } catch (error) {
     console.error('Failed to fetch project from Notion:', error)
   }

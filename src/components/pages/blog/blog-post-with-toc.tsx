@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
 import { Comments } from "@/components/common/comments/comments"
+import { siteInfo } from "@/lib/core/data"
 
 interface BlogContentWithTOCProps {
   post: BlogContent
@@ -42,7 +43,7 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
                 <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto">
                   <TableOfContents 
                     sections={sections}
-                    containerRef={contentRef as React.RefObject<HTMLElement>}
+                    containerRef={contentRef}
                   />
                 </div>
               </aside>
@@ -54,8 +55,8 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
                 <BlogHeader 
                   post={post}
                   author={{
-                    name: "Madhav Lodha",
-                    avatar: "/assets/portfolio/avatar-logo.png"
+                    name: siteInfo.name,
+                    avatar: siteInfo.avatarLogo
                   }}
                   readingTime={post.readingTime}
                 />

@@ -6,6 +6,7 @@
 
 import type { Project, TechStackItem } from "@/lib/schemas"
 import type { ProjectContent as NotionProject } from "@/lib/schemas"
+import { PROJECT_SECTIONS, type ProjectSectionId } from "@/lib/core/constants"
 
 // ============================================================================
 // Display Formatting
@@ -16,10 +17,6 @@ import type { ProjectContent as NotionProject } from "@/lib/schemas"
  * 
  * @param index - Zero-based project index
  * @returns Formatted string like "01", "02", etc.
- * 
- * @example
- * formatProjectIndex(0) // "01"
- * formatProjectIndex(9) // "10"
  */
 export function formatProjectIndex(index: number): string {
   return String(index + 1).padStart(2, "0")
@@ -32,20 +29,16 @@ export function formatProjectIndex(index: number): string {
 /**
  * Checks if a project has content for a specific section.
  * Used to conditionally render sections in project displays.
- * 
- * @param project - The project to check
- * @param sectionId - Section identifier ('features', 'tech-stack', 'gallery', 'statistics')
- * @returns Whether the section has content to display
  */
-export function hasProjectContent(project: Project, sectionId: string): boolean {
+export function hasProjectContent(project: Project, sectionId: ProjectSectionId): boolean {
   switch (sectionId) {
-    case 'features':
+    case PROJECT_SECTIONS.features:
       return (project.keyFeatures?.length ?? 0) > 0
-    case 'tech-stack':
+    case PROJECT_SECTIONS.techStack:
       return (project.techStack?.length ?? 0) > 0
-    case 'gallery':
+    case PROJECT_SECTIONS.gallery:
       return (project.gallery?.length ?? 0) > 0
-    case 'statistics':
+    case PROJECT_SECTIONS.statistics:
       return (project.stats?.length ?? 0) > 0
     default:
       return false

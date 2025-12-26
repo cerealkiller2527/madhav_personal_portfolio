@@ -6,9 +6,15 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ArrowDown } from "lucide-react"
 import { ProjectMarquee } from "@/components/projects/project-marquee"
-import type { HeroSectionProps } from "@/lib/schemas"
+import type { Project } from "@/lib/schemas"
 import { smoothScrollToElement } from "@/lib/core/utils"
 import { siteInfo, buttonLabels } from "@/lib/core/data"
+
+interface HeroSectionProps {
+  projects: readonly Project[]
+  onHoverChange: (isHovering: boolean) => void
+  onProjectSelect: (projectId: string) => void
+}
 
 const containerVariants = {
   hidden: { opacity: 0 },

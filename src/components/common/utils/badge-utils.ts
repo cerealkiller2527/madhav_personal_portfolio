@@ -1,12 +1,21 @@
-// Badge utility class for consistent styling
+/**
+ * Badge Utility Functions
+ * 
+ * Provides consistent badge styling for project categories and awards.
+ */
 
 import type { Project } from "@/lib/schemas"
 
 export type BadgeVariant = "default" | "secondary" | "destructive" | "outline"
 export type CategoryType = Project['category']
-export type AwardRank = string
 
+/**
+ * Badge styling utilities for project displays.
+ */
 export class BadgeUtil {
+  /**
+   * Get the badge variant for a project category.
+   */
   static getCategoryVariant(category: CategoryType): BadgeVariant {
     const categoryMap: Record<CategoryType, BadgeVariant> = {
       "Software": "default",
@@ -16,6 +25,9 @@ export class BadgeUtil {
     return categoryMap[category] || "default"
   }
 
+  /**
+   * Get Tailwind classes for category badge styling.
+   */
   static getCategoryClasses(category: CategoryType): string {
     const classMap: Record<CategoryType, string> = {
       "Software": "bg-blue-500/10 text-blue-600 border-blue-500/20 hover:bg-blue-500/20",
@@ -25,7 +37,10 @@ export class BadgeUtil {
     return classMap[category] || "bg-muted/80 text-muted-foreground"
   }
 
-  static getTrophyStyles(awardRank: AwardRank) {
+  /**
+   * Get styling for award trophy badges based on rank.
+   */
+  static getTrophyStyles(awardRank: string) {
     const lowerRank = awardRank.toLowerCase()
     
     if (lowerRank.includes("1st") || lowerRank.includes("first") || lowerRank.includes("gold")) {
@@ -55,23 +70,12 @@ export class BadgeUtil {
       }
     }
 
+    // Default award styling
     return {
       badgeClasses: "bg-primary/20 border-primary/30 hover:bg-primary/30 text-black dark:text-white",
       containerClasses: "bg-primary/20 backdrop-blur-sm",
       iconClasses: "text-black dark:text-primary",
       hoverClasses: "hover:border-primary/50"
     }
-  }
-
-  static getTechStackClasses(): string {
-    return "bg-secondary/80 text-secondary-foreground hover:bg-secondary border-secondary"
-  }
-
-  static isValidVariant(variant: string): variant is BadgeVariant {
-    return ["default", "secondary", "destructive", "outline"].includes(variant)
-  }
-
-  static isValidCategory(category: string): category is CategoryType {
-    return ["Software", "Hardware", "Hybrid"].includes(category)
   }
 }

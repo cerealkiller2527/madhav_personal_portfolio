@@ -28,7 +28,7 @@ interface ProjectDetailPageProps {
 export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
   const contentRef = useRef<HTMLElement>(null)
   
-  const hasNotionContent = project.recordMap && Object.keys(project.recordMap).length > 0
+  const hasNotionContent = Boolean(project.recordMap && Object.keys(project.recordMap).length > 0)
   
   // Use the centralized TOC hook for extracting sections
   const { sections } = useContentTOC({ 
@@ -47,11 +47,11 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                 Back
               </BackButton>
             </div>
-            <TableOfContents sections={sections} containerRef={contentRef as React.RefObject<HTMLElement>} />
+            <TableOfContents sections={sections} containerRef={contentRef} />
           </div>
         </aside>
 
-        <main className="lg:col-span-4 py-16" ref={contentRef}>
+        <main className="lg:col-span-4 py-16" ref={contentRef as React.RefObject<HTMLElement>}>
           <div className="lg:hidden mb-8">
             <BackButton sectionId="projects">
               <ArrowLeft className="mr-2 h-4 w-4" />

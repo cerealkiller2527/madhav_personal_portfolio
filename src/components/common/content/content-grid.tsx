@@ -88,12 +88,6 @@ export const GRID_CONFIGS = {
     gap: 'lg' as const
   },
   
-  // Experience timeline - single column with larger gaps
-  experience: {
-    columns: { default: 1 },
-    gap: 'xl' as const
-  },
-  
   // Gallery grid - 2x2 on small, more on larger screens
   gallery: {
     columns: { default: 2, sm: 2, md: 3, lg: 4 },

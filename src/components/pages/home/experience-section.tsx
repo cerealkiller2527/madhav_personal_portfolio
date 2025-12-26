@@ -3,11 +3,15 @@
 import { useState } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import type { Experience, ExperienceSectionProps } from "@/lib/schemas"
+import type { Experience } from "@/lib/schemas"
 import { Section } from "@/components/layout/section"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/core/utils"
 import { MapPin } from "lucide-react"
+
+interface ExperienceSectionProps {
+  experiences: readonly Experience[]
+}
 
 const listVariants = {
   visible: { transition: { staggerChildren: 0.07 } },

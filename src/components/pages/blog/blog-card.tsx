@@ -113,9 +113,6 @@ export function BlogCard({
   )
 }
 
-/** @deprecated Use BlogCard directly */
-export { BlogCard as BlogContentCard }
-
 // ============================================================================
 // Blog Grid Component
 // ============================================================================

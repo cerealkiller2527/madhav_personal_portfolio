@@ -10,40 +10,13 @@
 // ============================================================================
 
 export {
-  // Base validation schemas
   uuidSchema,
   dateStringSchema,
   urlSchema,
-  emailSchema,
   nonEmptyStringSchema,
-  optionalStringSchema,
-  
-  // Utility schemas
-  paginationSchema,
-  sortOrderSchema,
-  dateRangeSchema,
-  imageSchema,
-  seoMetadataSchema,
-  
-  // API response schemas
-  successResponseSchema,
-  errorResponseSchema,
-  apiResponseSchema,
-  
-  // Schema factory functions
   optionalSchema,
-  enumSchema,
-  
-  // Types
   type UUID,
-  type DateString,
-  type Pagination,
-  type DateRange,
-  type Image,
-  type SEOMetadata,
-  type SuccessResponse,
-  type ErrorResponse,
-  type APIResponse
+  type DateString
 } from './common.schemas'
 
 // ============================================================================
@@ -51,10 +24,13 @@ export {
 // ============================================================================
 
 export {
-  // Category and sub-schemas
+  // Enums
   projectCategorySchema,
   techCategorySchema,
   proficiencyLevelSchema,
+  ProjectCategory,
+  
+  // Sub-schemas
   statisticSchema,
   galleryItemSchema,
   featureSchema,
@@ -63,10 +39,8 @@ export {
   // Main project schema
   projectSchema,
   
-  // Enum values for runtime use
-  ProjectCategory,
-  
   // Types
+  type ProjectCategory as ProjectCategoryType,
   type TechCategory,
   type ProficiencyLevel,
   type Statistic,
@@ -101,41 +75,14 @@ export {
 // ============================================================================
 
 export {
-  // Notion API schemas
   notionPropertyValueSchema,
   notionPageSchema,
-  baseContentSchema,
-  
-  // Notion project schemas
-  projectContentSchema,
   notionProjectPreviewSchema,
-  
-  // Configuration schemas
+  projectContentSchema,
   notionConfigSchema,
-  
-  // Types
   type NotionPropertyValue,
   type NotionPage,
-  type BaseContent,
-  type ProjectContent,
   type NotionProjectPreview,
+  type ProjectContent,
   type NotionConfig
 } from './notion.schemas'
-
-// ============================================================================
-// Component Props Types
-// ============================================================================
-
-export {
-  // Layout component props
-  headerPropsSchema,
-  type HeaderProps,
-  
-  // Page section props
-  heroSectionPropsSchema,
-  experienceSectionPropsSchema,
-  projectsSectionPropsSchema,
-  type HeroSectionProps,
-  type ExperienceSectionProps,
-  type ProjectsSectionProps
-} from './component.schemas'

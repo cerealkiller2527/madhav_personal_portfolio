@@ -36,13 +36,12 @@ export const footerData = {
         { href: "mailto:madhavlodha2503@gmail.com", label: "Email" },
       ]
     },
-    work: {
-      title: "Work",
+    navigation: {
+      title: "Navigation",
       links: [
-        { href: "#", label: "Underwater ROV" },
-        { href: "#", label: "Tomo AI Game" },
-        { href: "#", label: "Frappe Fridge Manager" },
-        { href: "#", label: "T-Bot FRC Robot" },
+        { href: "/#projects", label: "Projects" },
+        { href: "/#experience", label: "Experience" },
+        { href: "/blog", label: "Blog" },
       ]
     }
   },

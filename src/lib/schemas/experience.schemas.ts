@@ -14,7 +14,6 @@ import { statisticSchema } from './project.schemas'
 
 /**
  * Experience schema for work/education experiences.
- * Used for displaying work history in the portfolio.
  */
 export const experienceSchema = z.object({
   id: uuidSchema,
@@ -30,5 +29,4 @@ export const experienceSchema = z.object({
   liveLink: optionalSchema(urlSchema)
 })
 
-/** Type for a work/education experience entry */
 export type Experience = z.infer<typeof experienceSchema>
