@@ -137,14 +137,17 @@ export type ProjectContent = z.infer<typeof projectContentSchema>
 // ============================================================================
 
 /**
- * Notion configuration schema for client initialization
+ * Notion configuration schema for client initialization.
+ * Note: revalidateTime, enableCache, and cacheMaxSize are kept for
+ * compatibility with UnifiedNotionClient but are not actively used
+ * in the current static export build.
  */
 export const notionConfigSchema = z.object({
   token: z.string().optional(),
   blogDatabaseId: z.string().optional(),
   projectsDatabaseId: z.string().optional(),
-  revalidateTime: z.number().int().nonnegative().default(3600),
-  enableCache: z.boolean().default(true),
-  cacheMaxSize: z.number().int().positive().default(100)
+  revalidateTime: z.number().int().nonnegative().optional(),
+  enableCache: z.boolean().optional(),
+  cacheMaxSize: z.number().int().positive().optional()
 })
 export type NotionConfig = z.infer<typeof notionConfigSchema>

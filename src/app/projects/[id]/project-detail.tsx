@@ -51,7 +51,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
           </div>
         </aside>
 
-        <main className="lg:col-span-4 py-16" ref={contentRef as React.RefObject<HTMLElement>}>
+        <main className="lg:col-span-4 py-16" ref={contentRef}>
           <div className="lg:hidden mb-8">
             <BackButton sectionId="projects">
               <ArrowLeft className="mr-2 h-4 w-4" />

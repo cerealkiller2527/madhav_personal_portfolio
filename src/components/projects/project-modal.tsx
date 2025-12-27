@@ -40,7 +40,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             <TableOfContents sections={sections} containerRef={contentRef} />
           </aside>
 
-          <main className="md:col-span-4 overflow-y-auto p-8" ref={contentRef as React.RefObject<HTMLElement>}>
+          <main className="md:col-span-4 overflow-y-auto p-8" ref={contentRef}>
             <div id="overview" className="scroll-mt-24">
               <div className="relative w-full h-64 md:h-80 mb-8 rounded-md overflow-hidden">
                 <ContentImage
