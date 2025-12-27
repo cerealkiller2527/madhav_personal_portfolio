@@ -61,7 +61,6 @@ function generateProjectSections(project: Project): TOCSection[] {
   return sections
 }
 
-    
 export function useContentTOC(content: {
   recordMap?: ExtendedRecordMap
   project?: Project

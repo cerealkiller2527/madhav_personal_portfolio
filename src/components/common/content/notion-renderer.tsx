@@ -1,7 +1,9 @@
 /**
  * Universal Notion Content Renderer
- * Meta Engineering Standards: DRY, configurable, performant
- * Handles Notion content for both Blog and Project domains
+ *
+ * Handles Notion content for both Blog and Project domains.
+ * Provides custom component overrides to suppress warnings
+ * for unsupported block types.
  */
 
 'use client'
@@ -15,6 +17,13 @@ interface NotionRendererProps {
   className?: string
   contentType?: 'blog' | 'project'
 }
+
+/**
+ * No-op component for unsupported Notion block types.
+ * Suppresses react-notion-x warnings for Collection/database views
+ * and other unsupported blocks without breaking the render.
+ */
+const NoOpBlock = () => null
 
 export function NotionRenderer({ 
   recordMap, 
@@ -31,7 +40,7 @@ export function NotionRenderer({
       <ReactNotionRenderer
         recordMap={recordMap}
         fullPage={false}
-        darkMode={false} // Will be controlled by our theme system
+        darkMode={false}
         rootPageId={rootPageId}
         previewImages
         showCollectionViewDropdown={false}
@@ -43,8 +52,8 @@ export function NotionRenderer({
         className={pageClassName}
         bodyClassName={bodyClassName}
         components={{
-          // Collection views will render with basic support
-          // Advanced features like equations, code blocks work out of the box
+          // Suppress warnings for Collection/database views
+          Collection: NoOpBlock,
         }}
       />
     </div>
