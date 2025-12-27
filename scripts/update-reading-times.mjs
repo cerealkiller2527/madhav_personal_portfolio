@@ -78,7 +78,7 @@ async function updateReadingTimes() {
       method: "post",
       path: `data_sources/${dataSourceId}/query`,
       body: {
-        filter: { property: 'Published', checkbox: { equals: true } }
+      filter: { property: 'Published', checkbox: { equals: true } }
       }
     })
 

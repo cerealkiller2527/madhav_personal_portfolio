@@ -3,33 +3,10 @@ import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { getAllProjects, getProjectById } from "@/lib/notion/notion-service"
 import ProjectDetailPage from "./project-detail"
-import type { Project, TechStackItem } from "@/lib/schemas/project.schemas"
+import type { Project } from "@/lib/schemas/project.schemas"
 import type { ProjectContent as NotionProject } from "@/lib/schemas"
 import { LogoSpinner } from "@/components/common/ui/logo-spinner"
-
-function transformNotionToLocalProject(notionProject: NotionProject): Project & { coverImage?: string; recordMap?: NotionProject['recordMap'] } {
-  return {
-    id: notionProject.id,
-    title: notionProject.title,
-    subtitle: notionProject.subtitle,
-    description: notionProject.description || "",
-    category: notionProject.category,
-    award: notionProject.award,
-    awardRank: notionProject.awardRank,
-    stats: notionProject.stats || [],
-    tags: notionProject.tags,
-    liveLink: notionProject.liveLink,
-    githubLink: notionProject.githubLink,
-    heroImage: notionProject.heroImage || "/assets/placeholders/placeholder-logo.svg",
-    coverImage: notionProject.coverImage || notionProject.heroImage || "/assets/placeholders/placeholder-logo.svg",
-    gallery: notionProject.gallery || [],
-    detailedDescription: notionProject.description || "",
-    vectaryEmbedUrl: notionProject.vectaryEmbedUrl,
-    keyFeatures: notionProject.keyFeatures || [],
-    techStack: notionProject.techStack as TechStackItem[] || [],
-    recordMap: notionProject.recordMap,
-  }
-}
+import { transformNotionToLocalProject } from "@/lib/utils/project-utils"
 
 interface ProjectPageProps {
   params: Promise<{
@@ -42,15 +19,6 @@ async function getProjectData(id: string) {
     const notionProject = await getProjectById(id)
     if (notionProject) {
       return transformNotionToLocalProject(notionProject)
-    }
-    
-    const allNotionProjects = await getAllProjects()
-    const foundProject = allNotionProjects.find(p => p.id === id || p.slug === id)
-    if (foundProject) {
-      const fullProject = await getProjectById(foundProject.id)
-      if (fullProject) {
-        return transformNotionToLocalProject(fullProject)
-      }
     }
   } catch (error) {
     console.error('Failed to fetch project from Notion:', error)

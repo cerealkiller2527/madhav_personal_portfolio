@@ -1,7 +1,7 @@
 /**
  * Universal Content Image Component
- * Meta Engineering Standards: Reusable, performant, accessible
- * Handles images for both Blog and Project content with consistent fallbacks
+ * 
+ * Handles images for both Blog and Project content with consistent fallbacks.
  */
 
 "use client"
@@ -9,6 +9,7 @@
 import Image from "next/image"
 import { useState } from "react"
 import { FileText, Image as ImageIcon } from "lucide-react"
+import { cn } from "@/lib/core/utils"
 
 interface ContentImageProps {
   src: string
@@ -32,7 +33,7 @@ export function ContentImage({
   src, 
   alt, 
   fill = false, 
-  className = "", 
+  className, 
   priority = false,
   width,
   height,
@@ -46,7 +47,7 @@ export function ContentImage({
   if (!src || src.trim() === '') {
     const FallbackIcon = FALLBACK_ICONS[fallbackType]
     return (
-      <div className={`bg-muted flex items-center justify-center ${className}`}>
+      <div className={cn("bg-muted flex items-center justify-center", className)}>
         <FallbackIcon className="h-8 w-8 text-muted-foreground/50" />
       </div>
     )
@@ -54,27 +55,30 @@ export function ContentImage({
 
   // Don't show fallback for placeholder.svg - just return empty div
   if (hasError && src.includes('placeholder.svg')) {
-    return <div className={`bg-muted ${className}`} />
+    return <div className={cn("bg-muted", className)} />
   }
 
   if (hasError) {
     const FallbackIcon = FALLBACK_ICONS[fallbackType]
     return (
-      <div className={`bg-muted flex items-center justify-center ${className}`}>
+      <div className={cn("bg-muted flex items-center justify-center", className)}>
         <FallbackIcon className="h-8 w-8 text-muted-foreground/50" />
       </div>
     )
   }
 
   if (fill) {
-    // For fill images, don't add extra wrapper - let parent handle positioning
     return (
       <>
         <Image
           src={src}
           alt={alt}
           fill
-          className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} ${className}`}
+          className={cn(
+            "transition-opacity duration-300",
+            isLoading ? "opacity-0" : "opacity-100",
+            className
+          )}
           priority={priority}
           sizes={sizes}
           onError={() => setHasError(true)}
@@ -88,20 +92,23 @@ export function ContentImage({
   }
   
   return (
-    <div className={`relative ${className}`}>
+    <div className={cn("relative", className)}>
       <Image
         src={src}
         alt={alt}
         width={width}
         height={height}
-        className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+        className={cn(
+          "transition-opacity duration-300",
+          isLoading ? "opacity-0" : "opacity-100"
+        )}
         priority={priority}
         sizes={sizes}
         onError={() => setHasError(true)}
         onLoad={() => setIsLoading(false)}
       />
       {isLoading && (
-        <div className={`absolute inset-0 bg-muted animate-pulse`} />
+        <div className="absolute inset-0 bg-muted animate-pulse" />
       )}
     </div>
   )

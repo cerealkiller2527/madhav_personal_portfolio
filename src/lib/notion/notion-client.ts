@@ -140,7 +140,7 @@ export class UnifiedNotionClient {
         method: "post",
         path: `data_sources/${dataSourceId}/query`,
         body: {
-          filter,
+        filter,
           sorts
         }
       }) as DataSourceQueryResponse

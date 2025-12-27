@@ -1,12 +1,13 @@
-// This file exports blog types from notion.schemas.ts to maintain backward compatibility
-// Blog types are now managed as part of the Notion integration
+/**
+ * Blog Schemas
+ * 
+ * Re-exports blog-related schemas from notion.schemas.ts
+ * for cleaner imports in blog-related code.
+ */
 
 export {
-  // Blog schemas
   blogContentSchema,
   blogPreviewSchema,
-  
-  // Blog types
   type BlogContent,
   type BlogPreview
 } from './notion.schemas'

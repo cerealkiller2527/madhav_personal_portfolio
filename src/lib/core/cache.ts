@@ -1,27 +1,31 @@
-// Build-time only cache for static export
+/**
+ * Data Fetching Utilities
+ * 
+ * For static export builds, data is fetched once at build time.
+ * This module provides error handling and fallback support.
+ */
 
-export const getBlogCacheKey = (type: string, id?: string): string => {
-  return id ? `blog:${type}:${id}` : `blog:${type}`
-}
+// ============================================================================
+// Data Fetching
+// ============================================================================
 
-export const getProjectsCacheKey = (type: string, id?: string): string => {
-  return id ? `projects:${type}:${id}` : `projects:${type}`
-}
-
-// Data is fetched once at build time in static export
-export async function getCachedData<T>(
-  _key: string,
+/**
+ * Fetches data with error handling and optional fallback.
+ * In static export mode, this simply executes the fetcher directly.
+ * 
+ * @param fetcher - Async function that fetches the data
+ * @param fallback - Optional fallback value if fetching fails
+ * @returns The fetched data or fallback value
+ */
+export async function fetchWithFallback<T>(
   fetcher: () => Promise<T>,
-  _ttlSeconds: number,
   fallback?: T
 ): Promise<T> {
   try {
     return await fetcher()
   } catch (error) {
+    console.error('Data fetch failed:', error)
     if (fallback !== undefined) return fallback
     throw error
   }
-}
-
-export function clearCache(): void {
 }

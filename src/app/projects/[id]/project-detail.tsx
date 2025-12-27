@@ -1,58 +1,23 @@
+/**
+ * Project Detail Page Component
+ * 
+ * Full-page view for a single project with TOC sidebar,
+ * Notion content rendering, and navigation between projects.
+ */
+
 "use client"
 
 import { useRef } from "react"
-import Image from "next/image"
-import type { Project, Feature, TechStackItem, GalleryItem } from "@/lib/schemas"
-import { Badge } from "@/components/ui/badge"
+import type { Project } from "@/lib/schemas"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { ProjectNavigation } from "@/components/common/content/content-navigation"
 import { BackButton } from "@/components/common/content/content-navigation"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
+import { ContentImage } from "@/components/common/content/content-image"
 import { Comments } from "@/components/common/comments/comments"
+import { ProjectContentSections } from "@/components/projects/project-content-sections"
 import { ArrowLeft } from "lucide-react"
-import type { ExtendedRecordMap } from "notion-types"
-
-const defaultSections = [
-  { id: "overview", label: "Overview" },
-  { id: "features", label: "Key Features" },
-  { id: "tech-stack", label: "Tech Stack" },
-  { id: "gallery", label: "Gallery" },
-]
-
-function extractNotionHeadings(recordMap: ExtendedRecordMap | undefined): { id: string; label: string; level: number }[] {
-  const headings: { id: string; label: string; level: number }[] = []
-  
-  if (!recordMap?.block) return headings
-
-  for (const [blockId, block] of Object.entries(recordMap.block)) {
-    const blockValue = (block as { value?: { type?: string; properties?: { title?: string[][] } } })?.value
-    if (!blockValue) continue
-
-    const { type, properties } = blockValue
-    
-    if (type === 'header' || type === 'sub_header' || type === 'sub_sub_header') {
-      const title = properties?.title?.[0]?.[0] || ''
-      if (title) {
-        const id = title
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '')
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-        
-        const level = type === 'header' ? 1 : type === 'sub_header' ? 2 : 3
-        
-        headings.push({
-          id: id || blockId,
-          label: title,
-          level
-        })
-      }
-    }
-  }
-
-  return headings
-}
+import { useContentTOC } from "@/lib/hooks/use-content-toc"
 
 interface ProjectDetailPageProps {
   project: Project
@@ -63,16 +28,13 @@ interface ProjectDetailPageProps {
 export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
   const contentRef = useRef<HTMLElement>(null)
   
-  const hasNotionContent = project.recordMap && Object.keys(project.recordMap).length > 0
+  const hasNotionContent = Boolean(project.recordMap && Object.keys(project.recordMap).length > 0)
   
-  const sections = hasNotionContent 
-    ? extractNotionHeadings(project.recordMap).map(h => ({ id: h.id, label: h.label, level: h.level }))
-    : defaultSections.filter(section => {
-        if (section.id === 'features') return project.keyFeatures?.length > 0
-        if (section.id === 'tech-stack') return project.techStack?.length > 0
-        if (section.id === 'gallery') return project.gallery?.length > 0
-        return true
-      })
+  // Use the centralized TOC hook for extracting sections
+  const { sections } = useContentTOC({ 
+    recordMap: hasNotionContent ? project.recordMap : undefined,
+    project: hasNotionContent ? undefined : project
+  })
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28">
@@ -85,11 +47,11 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                 Back
               </BackButton>
             </div>
-            <TableOfContents sections={sections} containerRef={contentRef as React.RefObject<HTMLElement>} />
+            <TableOfContents sections={sections} containerRef={contentRef} />
           </div>
         </aside>
 
-        <main className="lg:col-span-4 py-16" ref={contentRef}>
+        <main className="lg:col-span-4 py-16" ref={contentRef as React.RefObject<HTMLElement>}>
           <div className="lg:hidden mb-8">
             <BackButton sectionId="projects">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -107,18 +69,21 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               </p>
             </header>
 
+            {/* Hero Image */}
             <div id="overview" className="scroll-mt-28">
               <div className="relative w-full h-64 md:h-96 mb-12 rounded-lg overflow-hidden shadow-lg bg-secondary">
-                <Image
-                  src={project.heroImage || "/assets/placeholders/placeholder-logo.svg"}
+                <ContentImage
+                  src={project.heroImage || ""}
                   alt={`${project.title} hero image`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 1024px"
                   className="object-cover"
+                  fallbackType="project"
                   priority
                 />
               </div>
               
+              {/* Notion content or local description */}
               {hasNotionContent ? (
                 <div className="notion-project-full-page">
                   <NotionRenderer 
@@ -136,51 +101,12 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               )}
             </div>
 
-            {(!hasNotionContent && project.keyFeatures?.length > 0) && (
-              <section id="features" className="mt-12 scroll-mt-28">
-                <h2 className="text-3xl font-bold mb-4 border-b pb-3">Key Features</h2>
-                <ul className="space-y-6">
-                  {project.keyFeatures.map((feature: Feature) => (
-                    <li key={feature.title}>
-                      <p className="font-semibold text-lg text-foreground">{feature.title}</p>
-                      <p className="text-muted-foreground">{feature.description}</p>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {(!hasNotionContent && project.techStack?.length > 0) && (
-              <section id="tech-stack" className="mt-12 scroll-mt-28">
-                <h2 className="text-3xl font-bold mb-4 border-b pb-3">Tech Stack</h2>
-                <div className="flex flex-wrap gap-2">
-                  {project.techStack.map((tech: TechStackItem) => (
-                    <Badge key={tech.name} variant="secondary" className="text-sm px-3 py-1">
-                      {tech.name}
-                    </Badge>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {(!hasNotionContent && project.gallery?.length > 0) && (
-              <section id="gallery" className="mt-12 scroll-mt-28">
-                <h2 className="text-3xl font-bold mb-4 border-b pb-3">Gallery</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {project.gallery.map((image: GalleryItem, index: number) => (
-                    <div key={index} className="relative w-full h-56 rounded-md overflow-hidden bg-secondary">
-                      <Image
-                        src={image.url || "/assets/placeholders/placeholder-logo.svg"}
-                        alt={image.caption}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+            {/* Content sections (features, tech stack, gallery) */}
+            <ProjectContentSections 
+              project={project} 
+              hasNotionContent={hasNotionContent} 
+              variant="full-page"
+            />
 
             <ProjectNavigation 
               previousProject={previousProject}

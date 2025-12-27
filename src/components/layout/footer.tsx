@@ -53,7 +53,7 @@ export function Footer() {
           <div className="md:col-span-1 lg:col-span-2 flex flex-col sm:flex-row sm:justify-end gap-8">
             <div className="flex gap-8">
               <LinkSection title={footerData.sections.connect.title} links={footerData.sections.connect.links} />
-              <LinkSection title={footerData.sections.work.title} links={footerData.sections.work.links} />
+              <LinkSection title={footerData.sections.navigation.title} links={footerData.sections.navigation.links} />
             </div>
             <div className="flex items-start gap-3">
               {footerData.socialIcons.map((social) => {

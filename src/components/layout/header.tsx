@@ -2,8 +2,6 @@
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import type React from "react"
-import type { HeaderProps } from "@/lib/schemas"
-
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { Home, Briefcase, Code, Mail, Eye, BookOpen } from "lucide-react"
@@ -18,6 +16,10 @@ const navItems = [
   { name: "Blog", id: "blog", icon: <BookOpen className="h-4 w-4" />, href: "/blog" },
   { name: "Contact", id: "contact", icon: <Mail className="h-4 w-4" />, href: "/#contact" },
 ]
+
+interface HeaderProps {
+  onResumeOpen: () => void
+}
 
 export function Header({ onResumeOpen }: HeaderProps) {
   const router = useRouter()

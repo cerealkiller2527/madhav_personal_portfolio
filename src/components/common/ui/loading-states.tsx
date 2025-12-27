@@ -109,22 +109,3 @@ export function LoadingSpinner({ size = 'md', className = "" }: {
     <div className={`animate-spin rounded-full border-2 border-muted border-t-primary ${sizeClasses[size]} ${className}`} />
   )
 }
-
-/**
- * Loading text with animated dots
- */
-export function LoadingText({ text = "Loading", className = "" }: {
-  text?: string
-  className?: string
-}) {
-  return (
-    <div className={`flex items-center gap-1 text-muted-foreground ${className}`}>
-      <span>{text}</span>
-      <div className="flex gap-1">
-        <div className="w-1 h-1 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-        <div className="w-1 h-1 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-        <div className="w-1 h-1 bg-muted-foreground rounded-full animate-bounce"></div>
-      </div>
-    </div>
-  )
-}

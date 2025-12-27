@@ -1,6 +1,12 @@
+/**
+ * Notion Integration Schemas
+ * 
+ * Schemas for Notion API data structures and content transformation.
+ */
+
 import { z } from 'zod'
 import { uuidSchema, urlSchema, nonEmptyStringSchema, optionalSchema, dateStringSchema } from './common.schemas'
-import { projectCategorySchema, statisticSchema, galleryItemSchema, featureSchema, techStackItemSchema } from './project.schemas'
+import { projectCategorySchema, statisticSchema } from './project.schemas'
 import type { ExtendedRecordMap } from 'notion-types'
 
 // ============================================================================
@@ -8,15 +14,7 @@ import type { ExtendedRecordMap } from 'notion-types'
 // ============================================================================
 
 /**
- * Extended record map schema - properly typed wrapper for notion-types
- */
-export const extendedRecordMapSchema = z.custom<ExtendedRecordMap>(
-  (val) => val !== null && typeof val === 'object',
-  { message: 'Invalid ExtendedRecordMap' }
-)
-
-/**
- * Notion property value schema
+ * Notion property value schema - represents a single property from Notion API
  */
 export const notionPropertyValueSchema = z.object({
   id: z.string(),
@@ -37,7 +35,7 @@ export const notionPropertyValueSchema = z.object({
 export type NotionPropertyValue = z.infer<typeof notionPropertyValueSchema>
 
 /**
- * Notion page schema
+ * Notion page schema - represents a page from the Notion API
  */
 export const notionPageSchema = z.object({
   object: z.literal('page'),
@@ -56,129 +54,97 @@ export const notionPageSchema = z.object({
 export type NotionPage = z.infer<typeof notionPageSchema>
 
 // ============================================================================
-// Base Content Schema
+// Blog Content Schemas
 // ============================================================================
-
-/**
- * Base content schema for both blog and project content
- */
-export const baseContentSchema = z.object({
-  id: uuidSchema,
-  slug: nonEmptyStringSchema,
-  title: nonEmptyStringSchema,
-  description: optionalSchema(z.string()),
-  publishedAt: dateStringSchema,
-  updatedAt: dateStringSchema,
-  tags: z.array(nonEmptyStringSchema),
-  coverImage: optionalSchema(urlSchema),
-  published: z.boolean()
-})
-export type BaseContent = z.infer<typeof baseContentSchema>
-
-// ============================================================================
-// Blog Schemas
-// ============================================================================
-
-/**
- * Blog content schema (full content with Notion data)
- */
-export const blogContentSchema = baseContentSchema.extend({
-  category: optionalSchema(z.string()),
-  readingTime: z.number().int().positive().optional(),
-  recordMap: extendedRecordMapSchema.optional()
-})
-export type BlogContent = z.infer<typeof blogContentSchema>
 
 /**
  * Blog preview schema (for listings, without full content)
  */
-export const blogPreviewSchema = blogContentSchema.omit({ recordMap: true })
+export const blogPreviewSchema = z.object({
+  id: uuidSchema,
+  slug: nonEmptyStringSchema,
+  title: nonEmptyStringSchema,
+  description: optionalSchema(z.string()),
+  publishedAt: z.string(),
+  updatedAt: z.string(),
+  tags: z.array(nonEmptyStringSchema),
+  category: optionalSchema(z.string()),
+  coverImage: optionalSchema(urlSchema),
+  published: z.boolean(),
+  readingTime: z.number().int().positive().optional()
+})
 export type BlogPreview = z.infer<typeof blogPreviewSchema>
 
+/**
+ * Blog content schema (full content with Notion recordMap)
+ */
+export const blogContentSchema = blogPreviewSchema.extend({
+  recordMap: z.custom<ExtendedRecordMap>().optional()
+})
+export type BlogContent = z.infer<typeof blogContentSchema>
+
 // ============================================================================
-// Project Schemas (Notion-based)
+// Notion Project Preview Schema
 // ============================================================================
 
 /**
- * Project content schema (full content with Notion data)
+ * Notion project preview - intermediate type for Notion API responses
+ * before transformation to the canonical Project type.
  */
-export const projectContentSchema = baseContentSchema.extend({
+export const notionProjectPreviewSchema = z.object({
+  id: uuidSchema,
+  slug: nonEmptyStringSchema,
+  title: nonEmptyStringSchema,
   subtitle: nonEmptyStringSchema,
+  description: optionalSchema(z.string()),
+  publishedAt: z.string(),
+  updatedAt: z.string(),
   category: projectCategorySchema,
   award: optionalSchema(z.string()),
   awardRank: optionalSchema(z.string()),
-  stats: z.array(statisticSchema),
+  tags: z.array(nonEmptyStringSchema),
   liveLink: optionalSchema(urlSchema),
   githubLink: optionalSchema(urlSchema),
   heroImage: optionalSchema(urlSchema),
-  vectaryEmbedUrl: optionalSchema(urlSchema),
-  gallery: z.array(galleryItemSchema),
-  keyFeatures: z.array(featureSchema),
-  techStack: z.array(techStackItemSchema),
-  recordMap: extendedRecordMapSchema.optional()
-})
-export type ProjectContent = z.infer<typeof projectContentSchema>
-
-/**
- * Notion project preview schema (for listings, without full content)
- */
-export const notionProjectPreviewSchema = projectContentSchema.omit({
-  recordMap: true,
-  gallery: true,
-  keyFeatures: true,
-  techStack: true
+  coverImage: optionalSchema(urlSchema),
+  sketchfabEmbedUrl: optionalSchema(urlSchema),
+  stats: z.array(statisticSchema),
+  published: z.boolean()
 })
 export type NotionProjectPreview = z.infer<typeof notionProjectPreviewSchema>
 
-// ============================================================================
-// Validation & Error Schemas
-// ============================================================================
-
 /**
- * Validation result schema
+ * Notion project content - full project data with recordMap
  */
-export const validationResultSchema = <T extends z.ZodTypeAny>(dataSchema: T) => z.object({
-  isValid: z.boolean(),
-  errors: z.array(z.string()),
-  data: dataSchema.optional()
+export const projectContentSchema = notionProjectPreviewSchema.extend({
+  recordMap: z.custom<ExtendedRecordMap>().optional(),
+  gallery: z.array(z.object({
+    url: urlSchema,
+    caption: nonEmptyStringSchema
+  })),
+  keyFeatures: z.array(z.object({
+    title: nonEmptyStringSchema,
+    description: nonEmptyStringSchema
+  })),
+  techStack: z.array(z.object({
+    name: nonEmptyStringSchema
+  }))
 })
-export type ValidationResult<T> = {
-  isValid: boolean
-  errors: string[]
-  data?: T
-}
-
+export type ProjectContent = z.infer<typeof projectContentSchema>
 
 // ============================================================================
-// Configuration Schemas
+// Configuration Schema
 // ============================================================================
 
 /**
- * Notion configuration schema
+ * Notion configuration schema for client initialization
  */
 export const notionConfigSchema = z.object({
   token: z.string().optional(),
   blogDatabaseId: z.string().optional(),
   projectsDatabaseId: z.string().optional(),
-  revalidateTime: z.number().int().nonnegative(),
-  enableCache: z.boolean(),
-  cacheMaxSize: z.number().int().positive()
+  revalidateTime: z.number().int().nonnegative().default(3600),
+  enableCache: z.boolean().default(true),
+  cacheMaxSize: z.number().int().positive().default(100)
 })
 export type NotionConfig = z.infer<typeof notionConfigSchema>
-
-/**
- * Cache entry schema
- */
-export const cacheEntrySchema = <T extends z.ZodTypeAny>(dataSchema: T) => z.object({
-  data: dataSchema,
-  timestamp: z.number(),
-  ttl: z.number(),
-  key: z.string()
-})
-export type CacheEntry<T> = {
-  data: T
-  timestamp: number
-  ttl: number
-  key: string
-}
-

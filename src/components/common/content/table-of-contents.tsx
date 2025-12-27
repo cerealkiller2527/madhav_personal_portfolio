@@ -10,7 +10,7 @@ interface TocSection {
 
 interface TableOfContentsProps {
   sections: TocSection[]
-  containerRef?: React.RefObject<HTMLElement>
+  containerRef?: React.RefObject<HTMLElement | null>
   className?: string
 }
 

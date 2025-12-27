@@ -1,84 +1,39 @@
+/**
+ * Project Grid Card Component
+ * 
+ * Displays a project in a card format for the projects grid.
+ * Supports 3D model embeds via Sketchfab and award badges.
+ */
+
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowRight, Trophy } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import type { Project } from "@/lib/schemas"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ContentImage } from "@/components/common/content/content-image"
-import { cn } from "@/lib/core/utils"
-import { BadgeUtil } from "@/components/common/utils/badge-utils"
+import { ProjectMedia, ProjectBadges } from "@/components/projects/project-components"
+
+// ============================================================================
+// Types
+// ============================================================================
 
 interface ProjectGridCardProps {
+  /** The project data to display */
   project: Project
+  /** Callback when "Details" button is clicked */
   onViewDetails: (project: Project) => void
+  /** Zero-based index for display numbering */
   index: number
+  /** Optional callback when the card is clicked */
   onCardClick?: (projectId: string) => void
 }
 
-function ProjectMedia({ project, index }: { project: Project; index: number }) {
-  return (
-    <div className="relative w-full aspect-video bg-secondary/10 overflow-hidden rounded-t-2xl">
-      {project.vectaryEmbedUrl ? (
-        <iframe
-          src={project.vectaryEmbedUrl}
-          title={`${project.title} 3D Model`}
-          frameBorder="0"
-          className="w-full h-full"
-          allow="fullscreen; xr-spatial-tracking; camera; microphone"
-        />
-      ) : (
-        <ContentImage
-          src={project.heroImage || ""}
-          alt={project.title}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 will-change-transform"
-          fallbackType="project"
-        />
-      )}
-      
-      <div className="absolute top-4 left-4 bg-black/20 dark:bg-black/40 backdrop-blur-sm w-10 h-10 flex items-center justify-center rounded-lg border border-black/10 dark:border-white/10">
-        <span className="text-lg font-bold text-white dark:text-primary">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-      </div>
-      
-    </div>
-  )
-}
-
-
-function ProjectBadges({ project, trophyStyles }: { 
-  project: Project
-  trophyStyles: ReturnType<typeof BadgeUtil.getTrophyStyles> | null 
-}) {
-  return (
-    <div className="flex items-center gap-2 mb-3 flex-wrap">
-      <Badge 
-        variant={BadgeUtil.getCategoryVariant(project.category)}
-        className={BadgeUtil.getCategoryClasses(project.category)}
-      >
-        {project.category}
-      </Badge>
-      {project.award && (
-        <Badge 
-          className={cn(
-            "border-transparent", 
-            trophyStyles && cn(trophyStyles.badgeClasses, trophyStyles.hoverClasses)
-          )}
-        >
-          {trophyStyles && <Trophy className={cn("mr-1.5 h-3.5 w-3.5", trophyStyles.iconClasses)} />}
-          {project.award}
-        </Badge>
-      )}
-    </div>
-  )
-}
+// ============================================================================
+// Component
+// ============================================================================
 
 export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: ProjectGridCardProps) {
-  const trophyStyles = project.awardRank ? BadgeUtil.getTrophyStyles(project.awardRank) : null
-
   const handleClick = () => {
     onCardClick?.(project.id)
   }
@@ -97,13 +52,14 @@ export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: 
       className="relative overflow-hidden w-full rounded-2xl border border-black/10 dark:border-white/10 bg-black/10 dark:bg-white/5 backdrop-blur-lg shadow-lg flex flex-col group"
       onClick={handleClick}
     >
+      {/* Decorative gradient glow */}
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/15 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none translate-x-1/2 translate-y-1/2" />
       
       <ProjectMedia project={project} index={index} />
       
       <div className="p-6 flex-grow flex flex-col">
         <div className="flex-grow">
-          <ProjectBadges project={project} trophyStyles={trophyStyles} />
+          <ProjectBadges project={project} />
           <h3 className="text-xl font-bold text-foreground mb-2">{project.title}</h3>
           <p className="text-muted-foreground text-sm text-balance line-clamp-3">{project.description}</p>
         </div>
