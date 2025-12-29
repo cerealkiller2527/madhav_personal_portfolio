@@ -1,37 +1,20 @@
-/**
- * Project Grid Card Component
- * 
- * Displays a project in a card format for the projects grid.
- * Supports 3D model embeds via Sketchfab and award badges.
- */
+// Project card for grid display with Sketchfab support and badges
 
 "use client"
 
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
-import type { Project } from "@/lib/schemas"
+import type { Project } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ProjectMedia, ProjectBadges } from "@/components/projects/project-components"
 
-// ============================================================================
-// Types
-// ============================================================================
-
 interface ProjectGridCardProps {
-  /** The project data to display */
   project: Project
-  /** Callback when "Details" button is clicked */
   onViewDetails: (project: Project) => void
-  /** Zero-based index for display numbering */
   index: number
-  /** Optional callback when the card is clicked */
   onCardClick?: (projectId: string) => void
 }
-
-// ============================================================================
-// Component
-// ============================================================================
 
 export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: ProjectGridCardProps) {
   const handleClick = () => {

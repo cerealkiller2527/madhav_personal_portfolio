@@ -1,24 +1,4 @@
 
-.blog-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, box-shadow;
-}
-
-.blog-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 
-    0 10px 25px hsl(var(--foreground) / 0.1),
-    0 4px 10px hsl(var(--foreground) / 0.05);
-}
-
-.blog-card-image {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.blog-card:hover .blog-card-image {
-  transform: scale(1.05);
-}
-
 .blog-skeleton {
   background: linear-gradient(
     90deg,

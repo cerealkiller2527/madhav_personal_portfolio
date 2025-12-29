@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import type { ExtendedRecordMap } from "notion-types"
-import type { Project } from "@/lib/schemas"
+import type { Project } from "@/lib/types"
 
 export interface TOCSection {
   id: string

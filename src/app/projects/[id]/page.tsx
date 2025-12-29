@@ -1,9 +1,11 @@
+// Individual project detail page with navigation
+
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { getAllProjects, getProjectById } from "@/lib/notion/notion-service"
 import ProjectDetailPage from "./project-detail"
-import type { Project, ProjectContent as NotionProject } from "@/lib/schemas"
+import type { Project, ProjectContent as NotionProject, NotionProjectPreview } from "@/lib/types"
 import { LogoSpinner } from "@/components/common/ui/logo-spinner"
 import { transformNotionToLocalProject } from "@/lib/utils/project-utils"
 
@@ -69,6 +71,18 @@ export async function generateStaticParams() {
   }
 }
 
+// Helper to create a minimal project from preview when full data unavailable
+function createProjectFromPreview(preview: NotionProjectPreview): NotionProject {
+  return {
+    ...preview,
+    keyFeatures: [],
+    techStack: [],
+    gallery: [],
+    updatedAt: preview.publishedAt,
+    recordMap: undefined,
+  }
+}
+
 async function getAllProjectsWithOrder(): Promise<Project[]> {
   try {
     const notionProjects = await getAllProjects()
@@ -77,30 +91,10 @@ async function getAllProjectsWithOrder(): Promise<Project[]> {
         notionProjects.map(async (preview) => {
           try {
             const fullProject = await getProjectById(preview.id)
-            if (fullProject) {
-              return transformNotionToLocalProject(fullProject)
-            } else {
-              const projectFromPreview: NotionProject = {
-                ...preview,
-                keyFeatures: [],
-                techStack: [],
-                gallery: [],
-                updatedAt: preview.publishedAt,
-                recordMap: undefined,
-              }
-              return transformNotionToLocalProject(projectFromPreview)
-            }
+            const projectData = fullProject || createProjectFromPreview(preview)
+            return transformNotionToLocalProject(projectData)
           } catch {
-            // Transform preview to local project structure
-            const projectFromPreview: NotionProject = {
-              ...preview,
-              keyFeatures: [],
-              techStack: [],
-              gallery: [],
-              updatedAt: preview.publishedAt,
-              recordMap: undefined,
-            }
-            return transformNotionToLocalProject(projectFromPreview)
+            return transformNotionToLocalProject(createProjectFromPreview(preview))
           }
         })
       )

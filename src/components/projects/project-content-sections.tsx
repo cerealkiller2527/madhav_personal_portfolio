@@ -1,11 +1,6 @@
-/**
- * Project Content Sections Component
- * 
- * Renders project content sections (features, tech stack, gallery)
- * for both modal and full-page views with appropriate styling.
- */
+// Renders project content sections (features, tech stack, gallery)
 
-import type { Project } from "@/lib/schemas"
+import type { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { hasProjectContent } from "@/lib/utils/project-utils"
 import { ContentImage } from "@/components/common/content/content-image"

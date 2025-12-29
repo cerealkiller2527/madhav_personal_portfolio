@@ -1,16 +1,11 @@
-/**
- * Notion Service
- * 
- * High-level API for fetching and transforming Notion content.
- * Provides blog posts and projects from Notion databases.
- */
+// High-level API for fetching and transforming Notion content
 
 import { 
   BlogContent, 
   BlogPreview,
   ProjectContent,
   NotionProjectPreview
-} from "@/lib/schemas"
+} from "@/lib/types"
 import { notionClient } from "./notion-client"
 import { 
   transformToBlogPreview,
@@ -19,10 +14,9 @@ import {
   transformToProjectContent
 } from "./notion-transforms"
 
-// ============================================================================
-// Blog Posts
-// ============================================================================
+// --- Blog Posts ---
 
+// Fetches all published blog posts from Notion
 export async function getAllBlogPosts(): Promise<BlogPreview[]> {
   try {
     if (!notionClient.isBlogConfigured()) return []
@@ -34,6 +28,7 @@ export async function getAllBlogPosts(): Promise<BlogPreview[]> {
   }
 }
 
+// Fetches a single blog post by slug with full content
 export async function getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
   try {
     if (!notionClient.isBlogConfigured()) return null
@@ -50,10 +45,9 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogContent | nul
   }
 }
 
-// ============================================================================
-// Projects
-// ============================================================================
+// --- Projects ---
 
+// Fetches all published projects from Notion
 export async function getAllProjects(): Promise<NotionProjectPreview[]> {
   try {
     if (!notionClient.isProjectsConfigured()) return []
@@ -65,6 +59,7 @@ export async function getAllProjects(): Promise<NotionProjectPreview[]> {
   }
 }
 
+// Fetches a single project by ID with full content
 export async function getProjectById(id: string): Promise<ProjectContent | null> {
   try {
     if (!notionClient.isProjectsConfigured()) return null

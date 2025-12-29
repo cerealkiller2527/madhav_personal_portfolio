@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef } from "react"
-import type { Project } from "@/lib/schemas"
+import type { Project } from "@/lib/types"
 import { ContentImage } from "@/components/common/content/content-image"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { TableOfContents } from "@/components/common/content/table-of-contents"

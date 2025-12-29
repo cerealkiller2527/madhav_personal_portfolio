@@ -1,33 +1,16 @@
-/**
- * Core Utility Functions
- * 
- * Common utilities used across the application.
- */
+// Core utility functions for styling and scrolling
 
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-/**
- * Combines class names using clsx and tailwind-merge.
- * Handles conditional classes and resolves Tailwind conflicts.
- * 
- * @example
- * cn("px-4", isActive && "bg-primary", className)
- */
+// Combines class names using clsx and tailwind-merge
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// ============================================================================
-// Scroll Utilities
-// ============================================================================
+// --- Scroll Utilities ---
 
-/**
- * Smoothly scrolls to a target Y position using easeInOutQuart easing.
- * 
- * @param targetY - The target scroll position in pixels
- * @param duration - Animation duration in milliseconds (default: 800)
- */
+// Smoothly scrolls to a target Y position using easeInOutQuart easing
 export function smoothScrollTo(targetY: number, duration = 800) {
   const startY = window.pageYOffset
   const distance = targetY - startY
@@ -53,13 +36,7 @@ export function smoothScrollTo(targetY: number, duration = 800) {
   requestAnimationFrame(animation)
 }
 
-/**
- * Scrolls smoothly to an element by its ID.
- * 
- * @param elementId - The ID of the target element
- * @param duration - Animation duration in milliseconds (default: 800)
- * @param offset - Offset from top in pixels for header spacing (default: 90)
- */
+// Scrolls smoothly to an element by its ID with optional offset for headers
 export function smoothScrollToElement(elementId: string, duration = 800, offset = 90) {
   const element = document.getElementById(elementId)
   if (element) {

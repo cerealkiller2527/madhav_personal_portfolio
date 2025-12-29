@@ -1,34 +1,18 @@
-/**
- * Blog Card Components
- * 
- * Displays blog post previews in card format with consistent styling.
- * Supports both default and compact variants for different contexts.
- */
+// Blog card components for displaying post previews
 
 import Link from "next/link"
 import { ArrowRight, Calendar, Clock, FileText } from "lucide-react"
-import type { BlogPreview } from "@/lib/schemas"
+import type { BlogPreview } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { ContentImage } from "@/components/common/content/content-image"
 import { ContentGrid, GRID_CONFIGS } from "@/components/common/content/content-grid"
 import { formatBlogDate, getDisplayTags } from "@/lib/utils/blog-utils"
 
-// ============================================================================
-// Types
-// ============================================================================
-
 interface BlogCardProps {
-  /** The blog post data to display */
   post: BlogPreview
-  /** Card variant - "compact" shows less detail */
   variant?: "default" | "compact"
-  /** Whether to show "Read more" link */
   showReadMore?: boolean
 }
-
-// ============================================================================
-// Blog Card Component
-// ============================================================================
 
 export function BlogCard({ 
   post, 
@@ -113,19 +97,11 @@ export function BlogCard({
   )
 }
 
-// ============================================================================
-// Blog Grid Component
-// ============================================================================
-
 export interface BlogGridProps {
-  /** Array of blog posts to display */
   posts: readonly BlogPreview[]
 }
 
-/**
- * Renders a responsive grid of blog cards.
- * Uses the standard blog grid configuration from GRID_CONFIGS.
- */
+// Renders a responsive grid of blog cards
 export function BlogGrid({ posts }: BlogGridProps) {
   return (
     <ContentGrid config={GRID_CONFIGS.blog}>

@@ -1,10 +1,4 @@
-/**
- * Universal Notion Content Renderer
- *
- * Handles Notion content for both Blog and Project domains.
- * Provides custom component overrides to suppress warnings
- * for unsupported block types.
- */
+// Notion content renderer with custom block type handling
 
 'use client'
 
@@ -18,11 +12,7 @@ interface NotionRendererProps {
   contentType?: 'blog' | 'project'
 }
 
-/**
- * No-op component for unsupported Notion block types.
- * Suppresses react-notion-x warnings for Collection/database views
- * and other unsupported blocks without breaking the render.
- */
+// No-op component for unsupported Notion block types
 const NoOpBlock = () => null
 
 export function NotionRenderer({ 

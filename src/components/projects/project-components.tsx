@@ -1,40 +1,29 @@
-/**
- * Consolidated Project Components
- * 
- * Shared utility components used across project displays.
- * Includes: ProjectBadges, ProjectMedia, ProjectModalHeader
- */
+// Shared project display components for badges, media, and modal header
 
 import Link from "next/link"
 import { Trophy, Maximize, X } from "lucide-react"
-import type { Project } from "@/lib/schemas"
+import type { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { ContentImage } from "@/components/common/content/content-image"
 import { cn } from "@/lib/core/utils"
-import { BadgeUtil } from "@/lib/utils/badge-utils"
+import { getCategoryVariant, getCategoryClasses, getTrophyStyles } from "@/lib/utils/badge-utils"
 import { formatProjectIndex } from "@/lib/utils/project-utils"
 
-// ============================================================================
-// Project Badges Component
-// ============================================================================
+// --- Project Badges Component ---
 
 interface ProjectBadgesProps {
-  /** The project to display badges for */
   project: Project
 }
 
-/**
- * Displays category and award badges for a project.
- * Award styling is determined by the awardRank (1st, 2nd, 3rd place).
- */
+// Displays category and award badges with rank-based styling
 export function ProjectBadges({ project }: ProjectBadgesProps) {
   const awardText = project.award
-  const trophyStyles = project.awardRank ? BadgeUtil.getTrophyStyles(project.awardRank) : null
-  const categoryVariant = BadgeUtil.getCategoryVariant(project.category)
-  const categoryClasses = BadgeUtil.getCategoryClasses(project.category)
+  const trophyStyles = project.awardRank ? getTrophyStyles(project.awardRank) : null
+  const categoryVariant = getCategoryVariant(project.category)
+  const categoryClasses = getCategoryClasses(project.category)
 
   return (
     <div className="flex items-center gap-2 mb-3 flex-wrap">
@@ -63,21 +52,14 @@ export function ProjectBadges({ project }: ProjectBadgesProps) {
   )
 }
 
-// ============================================================================
-// Project Media Component
-// ============================================================================
+// --- Project Media Component ---
 
 interface ProjectMediaProps {
-  /** The project to display media for */
   project: Project
-  /** Zero-based index for display numbering */
   index: number
 }
 
-/**
- * Displays project media - either a Sketchfab 3D embed or hero image.
- * Shows project index in top-left corner.
- */
+// Displays project media - Sketchfab 3D embed or hero image with index badge
 export function ProjectMedia({ project, index }: ProjectMediaProps) {
   return (
     <div className={`relative w-full aspect-video overflow-hidden rounded-t-2xl ${project.sketchfabEmbedUrl ? '' : 'bg-secondary/10'}`}>
@@ -111,21 +93,14 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
   )
 }
 
-// ============================================================================
-// Project Modal Header Component
-// ============================================================================
+// --- Project Modal Header ---
 
 interface ProjectModalHeaderProps {
-  /** The project being displayed */
   project: Project
-  /** Callback when modal is closed */
   onClose: () => void
 }
 
-/**
- * Header component for the project modal dialog.
- * Includes title, subtitle, expand to full page button, and close button.
- */
+// Header for project modal with title, expand button, and close button
 export function ProjectModalHeader({ project, onClose }: ProjectModalHeaderProps) {
   return (
     <DialogHeader className="px-6 py-4 border-b flex flex-row items-start justify-between">

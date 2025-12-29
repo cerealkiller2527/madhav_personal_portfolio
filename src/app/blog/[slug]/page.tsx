@@ -1,8 +1,10 @@
+// Individual blog post page with table of contents
+
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/notion/notion-service"
-import type { BlogPreview } from "@/lib/schemas"
+import type { BlogPreview } from "@/lib/types"
 import { LoadingGrid } from "@/components/common/ui/loading-states"
 import { BlogContentWithTOC } from "@/components/pages/blog/blog-post-with-toc"
 

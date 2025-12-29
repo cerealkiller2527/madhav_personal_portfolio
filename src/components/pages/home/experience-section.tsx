@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import type { Experience } from "@/lib/schemas"
+import type { Experience } from "@/lib/types"
 import { Section } from "@/components/layout/section"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/core/utils"

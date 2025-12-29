@@ -5,9 +5,9 @@ import type React from "react"
 import Image from "next/image"
 import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame, MotionValue } from "framer-motion"
 import { Trophy, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react"
-import type { Project } from "@/lib/schemas"
+import type { Project } from "@/lib/types"
 import { cn } from "@/lib/core/utils"
-import { BadgeUtil } from "@/lib/utils/badge-utils"
+import { getTrophyStyles } from "@/lib/utils/badge-utils"
 
 interface ProjectMarqueeProps {
   projects: readonly Project[]
@@ -76,7 +76,7 @@ const InteractiveMarqueeItem = ({
   const smoothY = useSpring(y, { mass: 0.6, stiffness: 300, damping: 40 })
   const smoothTranslateZ = useSpring(translateZ, { mass: 0.6, stiffness: 300, damping: 40 })
 
-  const trophyStyles = project.awardRank ? BadgeUtil.getTrophyStyles(project.awardRank) : null
+  const trophyStyles = project.awardRank ? getTrophyStyles(project.awardRank) : null
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()

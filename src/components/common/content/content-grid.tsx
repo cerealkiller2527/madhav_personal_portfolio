@@ -1,14 +1,9 @@
-/**
- * Universal Content Grid System
- * Meta Engineering Standards: Reusable, responsive, type-safe
- * Handles both Blog and Project card layouts with consistent spacing
- */
+// Universal Content Grid System for blog and project card layouts
 
 import { ReactNode } from "react"
 import { cn } from "@/lib/core/utils"
 
 export interface GridConfig {
-  /** Grid columns for different breakpoints */
   columns: {
     default?: number
     sm?: number
@@ -16,9 +11,7 @@ export interface GridConfig {
     lg?: number
     xl?: number
   }
-  /** Gap between grid items */
   gap?: 'sm' | 'md' | 'lg' | 'xl'
-  /** Custom CSS classes */
   className?: string
 }
 
@@ -35,22 +28,63 @@ const GAP_CLASSES = {
   xl: 'gap-12'
 } as const
 
-/**
- * Generates responsive grid column classes based on config
- */
+// Static Tailwind class mappings for grid columns (avoids JIT purging)
+const COLUMN_CLASSES = {
+  default: {
+    1: 'grid-cols-1',
+    2: 'grid-cols-2',
+    3: 'grid-cols-3',
+    4: 'grid-cols-4',
+  },
+  sm: {
+    1: 'sm:grid-cols-1',
+    2: 'sm:grid-cols-2',
+    3: 'sm:grid-cols-3',
+    4: 'sm:grid-cols-4',
+  },
+  md: {
+    1: 'md:grid-cols-1',
+    2: 'md:grid-cols-2',
+    3: 'md:grid-cols-3',
+    4: 'md:grid-cols-4',
+  },
+  lg: {
+    1: 'lg:grid-cols-1',
+    2: 'lg:grid-cols-2',
+    3: 'lg:grid-cols-3',
+    4: 'lg:grid-cols-4',
+  },
+  xl: {
+    1: 'xl:grid-cols-1',
+    2: 'xl:grid-cols-2',
+    3: 'xl:grid-cols-3',
+    4: 'xl:grid-cols-4',
+  },
+} as const
+
+// Generates responsive grid column classes with static strings
 function generateGridClasses(columns: GridConfig['columns']): string {
   const classes: string[] = []
   
-  // Default columns
-  if (columns.default) {
-    classes.push(`grid-cols-${columns.default}`)
+  if (columns.default && COLUMN_CLASSES.default[columns.default as keyof typeof COLUMN_CLASSES.default]) {
+    classes.push(COLUMN_CLASSES.default[columns.default as keyof typeof COLUMN_CLASSES.default])
   }
   
-  // Responsive columns
-  if (columns.sm) classes.push(`sm:grid-cols-${columns.sm}`)
-  if (columns.md) classes.push(`md:grid-cols-${columns.md}`)
-  if (columns.lg) classes.push(`lg:grid-cols-${columns.lg}`)
-  if (columns.xl) classes.push(`xl:grid-cols-${columns.xl}`)
+  if (columns.sm && COLUMN_CLASSES.sm[columns.sm as keyof typeof COLUMN_CLASSES.sm]) {
+    classes.push(COLUMN_CLASSES.sm[columns.sm as keyof typeof COLUMN_CLASSES.sm])
+  }
+  
+  if (columns.md && COLUMN_CLASSES.md[columns.md as keyof typeof COLUMN_CLASSES.md]) {
+    classes.push(COLUMN_CLASSES.md[columns.md as keyof typeof COLUMN_CLASSES.md])
+  }
+  
+  if (columns.lg && COLUMN_CLASSES.lg[columns.lg as keyof typeof COLUMN_CLASSES.lg]) {
+    classes.push(COLUMN_CLASSES.lg[columns.lg as keyof typeof COLUMN_CLASSES.lg])
+  }
+  
+  if (columns.xl && COLUMN_CLASSES.xl[columns.xl as keyof typeof COLUMN_CLASSES.xl]) {
+    classes.push(COLUMN_CLASSES.xl[columns.xl as keyof typeof COLUMN_CLASSES.xl])
+  }
   
   return classes.join(' ')
 }
@@ -74,9 +108,8 @@ export function ContentGrid({ children, config, 'data-testid': testId }: Content
   )
 }
 
-// Predefined grid configurations for common use cases
+// Predefined grid configuration for blog posts
 export const GRID_CONFIGS = {
-  // Blog post grid - 3 columns on large screens
   blog: {
     columns: { default: 1, md: 2, lg: 3 },
     gap: 'md' as const

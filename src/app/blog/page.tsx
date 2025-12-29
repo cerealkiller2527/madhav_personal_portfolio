@@ -1,3 +1,5 @@
+// Blog listing page - displays all published blog posts
+
 import { Suspense } from "react"
 import { Metadata } from "next"
 import { getAllBlogPosts } from "@/lib/notion/notion-service"

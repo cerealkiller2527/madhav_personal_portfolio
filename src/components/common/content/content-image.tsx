@@ -1,8 +1,4 @@
-/**
- * Universal Content Image Component
- * 
- * Handles images for both Blog and Project content with consistent fallbacks.
- */
+// Image component with loading states and fallback icons
 
 "use client"
 

@@ -1,16 +1,13 @@
-// Notion client - handles all Notion API operations
-// Updated for Notion API version 2025-09-03 with data source support
+// Notion client for API operations with 2025-09-03 version support
 
 import { Client } from "@notionhq/client"
 import { NotionAPI } from "notion-client"
 import { ExtendedRecordMap } from "notion-types"
-import { NotionPage, NotionConfig } from "@/lib/schemas"
+import { NotionPage, NotionConfig } from "@/lib/types"
 
-// ============================================================================
-// Type Definitions for Notion API 2025-09-03
-// ============================================================================
+// --- Notion API Types ---
 
-/** Single property filter condition */
+// Single property filter condition
 interface PropertyFilter {
   property: string
   checkbox?: { equals: boolean }
@@ -72,6 +69,7 @@ export class UnifiedNotionClient {
   }
 
 
+  // Fetches a page's full content using the unofficial Notion API
   async getPage(pageId: string): Promise<ExtendedRecordMap> {
     try {
       return await this.notionAPI.getPage(pageId)
@@ -80,10 +78,7 @@ export class UnifiedNotionClient {
     }
   }
 
-  /**
-   * Fetches the data source ID for a given database ID
-   * Caches the result to avoid repeated API calls
-   */
+  // Fetches and caches the data source ID for a given database
   private async getDataSourceId(databaseId: string): Promise<string | null> {
     if (!this.client) return null
 
@@ -113,9 +108,7 @@ export class UnifiedNotionClient {
     }
   }
 
-  /**
-   * Queries a data source using the new 2025-09-03 API
-   */
+  // Queries a data source using the new 2025-09-03 API
   private async queryDataSource(
     databaseId: string,
     filter?: DataSourceFilter,

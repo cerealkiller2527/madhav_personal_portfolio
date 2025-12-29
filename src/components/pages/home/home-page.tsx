@@ -1,3 +1,5 @@
+// Main homepage component orchestrating hero, experience, and projects sections
+
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
@@ -5,7 +7,7 @@ import { HeroSection } from "@/components/pages/home/hero-section"
 import { ExperienceSection } from "@/components/pages/home/experience-section"
 import { ProjectsSection } from "@/components/pages/home/projects-section"
 import { ProjectModal } from "@/components/projects/project-modal"
-import type { Project, Experience } from "@/lib/schemas"
+import type { Project, Experience } from "@/lib/types"
 import { CursorGlow } from "@/components/common/cursor-glow"
 import { smoothScrollToElement } from "@/lib/core/utils"
 
@@ -14,10 +16,6 @@ interface HomePageProps {
   experiences: readonly Experience[]
 }
 
-/**
- * The main homepage component that handles all client-side state and interactivity.
- * Orchestrates the hero, experience, and projects sections with shared state management.
- */
 export default function HomePage({ projects, experiences }: HomePageProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isGlowVisible, setIsGlowVisible] = useState(false)

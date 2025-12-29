@@ -1,8 +1,8 @@
-import type { Experience } from "@/lib/schemas"
+// Core data constants for site information, footer, and experience
 
-// ============================================================================
-// Site Information
-// ============================================================================
+import type { Experience } from "@/lib/types"
+
+// --- Site Information ---
 
 export const siteInfo = {
   name: "Madhav Lodha",
@@ -60,9 +60,7 @@ export const footerData = {
 
 export const blogDescription = "Thoughts on software engineering, web development, and technology.";
 
-// ============================================================================
-// Project Constants
-// ============================================================================
+// --- Project Constants ---
 
 export const PROJECT_SECTIONS = {
   overview: 'overview',
@@ -88,9 +86,7 @@ export const PROJECT_IMAGE_HEIGHTS = {
   },
 } as const
 
-// ============================================================================
-// Experience Data
-// ============================================================================
+// --- Experience Data ---
 
 export const experiences: readonly Experience[] = [
   {

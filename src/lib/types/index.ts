@@ -1,14 +1,8 @@
-/**
- * Application Types
- * 
- * Centralized type definitions used across the application.
- */
+// Centralized type definitions for projects, blog posts, and Notion integration
 
 import type { ExtendedRecordMap } from 'notion-types'
 
-// ============================================================================
-// Common Types
-// ============================================================================
+// --- Common Types ---
 
 export type ProjectCategory = 'Software' | 'Hardware' | 'Hybrid'
 
@@ -17,9 +11,7 @@ export interface Statistic {
   label: string
 }
 
-// ============================================================================
-// Experience Types
-// ============================================================================
+// --- Experience Types ---
 
 export interface Experience {
   id: string
@@ -34,9 +26,7 @@ export interface Experience {
   liveLink?: string
 }
 
-// ============================================================================
-// Project Types
-// ============================================================================
+// --- Project Types ---
 
 export interface GalleryItem {
   url: string
@@ -74,9 +64,7 @@ export interface Project {
   recordMap?: ExtendedRecordMap
 }
 
-// ============================================================================
-// Blog Types
-// ============================================================================
+// --- Blog Types ---
 
 export interface BlogPreview {
   id: string
@@ -96,9 +84,7 @@ export interface BlogContent extends BlogPreview {
   recordMap?: ExtendedRecordMap
 }
 
-// ============================================================================
-// Notion API Types
-// ============================================================================
+// --- Notion API Types ---
 
 export interface NotionPropertyValue {
   id: string

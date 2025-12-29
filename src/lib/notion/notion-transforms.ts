@@ -6,7 +6,7 @@ import {
   BlogPreview,
   ProjectContent,
   NotionProjectPreview
-} from "@/lib/schemas"
+} from "@/lib/types"
 
 type NotionCover = {
   external?: { url?: string }
@@ -258,44 +258,44 @@ export async function transformToProjectContent(
 }
 
 
-function extractTextFromRecordMap(recordMap: ExtendedRecordMap): string {
-  try {
-    const textContent: string[] = []
-    
-    if (recordMap.block) {
-      // Process all blocks efficiently using the proper structure
-      Object.values(recordMap.block).forEach(blockWrapper => {
-        const block = blockWrapper?.value
-        if (!block || !block.properties) return
-        
-        const properties = block.properties
-        
-        // Extract text from common text-containing properties
-        const textProperties = ['title', 'rich_text', 'caption'] as const
-        
-        for (const prop of textProperties) {
-          if (properties[prop] && Array.isArray(properties[prop])) {
-            // Each property is an array of rich text elements
-            // Each element is typically [text, decorations] format
-            const text = properties[prop]
-              .map((item: unknown) => {
-                if (Array.isArray(item) && item.length > 0) {
-                  return String(item[0] || '')
-                } else if (typeof item === 'string') {
-                  return item
-                }
-                return ''
-              })
-              .join('')
-              .trim()
-            
-            if (text) textContent.push(text)
+// Extracts text content from a Notion block
+function extractBlockText(block: any): string {
+  if (!block?.properties) return ''
+  
+  const textProperties = ['title', 'rich_text', 'caption'] as const
+  const textParts: string[] = []
+  
+  for (const prop of textProperties) {
+    if (Array.isArray(block.properties[prop])) {
+      const text = block.properties[prop]
+        .map((item: unknown) => {
+          if (Array.isArray(item) && item.length > 0) {
+            return String(item[0] || '')
+          } else if (typeof item === 'string') {
+            return item
           }
-        }
-      })
+          return ''
+        })
+        .join('')
+        .trim()
+      
+      if (text) textParts.push(text)
     }
+  }
+  
+  return textParts.join(' ')
+}
+
+// Extracts all text content from Notion recordMap for reading time calculation
+function extractTextFromRecordMap(recordMap: ExtendedRecordMap): string {
+  if (!recordMap?.block) return ''
+  
+  try {
+    const textParts = Object.values(recordMap.block)
+      .map(wrapper => extractBlockText(wrapper?.value))
+      .filter(text => text.length > 0)
     
-    return textContent.join(' ').trim()
+    return textParts.join(' ').trim()
   } catch (error) {
     console.error('Error extracting text from recordMap:', error)
     return ''

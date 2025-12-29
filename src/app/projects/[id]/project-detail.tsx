@@ -1,14 +1,9 @@
-/**
- * Project Detail Page Component
- * 
- * Full-page view for a single project with TOC sidebar,
- * Notion content rendering, and navigation between projects.
- */
+// Project detail page component with TOC sidebar and navigation
 
 "use client"
 
 import { useRef } from "react"
-import type { Project } from "@/lib/schemas"
+import type { Project } from "@/lib/types"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { ProjectNavigation } from "@/components/common/content/content-navigation"
 import { BackButton } from "@/components/common/content/content-navigation"

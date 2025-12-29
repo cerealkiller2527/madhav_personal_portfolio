@@ -1,10 +1,12 @@
+// Main portfolio page - fetches and displays projects and experience
+
 import { Suspense } from "react"
 import { experiences } from "@/lib/core/data"
 import { getAllProjects, getProjectById } from "@/lib/notion/notion-service"
 import HomePage from "@/components/pages/home/home-page"
 import Loading from "./loading"
 import { transformNotionToLocalProject } from "@/lib/utils/project-utils"
-import type { Project } from "@/lib/schemas"
+import type { Project } from "@/lib/types"
 
 export default async function PortfolioPage() {
   let projects: readonly Project[] = []

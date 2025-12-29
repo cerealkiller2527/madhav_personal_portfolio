@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { Calendar, Clock, User, Tag } from "lucide-react"
-import { BlogContent } from "@/lib/schemas"
+import { BlogContent } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ContentImage } from "@/components/common/content/content-image"

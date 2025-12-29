@@ -1,34 +1,18 @@
-/**
- * Project Utility Functions
- * 
- * Display utilities and content helpers for project data.
- */
+// Project utility functions for display formatting and content detection
 
-import type { Project, ProjectContent as NotionProject } from "@/lib/schemas"
+import type { Project, ProjectContent as NotionProject } from "@/lib/types"
 import { PROJECT_SECTIONS, type ProjectSectionId } from "@/lib/core/data"
 
-// ============================================================================
-// Display Formatting
-// ============================================================================
+// --- Display Formatting ---
 
-/**
- * Formats a zero-based index as a two-digit display string.
- * 
- * @param index - Zero-based project index
- * @returns Formatted string like "01", "02", etc.
- */
+// Formats a zero-based index as a two-digit display string
 export function formatProjectIndex(index: number): string {
   return String(index + 1).padStart(2, "0")
 }
 
-// ============================================================================
-// Content Detection
-// ============================================================================
+// --- Content Detection ---
 
-/**
- * Checks if a project has content for a specific section.
- * Used to conditionally render sections in project displays.
- */
+// Checks if a project has content for a specific section
 export function hasProjectContent(project: Project, sectionId: ProjectSectionId): boolean {
   switch (sectionId) {
     case PROJECT_SECTIONS.features:
@@ -44,16 +28,9 @@ export function hasProjectContent(project: Project, sectionId: ProjectSectionId)
   }
 }
 
-// ============================================================================
-// Type Guards
-// ============================================================================
+// --- Type Guards ---
 
-/**
- * Type guard to check if a project has Notion content (recordMap).
- * 
- * @param project - Unknown project object
- * @returns Whether the project has a Notion recordMap
- */
+// Type guard to check if a project has Notion content (recordMap)
 export function isNotionProject(project: unknown): project is NotionProject {
   return (
     typeof project === 'object' && 
@@ -63,17 +40,9 @@ export function isNotionProject(project: unknown): project is NotionProject {
   )
 }
 
-// ============================================================================
-// Data Transformation
-// ============================================================================
+// --- Data Transformation ---
 
-/**
- * Transforms a Notion project (ProjectContent) to the local Project format.
- * Handles missing fields with sensible defaults.
- * 
- * @param notionProject - The Notion project content
- * @returns A Project object with recordMap for Notion rendering
- */
+// Transforms a Notion project to the local Project format with defaults
 export function transformNotionToLocalProject(
   notionProject: NotionProject
 ): Project & { recordMap?: NotionProject['recordMap'] } {

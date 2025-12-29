@@ -1,7 +1,4 @@
-/**
- * Loading States Component
- * Provides consistent loading skeletons for blog content
- */
+// Loading skeleton components for blog content
 
 import { ContentGrid, GRID_CONFIGS } from "@/components/common/content/content-grid"
 
@@ -10,9 +7,7 @@ interface LoadingGridProps {
   className?: string
 }
 
-/**
- * Loading skeleton for blog cards
- */
+// Loading skeleton for blog cards
 function LoadingCard({ className = "" }: { className?: string }) {
   return (
     <div className={`animate-pulse ${className}`}>
@@ -26,9 +21,7 @@ function LoadingCard({ className = "" }: { className?: string }) {
   )
 }
 
-/**
- * Loading grid for blog posts
- */
+// Loading grid for blog posts
 export function LoadingGrid({ count = 6, className = "" }: LoadingGridProps) {
   return (
     <div className={className}>

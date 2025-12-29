@@ -1,4 +1,4 @@
-// Universal navigation for Blog and Project content with consistent UI
+// Navigation components for blog and project content
 
 "use client"
 
@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ContentImage } from "@/components/common/content/content-image"
-import type { BlogPreview, Project } from "@/lib/schemas"
+import type { BlogPreview, Project } from "@/lib/types"
 
 interface NavigationItem {
   id: string
