@@ -61,9 +61,6 @@ export class UnifiedNotionClient {
       token: config?.token || process.env.NOTION_TOKEN,
       blogDatabaseId: config?.blogDatabaseId || process.env.NOTION_DATABASE_ID,
       projectsDatabaseId: config?.projectsDatabaseId || process.env.NOTION_PROJECTS_DATABASE_ID,
-      revalidateTime: config?.revalidateTime || 60,
-      enableCache: config?.enableCache ?? true,
-      cacheMaxSize: config?.cacheMaxSize || 100
     }
 
     if (this.config.token) {
@@ -173,38 +170,12 @@ export class UnifiedNotionClient {
     )
   }
 
-  async getFeaturedProjects(limit: number = 4): Promise<NotionPage[]> {
-    if (!this.config.projectsDatabaseId) return []
-
-    const pages = await this.queryDataSource(
-      this.config.projectsDatabaseId,
-      {
-        and: [
-          { property: "Published", checkbox: { equals: true } },
-          { property: "Featured", checkbox: { equals: true } }
-        ]
-      },
-      [{ property: "Published Date", direction: "descending" }]
-    )
-    
-    return pages.slice(0, limit)
-  }
-
-
   isBlogConfigured(): boolean {
     return !!(this.config.token && this.config.blogDatabaseId)
   }
 
   isProjectsConfigured(): boolean {
     return !!(this.config.token && this.config.projectsDatabaseId)
-  }
-
-  /**
-   * Clears the data source cache
-   * Useful if databases are updated
-   */
-  clearDataSourceCache(): void {
-    this.dataSourceCache.clear()
   }
 }
 

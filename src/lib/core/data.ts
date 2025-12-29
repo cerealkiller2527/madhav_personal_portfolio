@@ -2,12 +2,10 @@ import type { Experience } from "@/lib/schemas"
 
 export const siteInfo = {
   name: "Madhav Lodha",
-  title: "Madhav Lodha",
   description: "Robotics Engineering & Computer Science Major at WPI.",
   tagline: "Innovating at the Intersection of Hardware and Code",
   heroTitle: "Hey, I'm Madhav Lodha",
   bio: "I bring intelligent machines to life, crafting both the code and the hardware that powers them.",
-  email: "madhavlodha2503@gmail.com",
   copyright: `© ${new Date().getFullYear()} Madhav Lodha. All Rights Reserved.`,
   avatarLogo: "/assets/portfolio/avatar-logo.png",
   avatarTransparent: "/assets/portfolio/avatar-transparent.png",
@@ -15,15 +13,7 @@ export const siteInfo = {
 }
 
 export const buttonLabels = {
-  viewResume: "View Résumé",
   viewMyWork: "View My Work",
-  showMoreProjects: "Show More Projects",
-  showLessProjects: "Show Less Projects",
-  viewAllPosts: "View All Posts",
-  download: "Download",
-  tryAgain: "Try Again",
-  goHome: "Go Home",
-  goBack: "Go Back",
 }
 
 export const footerData = {

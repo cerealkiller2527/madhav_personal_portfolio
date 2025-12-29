@@ -81,18 +81,6 @@ export const GRID_CONFIGS = {
     columns: { default: 1, md: 2, lg: 3 },
     gap: 'md' as const
   },
-  
-  // Project grid - 2 columns on medium, 3 on large
-  projects: {
-    columns: { default: 1, md: 2, lg: 3 },
-    gap: 'lg' as const
-  },
-  
-  // Gallery grid - 2x2 on small, more on larger screens
-  gallery: {
-    columns: { default: 2, sm: 2, md: 3, lg: 4 },
-    gap: 'sm' as const
-  }
 } as const
 
 export type GridConfigName = keyof typeof GRID_CONFIGS
