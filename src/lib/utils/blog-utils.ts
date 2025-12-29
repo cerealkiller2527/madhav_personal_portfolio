@@ -43,17 +43,3 @@ export function getDisplayTags(tags: string[] | undefined, maxTags = 2): { visib
   
   return { visible, overflow }
 }
-
-// ============================================================================
-// Constants
-// ============================================================================
-
-/** Configuration for blog preview displays */
-export const BLOG_PREVIEW_LIMITS = {
-  /** Number of posts to show in preview sections */
-  POSTS_TO_SHOW: 3,
-  /** Maximum visible tags before showing +N */
-  MAX_TAGS_VISIBLE: 2,
-  /** Default reading time if not calculated */
-  DEFAULT_READING_TIME: 5
-} as const
