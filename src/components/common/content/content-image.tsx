@@ -43,7 +43,11 @@ export function ContentImage({
   if (!src || src.trim() === '') {
     const FallbackIcon = FALLBACK_ICONS[fallbackType]
     return (
-      <div className={cn("bg-muted flex items-center justify-center", className)}>
+      <div className={cn(
+        "bg-muted flex items-center justify-center",
+        fill && "absolute inset-0",
+        className
+      )}>
         <FallbackIcon className="h-8 w-8 text-muted-foreground/50" />
       </div>
     )
@@ -52,7 +56,11 @@ export function ContentImage({
   if (hasError) {
     const FallbackIcon = FALLBACK_ICONS[fallbackType]
     return (
-      <div className={cn("bg-muted flex items-center justify-center", className)}>
+      <div className={cn(
+        "bg-muted flex items-center justify-center",
+        fill && "absolute inset-0",
+        className
+      )}>
         <FallbackIcon className="h-8 w-8 text-muted-foreground/50" />
       </div>
     )

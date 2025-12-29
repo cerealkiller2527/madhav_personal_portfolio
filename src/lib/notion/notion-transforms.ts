@@ -94,7 +94,7 @@ function normalizeImageUrl(url: string): string {
 
 /**
  * Normalizes and enhances Sketchfab embed URLs with optimal parameters
- * Adds: transparent background, slow auto-rotation, and hides UI elements
+ * Adds: transparent background, slow auto-rotation, camera zoom, and hides UI elements
  */
 function normalizeSketchfabUrl(url: string | null | undefined): string | undefined {
   if (!url || typeof url !== 'string' || !url.trim()) return undefined
@@ -114,10 +114,13 @@ function normalizeSketchfabUrl(url: string | null | undefined): string | undefin
     params.set('transparent', '1')
     
     // Slow auto-rotation (0.1 degrees per second - very slow)
-    params.set('autospin', '0.1')
+    params.set('autospin', '-0.2')
     
     // Autostart the model
     params.set('autostart', '1')
+    
+    // Preload for better performance
+    params.set('preload', '1')
     
     // Hide UI elements
     params.set('ui_hint', '0')          // Hide navigation hint on hover

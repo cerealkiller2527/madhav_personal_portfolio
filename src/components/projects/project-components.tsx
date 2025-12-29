@@ -27,7 +27,7 @@ export function ProjectBadges({ project }: ProjectBadgesProps) {
 
   return (
     <div className="flex items-center gap-2 mb-3 flex-wrap">
-      {/* Category badge */}
+      {/* Category badge with custom colors */}
       <Badge 
         variant={categoryVariant}
         className={categoryClasses}
@@ -35,7 +35,7 @@ export function ProjectBadges({ project }: ProjectBadgesProps) {
         {project.category}
       </Badge>
       
-      {/* Award badge with trophy icon */}
+      {/* Award badge with trophy icon and rank-based colors */}
       {awardText && trophyStyles && (
         <Badge 
           className={cn(
@@ -67,7 +67,6 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
         <iframe
           src={project.sketchfabEmbedUrl}
           title={`${project.title} 3D Model`}
-          frameBorder="0"
           allowFullScreen
           className="w-full h-full bg-transparent"
           style={{ colorScheme: 'light' }}
@@ -90,6 +89,50 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
         </span>
       </div>
     </div>
+  )
+}
+
+// --- Project Hero Media Component ---
+
+interface ProjectHeroMediaProps {
+  project: Project
+  priority?: boolean
+  sizes?: string
+  className?: string
+}
+
+// Displays hero media following the hierarchy: 3D model (if available) > hero image
+// Used for modal and full-page views without index badge
+export function ProjectHeroMedia({ 
+  project, 
+  priority = false, 
+  sizes = "(max-width: 1200px) 100vw, 800px",
+  className = "object-cover"
+}: ProjectHeroMediaProps) {
+  return (
+    <>
+      {project.sketchfabEmbedUrl ? (
+        <iframe
+          src={project.sketchfabEmbedUrl}
+          title={`${project.title} 3D Model`}
+          frameBorder="0"
+          allowFullScreen
+          className="w-full h-full bg-transparent"
+          style={{ colorScheme: 'light' }}
+          allow="autoplay; fullscreen; xr-spatial-tracking"
+        />
+      ) : (
+        <ContentImage
+          src={project.heroImage || ""}
+          alt={`${project.title} hero image`}
+          fill
+          sizes={sizes}
+          className={className}
+          fallbackType="project"
+          priority={priority}
+        />
+      )}
+    </>
   )
 }
 

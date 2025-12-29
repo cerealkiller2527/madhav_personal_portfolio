@@ -2,11 +2,10 @@
 
 import { useRef } from "react"
 import type { Project } from "@/lib/types"
-import { ContentImage } from "@/components/common/content/content-image"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { ProjectModalHeader } from "@/components/projects/project-components"
+import { ProjectModalHeader, ProjectHeroMedia } from "@/components/projects/project-components"
 import { ProjectContentSections } from "@/components/projects/project-content-sections"
 import { isNotionProject } from "@/lib/utils/project-utils"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
@@ -42,14 +41,11 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
           <main className="md:col-span-4 overflow-y-auto p-8" ref={contentRef as React.RefObject<HTMLElement>}>
             <div id="overview" className="scroll-mt-24">
-              <div className="relative w-full h-64 md:h-80 mb-8 rounded-md overflow-hidden">
-                <ContentImage
-                  src={project.heroImage || ""}
-                  alt={`${project.title} hero image`}
-                  fill
+              <div className="relative w-full h-64 md:h-80 mb-8 rounded-md overflow-hidden bg-secondary">
+                <ProjectHeroMedia
+                  project={project}
                   sizes="(max-width: 1200px) 100vw, 800px"
                   className="object-cover bg-secondary"
-                  fallbackType="project"
                 />
               </div>
               

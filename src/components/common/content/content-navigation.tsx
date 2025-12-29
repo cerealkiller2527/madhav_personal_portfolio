@@ -14,6 +14,7 @@ interface NavigationItem {
   title: string
   description?: string
   coverImage?: string
+  heroImage?: string
   slug?: string
 }
 
@@ -38,6 +39,9 @@ function NavigationCard<T extends NavigationItem>({
     ? `/blog/${item.slug}` 
     : `/projects/${item.id}`
 
+  // Use heroImage for projects, coverImage for blogs
+  const imageUrl = item.heroImage || item.coverImage || ""
+
   return (
     <Link
       href={href}
@@ -47,7 +51,7 @@ function NavigationCard<T extends NavigationItem>({
         <>
           <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl">
             <ContentImage
-              src={item.coverImage || ""}
+              src={imageUrl}
               alt={item.title}
               fill
               sizes="80px"
@@ -96,7 +100,7 @@ function NavigationCard<T extends NavigationItem>({
           </div>
           <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl">
             <ContentImage
-              src={item.coverImage || ""}
+              src={imageUrl}
               alt={item.title}
               fill
               sizes="80px"

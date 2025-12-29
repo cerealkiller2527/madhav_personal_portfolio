@@ -19,12 +19,12 @@ interface ProjectGridCardProps {
 export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: ProjectGridCardProps) {
   const handleClick = () => {
     onCardClick?.(project.id)
+    onViewDetails(project)
   }
 
   const handleDetailsClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     handleClick()
-    onViewDetails(project)
   }
 
   return (
@@ -32,7 +32,7 @@ export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: 
       data-project-id={project.id}
       whileHover={{ y: -8 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="relative overflow-hidden w-full rounded-2xl border border-black/10 dark:border-white/10 bg-black/10 dark:bg-white/5 backdrop-blur-lg shadow-lg flex flex-col group"
+      className="relative overflow-hidden w-full rounded-2xl border border-black/10 dark:border-white/10 bg-black/10 dark:bg-white/5 backdrop-blur-lg shadow-lg flex flex-col group cursor-pointer"
       onClick={handleClick}
     >
       {/* Decorative gradient glow */}

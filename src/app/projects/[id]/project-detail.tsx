@@ -8,9 +8,9 @@ import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { ProjectNavigation } from "@/components/common/content/content-navigation"
 import { BackButton } from "@/components/common/content/content-navigation"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
-import { ContentImage } from "@/components/common/content/content-image"
 import { Comments } from "@/components/common/comments"
 import { ProjectContentSections } from "@/components/projects/project-content-sections"
+import { ProjectHeroMedia } from "@/components/projects/project-components"
 import { ArrowLeft } from "lucide-react"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
 
@@ -64,16 +64,13 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               </p>
             </header>
 
-            {/* Hero Image */}
+            {/* Hero Media - 3D model or hero image */}
             <div id="overview" className="scroll-mt-28">
               <div className="relative w-full h-64 md:h-96 mb-12 rounded-lg overflow-hidden shadow-lg bg-secondary">
-                <ContentImage
-                  src={project.heroImage || ""}
-                  alt={`${project.title} hero image`}
-                  fill
+                <ProjectHeroMedia
+                  project={project}
                   sizes="(max-width: 1024px) 100vw, 1024px"
                   className="object-cover"
-                  fallbackType="project"
                   priority
                 />
               </div>

@@ -35,7 +35,7 @@ export function useBounceAnimation({
     if (!element) return
 
     const elementRect = element.getBoundingClientRect()
-    const targetPosition = elementRect.top + window.pageYOffset - window.innerHeight / 2
+    const targetPosition = elementRect.top + window.pageYOffset - window.innerHeight / 2 + elementRect.height / 2
     smoothScrollTo(targetPosition, 1000)
 
     setTimeout(() => {
@@ -43,7 +43,7 @@ export function useBounceAnimation({
       setTimeout(() => {
         setActiveBounceId(null)
         onBounceComplete()
-      }, 2000)
+      }, 3000)
     }, 1000)
   }, [bounceProjectId, filteredProjects, showMore, activeFilter, onBounceComplete, setShowMore])
 

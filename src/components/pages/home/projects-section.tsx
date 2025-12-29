@@ -76,7 +76,7 @@ export function ProjectsSection({
                 style={{ zIndex: isBouncing ? 10 : 1 }}
               >
                 <motion.div
-                  animate={isBouncing ? { y: [0, -6, 0] } : { y: 0 }}
+                  animate={isBouncing ? { y: [0, -12, 0] } : { y: 0 }}
                   transition={
                     isBouncing
                       ? {
@@ -87,7 +87,6 @@ export function ProjectsSection({
                       : { duration: 0.3 }
                   }
                   onClick={() => stopBouncing(project.id)}
-                  onMouseEnter={() => stopBouncing(project.id)}
                 >
                   <ProjectGridCard
                     project={project}
