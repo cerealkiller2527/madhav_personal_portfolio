@@ -105,7 +105,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
           </div>
           
           <div className="flex justify-center pt-3 sm:pt-4">
-            <div className="flex gap-0.5 xs:gap-1 sm:gap-2 p-1 sm:p-2 rounded-xl bg-muted">
+            <div className="flex gap-0.5 xs:gap-1 sm:gap-2 p-1 sm:p-2 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/25 backdrop-blur-md">
               {resumeTypes.map((resume) => (
                 <motion.button
                   key={resume.id}
@@ -115,7 +115,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                   {activeTab === resume.id && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute inset-0 bg-primary rounded-lg"
+                      className="absolute inset-0 rounded-lg backdrop-blur-xl bg-primary/50 dark:bg-primary/40 border border-primary/50 dark:border-primary/50 shadow-md shadow-black/10 dark:shadow-black/20"
                       transition={{ type: "spring", damping: 25, stiffness: 300 }}
                     />
                   )}

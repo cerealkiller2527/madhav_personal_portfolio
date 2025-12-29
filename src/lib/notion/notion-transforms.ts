@@ -61,13 +61,15 @@ function parseStatistics(text: string | null): Array<{value: string, label: stri
       return parsed.filter(stat => stat.value && stat.label)
     }
   } catch {
+    // Format: "89%|Accuracy Rate,10K+|Daily Users"
+    // Split by comma, then by pipe - value comes first, then label
     return text.split(',')
       .map(s => s.trim())
       .map(pair => {
-        const parts = pair.includes(':') ? pair.split(':') : pair.split('|')
+        const parts = pair.split('|')
         if (parts.length === 2) {
-          const [label, value] = parts.map(p => p.trim())
-          if (label && value) return { label, value }
+          const [value, label] = parts.map(p => p.trim())
+          if (value && label) return { value, label }
         }
         return null
       })

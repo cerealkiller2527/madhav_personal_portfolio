@@ -1,4 +1,4 @@
-// Renders project content sections (features, tech stack, gallery)
+// Renders project content sections (features, tech stack, gallery, statistics)
 
 import type { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
@@ -26,10 +26,6 @@ export function ProjectContentSections({
   hasNotionContent,
   variant = "modal"
 }: ProjectContentSectionsProps) {
-  if (hasNotionContent) {
-    return null
-  }
-
   const isFullPage = variant === "full-page"
   const headingClass = isFullPage 
     ? "text-3xl font-bold mb-4 border-b pb-3" 
@@ -47,9 +43,18 @@ export function ProjectContentSections({
     ? PROJECT_IMAGE_HEIGHTS.fullPage.gallery 
     : PROJECT_IMAGE_HEIGHTS.modal.gallery
 
+  const hasFeatures = !hasNotionContent && hasProjectContent(project, PROJECT_SECTIONS.features)
+  const hasTechStack = !hasNotionContent && hasProjectContent(project, PROJECT_SECTIONS.techStack)
+  const hasGallery = !hasNotionContent && hasProjectContent(project, PROJECT_SECTIONS.gallery)
+
+  // Return null only if there's nothing to show (stats shown inline in overview)
+  if (!hasFeatures && !hasTechStack && !hasGallery) {
+    return null
+  }
+
   return (
     <>
-      {hasProjectContent(project, PROJECT_SECTIONS.features) && (
+      {hasFeatures && (
         <section id={PROJECT_SECTIONS.features} className={sectionClass}>
           <h2 className={headingClass}>Key Features</h2>
           <ul className="space-y-6">
@@ -63,7 +68,7 @@ export function ProjectContentSections({
         </section>
       )}
 
-      {hasProjectContent(project, PROJECT_SECTIONS.techStack) && (
+      {hasTechStack && (
         <section id={PROJECT_SECTIONS.techStack} className={sectionClass}>
           <h2 className={headingClass}>Tech Stack</h2>
           <div className="flex flex-wrap gap-2">
@@ -80,7 +85,7 @@ export function ProjectContentSections({
         </section>
       )}
 
-      {hasProjectContent(project, PROJECT_SECTIONS.gallery) && (
+      {hasGallery && (
         <section id={PROJECT_SECTIONS.gallery} className={sectionClass}>
           <h2 className={headingClass}>Gallery</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

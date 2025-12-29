@@ -194,7 +194,7 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
   // Animation values
   const x = useMotionValue(0)
   const velocityFactor = useMotionValue(0)
-  const baseVelocity = -100 // Base scrolling speed
+  const baseVelocity = -130 // Base scrolling speed
 
   useAnimationFrame((_time, delta) => {
     if (!singleSetWidth) return
@@ -204,7 +204,11 @@ export function ProjectMarquee({ projects, className, onProjectSelect }: Project
     
     // Calculate movement - positive vf moves right (reverse), negative moves left (faster forward)
     const baseMove = baseVelocity * deltaInSeconds
-    const mouseInfluence = vf * 300 * deltaInSeconds // Increased for more responsive control
+    // When moving right (positive vf), we need to compensate for the base leftward movement
+    // So we double the influence to overcome the base velocity and still move right at the same apparent speed
+    const mouseInfluence = vf > 0 
+      ? vf * 520 * deltaInSeconds // Moving right - compensate for base leftward movement
+      : vf * 400 * deltaInSeconds // Moving left - add to base movement
     const totalMove = baseMove + mouseInfluence
     
     const currentX = x.get()

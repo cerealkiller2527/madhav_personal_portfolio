@@ -10,7 +10,7 @@ import { BackButton } from "@/components/common/content/content-navigation"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { Comments } from "@/components/common/comments"
 import { ProjectContentSections } from "@/components/projects/project-content-sections"
-import { ProjectHeroMedia } from "@/components/projects/project-components"
+import { ProjectHeroMedia, ProjectLinks, ProjectStats } from "@/components/projects/project-components"
 import { ArrowLeft } from "lucide-react"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
 
@@ -62,11 +62,12 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
               <p className="text-xl text-muted-foreground text-balance">
                 {project.subtitle}
               </p>
+              <ProjectLinks project={project} showLabels className="mt-6" />
             </header>
 
             {/* Hero Media - 3D model or hero image */}
             <div id="overview" className="scroll-mt-28">
-              <div className="relative w-full h-64 md:h-96 mb-12 rounded-lg overflow-hidden shadow-lg bg-secondary">
+              <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden shadow-lg bg-secondary">
                 <ProjectHeroMedia
                   project={project}
                   sizes="(max-width: 1024px) 100vw, 1024px"
@@ -74,6 +75,11 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                   priority
                 />
               </div>
+              
+              {/* Inline stats display for immediate visibility */}
+              {project.stats && project.stats.length > 0 && (
+                <ProjectStats stats={project.stats} variant="section" className="mb-8" />
+              )}
               
               {/* Notion content or local description */}
               {hasNotionContent ? (

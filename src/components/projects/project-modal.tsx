@@ -5,7 +5,7 @@ import type { Project } from "@/lib/types"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { ProjectModalHeader, ProjectHeroMedia } from "@/components/projects/project-components"
+import { ProjectModalHeader, ProjectHeroMedia, ProjectStats } from "@/components/projects/project-components"
 import { ProjectContentSections } from "@/components/projects/project-content-sections"
 import { isNotionProject } from "@/lib/utils/project-utils"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
@@ -41,13 +41,18 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
           <main className="md:col-span-4 overflow-y-auto p-8" ref={contentRef as React.RefObject<HTMLElement>}>
             <div id="overview" className="scroll-mt-24">
-              <div className="relative w-full h-64 md:h-80 mb-8 rounded-md overflow-hidden bg-secondary">
+              <div className="relative w-full h-64 md:h-80 mb-6 rounded-md overflow-hidden bg-secondary">
                 <ProjectHeroMedia
                   project={project}
                   sizes="(max-width: 1200px) 100vw, 800px"
                   className="object-cover bg-secondary"
                 />
               </div>
+              
+              {/* Inline stats display for immediate visibility */}
+              {project.stats && project.stats.length > 0 && (
+                <ProjectStats stats={project.stats} variant="default" className="mb-6" />
+              )}
               
               {/* Render Notion content if available, otherwise use local content */}
               {hasNotionContent && notionProject?.recordMap ? (

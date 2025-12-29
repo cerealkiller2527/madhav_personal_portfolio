@@ -1,6 +1,6 @@
 "use client"
 import { useEffect } from "react"
-import { motion, useMotionValue, useSpring } from "framer-motion"
+import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion"
 
 interface CursorGlowProps {
   readonly isVisible: boolean
@@ -14,29 +14,37 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      if (!isVisible) return
       mouseX.set(event.clientX)
       mouseY.set(event.clientY)
     }
 
     window.addEventListener("mousemove", handleMouseMove)
     return () => window.removeEventListener("mousemove", handleMouseMove)
-  }, [isVisible, mouseX, mouseY])
-
-  if (!isVisible) return null
+  }, [mouseX, mouseY])
 
   return (
-    <motion.div
-      className="pointer-events-none fixed top-0 left-0 z-30 rounded-full bg-primary/20 blur-3xl"
-      style={{
-        left: smoothX,
-        top: smoothY,
-        width: 300,
-        height: 300,
-        transform: "translate(-50%, -50%)",
-        opacity: 0.8
-      }}
-    />
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          className="pointer-events-none fixed z-30 rounded-full bg-primary/20 blur-3xl"
+          style={{
+            left: smoothX,
+            top: smoothY,
+            width: 300,
+            height: 300,
+            x: "-50%",
+            y: "-50%",
+          }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 0.8, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{
+            opacity: { duration: 0.6, ease: "easeInOut" },
+            scale: { duration: 0.5, ease: "easeInOut" }
+          }}
+        />
+      )}
+    </AnimatePresence>
   )
 }
 
