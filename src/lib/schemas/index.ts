@@ -6,47 +6,16 @@
  */
 
 // ============================================================================
-// Common Schemas and Types
-// ============================================================================
-
-export {
-  uuidSchema,
-  dateStringSchema,
-  urlSchema,
-  nonEmptyStringSchema,
-  optionalSchema,
-  type UUID,
-  type DateString
-} from './common.schemas'
-
-// ============================================================================
 // Project Schemas and Types
 // ============================================================================
 
 export {
-  // Enums
   projectCategorySchema,
-  techCategorySchema,
-  proficiencyLevelSchema,
   ProjectCategory,
-  
-  // Sub-schemas
   statisticSchema,
-  galleryItemSchema,
-  featureSchema,
-  techStackItemSchema,
-  
-  // Main project schema
   projectSchema,
-  
-  // Types
   type ProjectCategory as ProjectCategoryType,
-  type TechCategory,
-  type ProficiencyLevel,
   type Statistic,
-  type GalleryItem,
-  type Feature,
-  type TechStackItem,
   type Project
 } from './project.schemas'
 
@@ -68,7 +37,7 @@ export {
   blogPreviewSchema,
   type BlogContent,
   type BlogPreview
-} from './blog.schemas'
+} from './notion.schemas'
 
 // ============================================================================
 // Notion Integration Schemas and Types

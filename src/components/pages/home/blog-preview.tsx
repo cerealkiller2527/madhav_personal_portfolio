@@ -1,16 +1,16 @@
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import type { BlogPreview } from "@/lib/schemas"
+import type { BlogPreview as BlogPreviewType } from "@/lib/schemas"
 import { Button } from "@/components/ui/button"
 import { Section } from "@/components/layout/section"
 import { BlogCard } from "@/components/pages/blog/blog-card"
 import { BLOG_PREVIEW_LIMITS } from "@/lib/utils/blog-utils"
 
 interface BlogPreviewSectionProps {
-  posts: BlogPreview[]
+  posts: BlogPreviewType[]
 }
 
-export function BlogPreview({ posts }: BlogPreviewSectionProps) {
+export function BlogPreviewSection({ posts }: BlogPreviewSectionProps) {
   if (posts.length === 0) {
     return null // Don't show section if no posts
   }

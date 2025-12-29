@@ -20,26 +20,6 @@ export const projectCategorySchema = z.enum(['Software', 'Hardware', 'Hybrid'])
 export type ProjectCategory = z.infer<typeof projectCategorySchema>
 export const ProjectCategory = projectCategorySchema.enum
 
-/**
- * Technology category enum
- */
-export const techCategorySchema = z.enum([
-  'Software',
-  'Mobile',
-  'Database',
-  'AI/ML',
-  'Design', 
-  'Fabrication',
-  'Hardware'
-])
-export type TechCategory = z.infer<typeof techCategorySchema>
-
-/**
- * Proficiency level enum
- */
-export const proficiencyLevelSchema = z.enum(['Beginner', 'Intermediate', 'Advanced', 'Expert'])
-export type ProficiencyLevel = z.infer<typeof proficiencyLevelSchema>
-
 // ============================================================================
 // Sub-schemas
 // ============================================================================
@@ -52,39 +32,6 @@ export const statisticSchema = z.object({
   label: nonEmptyStringSchema
 })
 export type Statistic = z.infer<typeof statisticSchema>
-
-/**
- * Gallery item schema for project images
- */
-export const galleryItemSchema = z.object({
-  url: urlSchema,
-  caption: nonEmptyStringSchema,
-  alt: optionalSchema(z.string()),
-  width: z.number().int().positive().optional(),
-  height: z.number().int().positive().optional()
-})
-export type GalleryItem = z.infer<typeof galleryItemSchema>
-
-/**
- * Feature schema for project key features
- */
-export const featureSchema = z.object({
-  title: nonEmptyStringSchema,
-  description: nonEmptyStringSchema,
-  icon: optionalSchema(z.string())
-})
-export type Feature = z.infer<typeof featureSchema>
-
-/**
- * Tech stack item schema
- */
-export const techStackItemSchema = z.object({
-  name: nonEmptyStringSchema,
-  category: techCategorySchema,
-  icon: optionalSchema(z.string()),
-  proficiency: proficiencyLevelSchema.optional()
-})
-export type TechStackItem = z.infer<typeof techStackItemSchema>
 
 // ============================================================================
 // Main Project Schema
@@ -118,14 +65,22 @@ export const projectSchema = z.object({
   githubLink: optionalSchema(urlSchema),
   
   // Media
-  heroImage: z.string(), // URL or path to hero image
+  heroImage: z.string(),
   sketchfabEmbedUrl: optionalSchema(urlSchema),
-  gallery: z.array(galleryItemSchema),
+  gallery: z.array(z.object({
+    url: z.string(),
+    caption: z.string()
+  })),
   
   // Content
   detailedDescription: nonEmptyStringSchema,
-  keyFeatures: z.array(featureSchema),
-  techStack: z.array(techStackItemSchema),
+  keyFeatures: z.array(z.object({
+    title: nonEmptyStringSchema,
+    description: nonEmptyStringSchema
+  })),
+  techStack: z.array(z.object({
+    name: nonEmptyStringSchema
+  })),
   
   // Notion integration - optional recordMap for Notion-sourced projects
   recordMap: z.custom<ExtendedRecordMap>().optional()

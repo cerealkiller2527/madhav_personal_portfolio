@@ -4,8 +4,7 @@
  * Display utilities and content helpers for project data.
  */
 
-import type { Project, TechStackItem } from "@/lib/schemas"
-import type { ProjectContent as NotionProject } from "@/lib/schemas"
+import type { Project, ProjectContent as NotionProject } from "@/lib/schemas"
 import { PROJECT_SECTIONS, type ProjectSectionId } from "@/lib/core/constants"
 
 // ============================================================================
@@ -95,7 +94,7 @@ export function transformNotionToLocalProject(
     detailedDescription: notionProject.description || "",
     sketchfabEmbedUrl: notionProject.sketchfabEmbedUrl,
     keyFeatures: notionProject.keyFeatures || [],
-    techStack: notionProject.techStack as TechStackItem[] || [],
+    techStack: notionProject.techStack || [],
     recordMap: notionProject.recordMap,
   }
 }

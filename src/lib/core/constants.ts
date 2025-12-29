@@ -43,14 +43,3 @@ export const PROJECT_IMAGE_HEIGHTS = {
   },
 } as const
 
-// ============================================================================
-// Grid Layouts
-// ============================================================================
-
-/**
- * Number of items to show before "Show More"
- */
-export const PAGINATION = {
-  projectsInitial: 4,
-  blogPostsPreview: 3,
-} as const
