@@ -1,4 +1,4 @@
-import { ExtendedRecordMap } from "notion-types"
+import { ExtendedRecordMap, Block } from "notion-types"
 import { 
   NotionPage, 
   NotionPropertyValue,
@@ -264,15 +264,16 @@ export async function transformToProjectContent(
 
 
 // Extracts text content from a Notion block
-function extractBlockText(block: any): string {
+function extractBlockText(block: Block | null | undefined): string {
   if (!block?.properties) return ''
   
   const textProperties = ['title', 'rich_text', 'caption'] as const
   const textParts: string[] = []
   
   for (const prop of textProperties) {
-    if (Array.isArray(block.properties[prop])) {
-      const text = block.properties[prop]
+    const propertyValue = block.properties[prop]
+    if (Array.isArray(propertyValue)) {
+      const text = propertyValue
         .map((item: unknown) => {
           if (Array.isArray(item) && item.length > 0) {
             return String(item[0] || '')
