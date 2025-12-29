@@ -1,13 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import type { Experience } from "@/lib/schemas"
 import { Section } from "@/components/layout/section"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/core/utils"
-import { MapPin } from "lucide-react"
+import { MapPin, Building2 } from "lucide-react"
 
 interface ExperienceSectionProps {
   experiences: readonly Experience[]
@@ -77,14 +76,8 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
               <div className="absolute -top-1/4 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-80" />
               <div className="relative z-10 h-full flex flex-col">
                 <div className="flex flex-col sm:flex-row gap-6 mb-6">
-                  <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-                    <Image
-                      src={selected.logo || "/assets/placeholders/placeholder-logo.svg"}
-                      alt={`${selected.company} logo`}
-                      fill
-                      sizes="96px"
-                      className="object-contain bg-white/80"
-                    />
+                  <div className="w-24 h-24 flex-shrink-0 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+                    <Building2 className="w-12 h-12 text-primary" />
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-foreground">{selected.company}</h3>

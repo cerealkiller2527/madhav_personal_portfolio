@@ -89,7 +89,7 @@ export function transformNotionToLocalProject(
     tags: notionProject.tags,
     liveLink: notionProject.liveLink,
     githubLink: notionProject.githubLink,
-    heroImage: notionProject.heroImage || notionProject.coverImage || "/assets/placeholders/placeholder-logo.svg",
+    heroImage: notionProject.heroImage || notionProject.coverImage || "",
     gallery: notionProject.gallery || [],
     detailedDescription: notionProject.description || "",
     sketchfabEmbedUrl: notionProject.sketchfabEmbedUrl,

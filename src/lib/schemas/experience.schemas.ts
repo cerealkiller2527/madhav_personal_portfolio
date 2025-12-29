@@ -18,7 +18,6 @@ import { statisticSchema } from './project.schemas'
 export const experienceSchema = z.object({
   id: uuidSchema,
   company: nonEmptyStringSchema,
-  logo: urlSchema,
   role: nonEmptyStringSchema,
   title: optionalSchema(z.string()),
   date: optionalSchema(z.string()),

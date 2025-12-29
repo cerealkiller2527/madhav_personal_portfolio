@@ -70,7 +70,6 @@ export const experiences: readonly Experience[] = [
   {
     id: "01",
     company: "Liger Mobility",
-    logo: "/assets/placeholders/placeholder-logo.svg",
     role: "Embedded Systems & Software Intern",
     date: "May 2024 – July 2024",
     location: "Mumbai, India",
@@ -84,9 +83,8 @@ export const experiences: readonly Experience[] = [
     tags: ["Flutter", "Firebase", "AWS IoT", "PID Control", "Embedded Systems"],
   },
   {
-    id: "hcl",
+    id: "02",
     company: "HCLTech",
-    logo: "/assets/placeholders/placeholder-logo.svg",
     role: "Robotics Engineering Intern",
     date: "Jan 2024 – Apr 2024",
     location: "Boston, MA",
@@ -99,9 +97,8 @@ export const experiences: readonly Experience[] = [
     tags: ["Robotics", "Computer Vision", "Automation", "ROS", "Quality Assurance"],
   },
   {
-    id: "02",
+    id: "03",
     company: "Ayurythm",
-    logo: "/assets/placeholders/placeholder-logo.svg",
     role: "Test Design Engineer Intern",
     date: "April 2022 – July 2022",
     location: "Bangalore, India",
@@ -114,9 +111,8 @@ export const experiences: readonly Experience[] = [
     tags: ["Arduino", "Altium Designer", "Signal Processing", "3D Printing", "Health Tech"],
   },
   {
-    id: "03",
+    id: "04",
     company: "Design Flyover",
-    logo: "/assets/placeholders/placeholder-logo.svg",
     role: "Product Design Engineer Intern",
     date: "September 2021 – October 2021",
     location: "Mumbai, India",

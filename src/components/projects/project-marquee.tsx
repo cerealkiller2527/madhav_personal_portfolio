@@ -4,7 +4,7 @@ import type React from "react"
 
 import Image from "next/image"
 import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame, MotionValue } from "framer-motion"
-import { Trophy, ChevronLeft, ChevronRight } from "lucide-react"
+import { Trophy, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react"
 import type { Project } from "@/lib/schemas"
 import { cn } from "@/lib/core/utils"
 import { BadgeUtil } from "@/components/common/utils/badge-utils"
@@ -99,16 +99,20 @@ const InteractiveMarqueeItem = ({
       <a href={`/projects/${project.id}`} onClick={handleClick} className="block w-full h-full cursor-pointer">
         <div className="w-full h-full bg-secondary/80 dark:bg-secondary/90 border-2 border-border/50 rounded-xl p-3 shadow-md hover:shadow-lg transition-shadow flex flex-col overflow-hidden">
           <div className="relative h-28 w-full rounded-md overflow-hidden mb-3 flex-shrink-0">
-            <Image
-              src={
-                project.heroImage || `/assets/placeholders/placeholder-logo.svg`
-              }
-              alt={project.title}
-              fill
-              sizes="256px"
-              className="object-cover"
-              style={{ imageRendering: "auto" }}
-            />
+            {project.heroImage ? (
+              <Image
+                src={project.heroImage}
+                alt={project.title}
+                fill
+                sizes="256px"
+                className="object-cover"
+                style={{ imageRendering: "auto" }}
+              />
+            ) : (
+              <div className="w-full h-full bg-muted flex items-center justify-center">
+                <ImageIcon className="h-8 w-8 text-muted-foreground/50" />
+              </div>
+            )}
             {project.awardRank && trophyStyles && (
               <div className={cn("absolute top-2 right-2 rounded-full p-1.5", trophyStyles.containerClasses)}>
                 <Trophy className={cn("w-4 h-4", trophyStyles.iconClasses)} />

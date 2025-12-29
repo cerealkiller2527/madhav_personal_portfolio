@@ -53,11 +53,6 @@ export function ContentImage({
     )
   }
 
-  // Don't show fallback for placeholder.svg - just return empty div
-  if (hasError && src.includes('placeholder.svg')) {
-    return <div className={cn("bg-muted", className)} />
-  }
-
   if (hasError) {
     const FallbackIcon = FALLBACK_ICONS[fallbackType]
     return (
