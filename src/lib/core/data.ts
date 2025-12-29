@@ -1,5 +1,9 @@
 import type { Experience } from "@/lib/schemas"
 
+// ============================================================================
+// Site Information
+// ============================================================================
+
 export const siteInfo = {
   name: "Madhav Lodha",
   description: "Robotics Engineering & Computer Science Major at WPI.",
@@ -55,6 +59,38 @@ export const footerData = {
 }
 
 export const blogDescription = "Thoughts on software engineering, web development, and technology.";
+
+// ============================================================================
+// Project Constants
+// ============================================================================
+
+export const PROJECT_SECTIONS = {
+  overview: 'overview',
+  features: 'features',
+  techStack: 'tech-stack',
+  gallery: 'gallery',
+  statistics: 'statistics',
+} as const
+
+export type ProjectSectionId = (typeof PROJECT_SECTIONS)[keyof typeof PROJECT_SECTIONS]
+
+export const PROJECT_IMAGE_HEIGHTS = {
+  modal: {
+    hero: 'h-64 md:h-80',
+    gallery: 'h-48',
+  },
+  fullPage: {
+    hero: 'h-64 md:h-96',
+    gallery: 'h-56',
+  },
+  card: {
+    hero: 'aspect-video',
+  },
+} as const
+
+// ============================================================================
+// Experience Data
+// ============================================================================
 
 export const experiences: readonly Experience[] = [
   {

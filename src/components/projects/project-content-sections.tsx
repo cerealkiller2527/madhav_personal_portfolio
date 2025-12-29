@@ -9,7 +9,7 @@ import type { Project } from "@/lib/schemas"
 import { Badge } from "@/components/ui/badge"
 import { hasProjectContent } from "@/lib/utils/project-utils"
 import { ContentImage } from "@/components/common/content/content-image"
-import { PROJECT_SECTIONS, PROJECT_IMAGE_HEIGHTS } from "@/lib/core/constants"
+import { PROJECT_SECTIONS, PROJECT_IMAGE_HEIGHTS } from "@/lib/core/data"
 import { cn } from "@/lib/core/utils"
 
 // ============================================================================

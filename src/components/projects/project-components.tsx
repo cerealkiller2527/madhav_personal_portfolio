@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { ContentImage } from "@/components/common/content/content-image"
 import { cn } from "@/lib/core/utils"
-import { BadgeUtil } from "@/components/common/utils/badge-utils"
+import { BadgeUtil } from "@/lib/utils/badge-utils"
 import { formatProjectIndex } from "@/lib/utils/project-utils"
 
 // ============================================================================

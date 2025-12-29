@@ -3,7 +3,23 @@
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import Giscus from "@giscus/react"
-import { commentsConfig, isCommentsEnabled } from "@/lib/core/config"
+
+const commentsConfig = {
+  repo: process.env.NEXT_PUBLIC_GISCUS_REPO as `${string}/${string}`,
+  repoId: process.env.NEXT_PUBLIC_GISCUS_REPO_ID || "",
+  category: process.env.NEXT_PUBLIC_GISCUS_CATEGORY || "General",
+  categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID || "",
+  mapping: "pathname" as const,
+  strict: "0" as const,
+  reactionsEnabled: "1" as const,
+  emitMetadata: "0" as const,
+  inputPosition: "bottom" as const,
+  loading: "lazy" as const,
+}
+
+function isCommentsEnabled() {
+  return !!(commentsConfig.repo && commentsConfig.repoId && commentsConfig.categoryId)
+}
 
 interface CommentsProps {
   className?: string
@@ -54,3 +70,4 @@ export function Comments({ className = "" }: CommentsProps) {
     </div>
   )
 }
+

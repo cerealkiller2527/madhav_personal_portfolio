@@ -66,7 +66,7 @@ export default function BlogPage() {
               <div className="h-12 bg-muted rounded w-1/3 mx-auto mb-4"></div>
               <div className="h-6 bg-muted rounded w-2/3 mx-auto"></div>
             </div>
-            <LoadingGrid variant="blog" count={6} />
+            <LoadingGrid count={6} />
           </div>
         </div>
       </div>

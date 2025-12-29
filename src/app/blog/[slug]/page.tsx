@@ -86,7 +86,7 @@ export default async function BlogContentPage({ params }: BlogContentPageProps) 
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
-            <LoadingGrid variant="blog" count={1} />
+            <LoadingGrid count={1} />
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame, Mot
 import { Trophy, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react"
 import type { Project } from "@/lib/schemas"
 import { cn } from "@/lib/core/utils"
-import { BadgeUtil } from "@/components/common/utils/badge-utils"
+import { BadgeUtil } from "@/lib/utils/badge-utils"
 
 interface ProjectMarqueeProps {
   projects: readonly Project[]

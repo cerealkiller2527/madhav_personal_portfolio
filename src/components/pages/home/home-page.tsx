@@ -6,7 +6,7 @@ import { ExperienceSection } from "@/components/pages/home/experience-section"
 import { ProjectsSection } from "@/components/pages/home/projects-section"
 import { ProjectModal } from "@/components/projects/project-modal"
 import type { Project, Experience } from "@/lib/schemas"
-import { CursorGlow } from "@/components/common/interactions/cursor-glow"
+import { CursorGlow } from "@/components/common/cursor-glow"
 import { smoothScrollToElement } from "@/lib/core/utils"
 
 interface HomePageProps {

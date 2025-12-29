@@ -39,3 +39,4 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
     />
   )
 }
+

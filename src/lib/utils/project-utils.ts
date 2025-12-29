@@ -5,7 +5,7 @@
  */
 
 import type { Project, ProjectContent as NotionProject } from "@/lib/schemas"
-import { PROJECT_SECTIONS, type ProjectSectionId } from "@/lib/core/constants"
+import { PROJECT_SECTIONS, type ProjectSectionId } from "@/lib/core/data"
 
 // ============================================================================
 // Display Formatting

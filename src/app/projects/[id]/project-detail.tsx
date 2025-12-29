@@ -14,7 +14,7 @@ import { ProjectNavigation } from "@/components/common/content/content-navigatio
 import { BackButton } from "@/components/common/content/content-navigation"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { ContentImage } from "@/components/common/content/content-image"
-import { Comments } from "@/components/common/comments/comments"
+import { Comments } from "@/components/common/comments"
 import { ProjectContentSections } from "@/components/projects/project-content-sections"
 import { ArrowLeft } from "lucide-react"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"

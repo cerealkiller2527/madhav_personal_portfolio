@@ -1,25 +1,19 @@
 /**
- * Universal Loading States Component
- * Provides consistent loading skeletons across all domains
+ * Loading States Component
+ * Provides consistent loading skeletons for blog content
  */
 
-import { ContentGrid, GRID_CONFIGS, type GridConfigName } from "@/components/common/content/content-grid"
+import { ContentGrid, GRID_CONFIGS } from "@/components/common/content/content-grid"
 
 interface LoadingGridProps {
-  variant: GridConfigName
   count?: number
-  className?: string
-}
-
-interface LoadingCardProps {
-  variant: 'blog'
   className?: string
 }
 
 /**
  * Loading skeleton for blog cards
  */
-export function LoadingCard({ className = "" }: LoadingCardProps) {
+function LoadingCard({ className = "" }: { className?: string }) {
   return (
     <div className={`animate-pulse ${className}`}>
       <div className="h-48 bg-muted rounded-lg mb-4"></div>
@@ -33,16 +27,14 @@ export function LoadingCard({ className = "" }: LoadingCardProps) {
 }
 
 /**
- * Loading grid for collections of items
+ * Loading grid for blog posts
  */
-export function LoadingGrid({ variant, count = 6, className = "" }: LoadingGridProps) {
-  const config = GRID_CONFIGS[variant]
-  
+export function LoadingGrid({ count = 6, className = "" }: LoadingGridProps) {
   return (
     <div className={className}>
-      <ContentGrid config={config}>
+      <ContentGrid config={GRID_CONFIGS.blog}>
         {Array.from({ length: count }).map((_, i) => (
-          <LoadingCard key={i} variant="blog" />
+          <LoadingCard key={i} />
         ))}
       </ContentGrid>
     </div>
