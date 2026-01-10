@@ -10,14 +10,11 @@ const cardVariants = cva(
       variant: {
         default: "bg-card shadow-sm",
         // Interactive glass card with hover effect
-        glass:
-          "bg-[hsl(var(--glass-bg))] border-[hsl(var(--glass-border))] backdrop-blur-[var(--glass-blur)] shadow-[var(--glass-shadow)] hover:shadow-xl transition-shadow duration-300",
-        // Static glass card without hover effects (for non-interactive elements)
-        "glass-static":
-          "bg-[hsl(var(--glass-bg))] border-[hsl(var(--glass-border))] backdrop-blur-[var(--glass-blur)] shadow-[var(--glass-shadow)]",
+        glass: "glass hover:shadow-xl transition-shadow duration-300",
+        // Static glass card without hover effects
+        "glass-static": "glass",
         // Subtle glass for less prominent elements
-        "glass-subtle":
-          "bg-[hsl(var(--glass-bg-subtle))] border-[hsl(var(--glass-border))] backdrop-blur-[var(--glass-blur-sm)]",
+        "glass-subtle": "glass-subtle",
       },
     },
     defaultVariants: {

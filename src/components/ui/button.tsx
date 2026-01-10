@@ -18,16 +18,14 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        glass:
-          "backdrop-blur-[var(--glass-blur)] bg-[hsl(var(--primary)/0.15)] border border-[hsl(var(--primary)/0.3)] text-white shadow-[var(--glass-shadow)] hover:bg-[hsl(var(--primary)/0.2)] hover:border-[hsl(var(--primary)/0.4)] dark:bg-[hsl(var(--primary)/0.1)] dark:border-[hsl(var(--primary)/0.2)] dark:hover:bg-[hsl(var(--primary)/0.15)] dark:hover:border-[hsl(var(--primary)/0.3)]",
+        // Glass button with primary tint
+        glass: "glass text-white hover:bg-primary/20",
         // Navigation variant for header nav links
-        nav: "text-white/70 hover:text-white hover:bg-[hsl(var(--glass-hover-bg))] transition-colors",
+        nav: "text-white/70 hover:text-white hover:bg-white/10 transition-colors",
         // Icon button with glass background
-        "icon-glass":
-          "bg-[hsl(var(--glass-bg))] border border-[hsl(var(--glass-border))] backdrop-blur-[var(--glass-blur-sm)] hover:bg-primary hover:border-primary hover:text-white transition-all duration-200",
+        "icon-glass": "glass-subtle hover:bg-primary hover:border-primary hover:text-white transition-all duration-200",
         // Primary outline variant for emphasis buttons
-        "outline-primary":
-          "border-2 border-primary text-primary bg-transparent hover:bg-primary/10 hover:text-primary",
+        "outline-primary": "border-2 border-primary text-primary bg-transparent hover:bg-primary/10",
       },
       size: {
         default: "h-10 px-4 py-2",

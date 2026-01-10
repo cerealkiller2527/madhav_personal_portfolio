@@ -1,7 +1,7 @@
 // Blog card components for displaying post previews
 
 import Link from "next/link"
-import { ArrowRight, Calendar, Clock, FileText } from "lucide-react"
+import { ArrowRight, Calendar, Clock } from "lucide-react"
 import type { BlogPreview } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -31,20 +31,13 @@ export function BlogCard({
     <Link href={`/blog/${post.slug}`} className="group block">
       <Card variant="glass" className="overflow-hidden">
         <AspectRatio ratio={isCompact ? 16 / 10 : 16 / 9}>
-          {post.coverImage ? (
-            <ContentImage
-              src={post.coverImage}
-              alt={post.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              fallbackType="blog"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          ) : (
-            <div className="w-full h-full glass-subtle flex items-center justify-center group-hover:bg-[hsl(var(--glass-hover-bg))] transition-colors duration-300">
-              <FileText className={`${isCompact ? "h-8 w-8" : "h-12 w-12"} text-muted-foreground/50`} />
-            </div>
-          )}
+          <ContentImage
+            src={post.coverImage || "/assets/portfolio/avatar-logo.png"}
+            alt={post.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
         </AspectRatio>
         
         <CardContent className="p-6">

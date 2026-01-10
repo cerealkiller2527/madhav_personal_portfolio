@@ -70,7 +70,7 @@ export function Footer() {
                     variant="ghost"
                     size="icon"
                     asChild
-                    className="w-8 h-8 border border-white/30 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/50"
+                    className="w-8 h-8 border border-white/30 text-white/80 hover:text-white hover:bg-white/10"
                   >
                     <a
                       href={social.href}

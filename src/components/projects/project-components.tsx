@@ -53,9 +53,6 @@ interface ProjectStatsProps {
 }
 
 // Displays project statistics with glass morphism styling
-// - compact: inline pills for cards (subtle, minimal space)
-// - default: small grid for modals/detail views
-// - section: larger grid with heading for dedicated sections
 export function ProjectStats({ stats, variant = "default", className }: ProjectStatsProps) {
   const [visibleStats, setVisibleStats] = useState<Statistic[]>([])
   const [overflowCount, setOverflowCount] = useState(0)
@@ -162,7 +159,7 @@ export function ProjectStats({ stats, variant = "default", className }: ProjectS
           key={stat.label}
           variant="glass"
           className={cn(
-            "text-center transition-colors hover:bg-[hsl(var(--glass-hover-bg))]",
+            "text-center",
             isSection ? "p-4" : "p-3"
           )}
         >
@@ -218,7 +215,7 @@ interface ProjectMediaProps {
 export function ProjectMedia({ project, index }: ProjectMediaProps) {
   return (
     <div className="relative w-full overflow-hidden rounded-t-2xl">
-      <AspectRatio ratio={16 / 9} className={project.sketchfabEmbedUrl ? '' : 'bg-[hsl(var(--glass-bg))]'}>
+      <AspectRatio ratio={16 / 9}>
         {project.sketchfabEmbedUrl ? (
           <SketchfabIframe
             src={project.sketchfabEmbedUrl}
@@ -226,12 +223,11 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
           />
         ) : (
           <ContentImage
-            src={project.heroImage || ""}
+            src={project.heroImage || "/assets/portfolio/avatar-logo.png"}
             alt={project.title}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 will-change-transform"
-            fallbackType="project"
           />
         )}
       </AspectRatio>
@@ -255,7 +251,6 @@ interface ProjectHeroMediaProps {
 }
 
 // Displays hero media following the hierarchy: 3D model (if available) > hero image
-// Used for modal and full-page views without index badge
 export function ProjectHeroMedia({ 
   project, 
   priority = false, 
@@ -271,12 +266,11 @@ export function ProjectHeroMedia({
         />
       ) : (
         <ContentImage
-          src={project.heroImage || ""}
+          src={project.heroImage || "/assets/portfolio/avatar-logo.png"}
           alt={`${project.title} hero image`}
           fill
           sizes={sizes}
           className={className}
-          fallbackType="project"
           priority={priority}
         />
       )}
@@ -303,39 +297,20 @@ export function ProjectLinks({ project, variant = "default", showLabels = false,
   const isHeader = variant === "header"
   
   const containerClasses = cn("flex items-center gap-2", className)
-  
-  const iconClasses = cn(
-    isCompact ? "h-4 w-4" : "h-5 w-5"
-  )
+  const iconClasses = cn(isCompact ? "h-4 w-4" : "h-5 w-5")
 
   // Determine button variant and size based on context
   const getButtonProps = () => {
     if (isHeader) {
-      return {
-        variant: "ghost" as const,
-        size: "icon" as const,
-        className: "w-10 h-10 hover:bg-primary hover:text-white"
-      }
+      return { variant: "ghost" as const, size: "icon" as const }
     }
     if (isCompact) {
-      return {
-        variant: "icon-glass" as const,
-        size: "icon" as const,
-        className: "w-8 h-8 hover:scale-105"
-      }
+      return { variant: "icon-glass" as const, size: "icon" as const, className: "w-8 h-8" }
     }
     if (showLabels) {
-      return {
-        variant: "icon-glass" as const,
-        size: "default" as const,
-        className: "px-4 py-2.5 h-auto rounded-xl hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/25"
-      }
+      return { variant: "icon-glass" as const, size: "default" as const }
     }
-    return {
-      variant: "icon-glass" as const,
-      size: "icon" as const,
-      className: "w-11 h-11 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/25"
-    }
+    return { variant: "icon-glass" as const, size: "icon" as const, className: "w-11 h-11" }
   }
 
   const buttonProps = getButtonProps()
@@ -405,7 +380,6 @@ export function ProjectModalHeader({ project, onClose }: ProjectModalHeaderProps
           asChild
           variant="ghost"
           size="icon"
-          className="flex-shrink-0 hover:bg-accent hover:text-accent-foreground"
         >
           <Link
             href={`/projects/${project.id}`}
@@ -419,7 +393,6 @@ export function ProjectModalHeader({ project, onClose }: ProjectModalHeaderProps
         <Button
           variant="ghost"
           size="icon"
-          className="flex-shrink-0 hover:bg-accent hover:text-accent-foreground"
           onClick={onClose}
           aria-label="Close modal"
         >

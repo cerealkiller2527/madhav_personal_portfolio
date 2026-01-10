@@ -42,8 +42,7 @@ export function LogoSpinner({
     <div className={cn("flex flex-col items-center justify-center", className)}>
       <motion.div
         className={cn(
-          "relative flex-shrink-0 rounded-full overflow-hidden bg-primary/10 backdrop-blur-sm",
-          "border border-primary/20 shadow-lg",
+          "relative flex-shrink-0 rounded-full overflow-hidden glass-subtle",
           config.container
         )}
         animate={{
@@ -71,7 +70,7 @@ export function LogoSpinner({
           }}
         />
         
-        <div className="absolute inset-1 rounded-full overflow-hidden bg-background/80 backdrop-blur-sm flex items-center justify-center">
+        <div className="absolute inset-1 rounded-full overflow-hidden glass flex items-center justify-center">
           <motion.div
             className="relative w-full h-full p-1"
             animate={{
@@ -126,8 +125,7 @@ export function LogoSpinnerOverlay({
 }) {
   return (
     <div className={cn(
-      "fixed inset-0 z-[100] flex items-center justify-center",
-      "bg-background/80 backdrop-blur-[var(--glass-blur)]",
+      "fixed inset-0 z-[100] flex items-center justify-center glass-strong",
       className
     )}>
       <LogoSpinner size="xl" showText text={text} />

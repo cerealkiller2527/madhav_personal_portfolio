@@ -42,14 +42,11 @@ function NavigationCard<T extends NavigationItem>({
     : `/projects/${item.id}`
 
   // Use heroImage for projects, coverImage for blogs
-  const imageUrl = item.heroImage || item.coverImage || ""
+  const imageUrl = item.heroImage || item.coverImage || "/assets/portfolio/avatar-logo.png"
 
   return (
     <Link href={href} className="block w-full max-w-sm md:w-96 group">
-      <Card
-        variant="glass"
-        className="p-6 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
-      >
+      <Card variant="glass" className="p-6">
         <div className="flex items-center gap-6">
           {direction === "left" ? (
             <>
@@ -60,7 +57,6 @@ function NavigationCard<T extends NavigationItem>({
                   fill
                   sizes="80px"
                   className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                  fallbackType={contentType}
                 />
               </div>
               <div className="flex flex-col gap-3 flex-grow min-w-0">
@@ -109,7 +105,6 @@ function NavigationCard<T extends NavigationItem>({
                   fill
                   sizes="80px"
                   className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                  fallbackType={contentType}
                 />
               </div>
             </>

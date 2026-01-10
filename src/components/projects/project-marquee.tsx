@@ -4,7 +4,7 @@ import type React from "react"
 
 import Image from "next/image"
 import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame, MotionValue } from "framer-motion"
-import { Trophy, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react"
+import { Trophy, ChevronLeft, ChevronRight } from "lucide-react"
 import type { Project } from "@/lib/types"
 import { Card, CardContent } from "@/components/ui/card"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
@@ -103,20 +103,14 @@ const InteractiveMarqueeItem = ({
           <CardContent className="p-3 flex flex-col h-full">
             <div className="relative w-full rounded-md overflow-hidden mb-3 flex-shrink-0">
               <AspectRatio ratio={16 / 9}>
-                {project.heroImage ? (
-                  <Image
-                    src={project.heroImage}
-                    alt={project.title}
-                    fill
-                    sizes="256px"
-                    className="object-cover"
-                    style={{ imageRendering: "auto" }}
-                  />
-                ) : (
-                  <div className="w-full h-full glass-subtle flex items-center justify-center">
-                    <ImageIcon className="h-8 w-8 text-muted-foreground/50" />
-                  </div>
-                )}
+                <Image
+                  src={project.heroImage || "/assets/portfolio/avatar-logo.png"}
+                  alt={project.title}
+                  fill
+                  sizes="256px"
+                  className="object-cover"
+                  style={{ imageRendering: "auto" }}
+                />
               </AspectRatio>
               {project.awardRank && awardVariant && (
                 <div className="absolute top-2 right-2">

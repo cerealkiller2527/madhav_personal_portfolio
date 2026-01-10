@@ -87,15 +87,14 @@ export function ProjectContentSections({
           <h2 className={headingClass}>Gallery</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {project.gallery?.map((image, index) => (
-              <div key={index} className="rounded-md overflow-hidden">
+              <div key={index} className="rounded-md overflow-hidden glass-subtle">
                 <AspectRatio ratio={isFullPage ? 16 / 10 : 4 / 3}>
                   <ContentImage
-                    src={image.url || ""}
+                    src={image.url || "/assets/portfolio/avatar-logo.png"}
                     alt={image.caption}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover bg-secondary"
-                    fallbackType="project"
+                    className="object-cover"
                   />
                 </AspectRatio>
               </div>

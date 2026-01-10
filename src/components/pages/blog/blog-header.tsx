@@ -1,4 +1,4 @@
-import { Calendar, Clock, User, Tag } from "lucide-react"
+import { Calendar, Clock, Tag } from "lucide-react"
 import { BlogContent } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
@@ -38,7 +38,6 @@ export function BlogHeader({ post, author, readingTime }: BlogHeaderProps) {
               fill
               className="object-cover"
               priority
-              fallbackType="blog"
               sizes="(max-width: 1200px) 100vw, 800px"
             />
           </AspectRatio>
@@ -59,14 +58,10 @@ export function BlogHeader({ post, author, readingTime }: BlogHeaderProps) {
         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           {author && (
             <div className="flex items-center gap-2">
-              {author.avatar ? (
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src={author.avatar} alt={author.name} />
-                  <AvatarFallback className="text-xs">{getInitials(author.name)}</AvatarFallback>
-                </Avatar>
-              ) : (
-                <User className="h-4 w-4" />
-              )}
+              <Avatar className="h-6 w-6">
+                <AvatarImage src={author.avatar || "/assets/portfolio/avatar-logo.png"} alt={author.name} />
+                <AvatarFallback className="text-xs">{getInitials(author.name)}</AvatarFallback>
+              </Avatar>
               <span>{author.name}</span>
             </div>
           )}

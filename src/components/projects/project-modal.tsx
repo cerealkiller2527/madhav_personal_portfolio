@@ -51,7 +51,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     <ProjectHeroMedia
                       project={project}
                       sizes="(max-width: 1200px) 100vw, 800px"
-                      className="object-cover bg-secondary"
+                      className="object-cover"
                     />
                   </AspectRatio>
                 </div>
