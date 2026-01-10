@@ -162,7 +162,7 @@ export function ProjectStats({ stats, variant = "default", className }: ProjectS
           key={stat.label}
           variant="glass"
           className={cn(
-            "text-center transition-colors hover:bg-black/10 dark:hover:bg-white/10",
+            "text-center transition-colors hover:bg-[hsl(var(--glass-hover-bg))]",
             isSection ? "p-4" : "p-3"
           )}
         >
@@ -218,7 +218,7 @@ interface ProjectMediaProps {
 export function ProjectMedia({ project, index }: ProjectMediaProps) {
   return (
     <div className="relative w-full overflow-hidden rounded-t-2xl">
-      <AspectRatio ratio={16 / 9} className={project.sketchfabEmbedUrl ? '' : 'bg-secondary/10'}>
+      <AspectRatio ratio={16 / 9} className={project.sketchfabEmbedUrl ? '' : 'bg-[hsl(var(--glass-bg))]'}>
         {project.sketchfabEmbedUrl ? (
           <SketchfabIframe
             src={project.sketchfabEmbedUrl}

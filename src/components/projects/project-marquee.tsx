@@ -113,7 +113,7 @@ const InteractiveMarqueeItem = ({
                     style={{ imageRendering: "auto" }}
                   />
                 ) : (
-                  <div className="w-full h-full bg-muted flex items-center justify-center">
+                  <div className="w-full h-full glass-subtle flex items-center justify-center">
                     <ImageIcon className="h-8 w-8 text-muted-foreground/50" />
                   </div>
                 )}

@@ -65,7 +65,7 @@ function NavigationCard<T extends NavigationItem>({
               </div>
               <div className="flex flex-col gap-3 flex-grow min-w-0">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-secondary transition-transform duration-300 group-hover:-translate-x-1">
+                  <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full glass-subtle transition-transform duration-300 group-hover:-translate-x-1">
                     <ArrowLeft className="h-3 w-3" />
                   </div>
                   <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium whitespace-nowrap">
@@ -89,7 +89,7 @@ function NavigationCard<T extends NavigationItem>({
                   <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium whitespace-nowrap">
                     Next
                   </p>
-                  <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-secondary transition-transform duration-300 group-hover:translate-x-1">
+                  <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full glass-subtle transition-transform duration-300 group-hover:translate-x-1">
                     <ArrowRight className="h-3 w-3" />
                   </div>
                 </div>

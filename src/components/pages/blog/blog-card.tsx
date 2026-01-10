@@ -41,7 +41,7 @@ export function BlogCard({
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           ) : (
-            <div className="w-full h-full bg-muted flex items-center justify-center group-hover:bg-muted/80 transition-colors duration-300">
+            <div className="w-full h-full glass-subtle flex items-center justify-center group-hover:bg-[hsl(var(--glass-hover-bg))] transition-colors duration-300">
               <FileText className={`${isCompact ? "h-8 w-8" : "h-12 w-12"} text-muted-foreground/50`} />
             </div>
           )}

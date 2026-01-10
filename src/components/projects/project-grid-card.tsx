@@ -141,7 +141,7 @@ export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: 
           )}
 
           {/* Footer: Tags (wrapping) with Details button */}
-          <div className="mt-auto pt-4 border-t border-black/10 dark:border-white/10">
+          <div className="mt-auto pt-4 border-t border-[hsl(var(--glass-border))]">
             <div className="flex items-center gap-3">
               {/* Tags container - max 2 lines with overflow */}
               <div className="flex-1 min-w-0">

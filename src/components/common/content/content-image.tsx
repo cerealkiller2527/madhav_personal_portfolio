@@ -45,7 +45,7 @@ export function ContentImage({
     const FallbackIcon = FALLBACK_ICONS[fallbackType]
     return (
       <div className={cn(
-        "bg-muted flex items-center justify-center",
+        "glass-subtle flex items-center justify-center",
         fill && "absolute inset-0",
         className
       )}>
@@ -58,7 +58,7 @@ export function ContentImage({
     const FallbackIcon = FALLBACK_ICONS[fallbackType]
     return (
       <div className={cn(
-        "bg-muted flex items-center justify-center",
+        "glass-subtle flex items-center justify-center",
         fill && "absolute inset-0",
         className
       )}>

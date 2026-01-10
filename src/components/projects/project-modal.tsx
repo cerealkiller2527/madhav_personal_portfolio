@@ -46,7 +46,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           <ScrollArea className="md:col-span-4 h-full">
             <main className="p-8" ref={contentRef as React.RefObject<HTMLElement>}>
               <div id="overview" className="scroll-mt-24">
-                <div className="relative w-full mb-6 rounded-md overflow-hidden bg-secondary">
+                <div className="relative w-full mb-6 rounded-md overflow-hidden glass-subtle">
                   <AspectRatio ratio={16 / 9}>
                     <ProjectHeroMedia
                       project={project}

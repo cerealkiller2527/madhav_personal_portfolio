@@ -67,7 +67,7 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
 
             {/* Hero Media - 3D model or hero image */}
             <div id="overview" className="scroll-mt-28">
-              <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden shadow-lg bg-secondary">
+              <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden shadow-lg glass-subtle">
                 <ProjectHeroMedia
                   project={project}
                   sizes="(max-width: 1024px) 100vw, 1024px"

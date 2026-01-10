@@ -82,7 +82,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
                 <div className="absolute -top-1/4 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-80" />
                 <CardContent className="relative z-10 p-6 md:p-8 h-full flex flex-col">
                   <div className="flex flex-col sm:flex-row gap-6 mb-6">
-                    <div className="w-24 h-24 flex-shrink-0 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+                    <div className="w-24 h-24 flex-shrink-0 rounded-lg glass-subtle flex items-center justify-center">
                       <Building2 className="w-12 h-12 text-primary" />
                     </div>
                     <div>
@@ -104,9 +104,11 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
                   {selected.stats && selected.stats.length > 0 && (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
                       {selected.stats.map((stat) => (
-                        <Card key={stat.label} variant="glass" className="p-3 text-center">
-                          <p className="text-xl font-bold text-foreground">{stat.value}</p>
-                          <p className="text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</p>
+                        <Card key={stat.label} variant="glass-static" className="text-center">
+                          <CardContent className="p-3">
+                            <p className="text-xl font-bold text-foreground">{stat.value}</p>
+                            <p className="text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</p>
+                          </CardContent>
                         </Card>
                       ))}
                     </div>

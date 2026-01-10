@@ -124,9 +124,9 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
           </div>
         </DialogHeader>
 
-        <div className="flex-1 bg-muted/20 overflow-hidden relative">
+        <div className="flex-1 bg-[hsl(var(--glass-bg-subtle))] overflow-hidden relative">
           {isLoading && (
-            <div className="absolute inset-0 flex justify-center items-center bg-background/80 z-10">
+            <div className="absolute inset-0 flex justify-center items-center bg-background/80 backdrop-blur-[var(--glass-blur-sm)] z-10">
               <LogoSpinnerInline size="md" text="Loading PDF..." />
             </div>
           )}

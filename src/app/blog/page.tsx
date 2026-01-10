@@ -5,6 +5,7 @@ import { Metadata } from "next"
 import { getAllBlogPosts } from "@/lib/notion/notion-service"
 import { BlogGrid } from "@/components/pages/blog/blog-card"
 import { LoadingGrid } from "@/components/common/ui/loading-states"
+import { Skeleton } from "@/components/ui/skeleton"
 import { blogDescription } from "@/lib/core/data"
 
 export const metadata: Metadata = {
@@ -65,8 +66,8 @@ export default function BlogPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <div className="h-12 bg-muted rounded w-1/3 mx-auto mb-4"></div>
-              <div className="h-6 bg-muted rounded w-2/3 mx-auto"></div>
+              <Skeleton className="h-12 w-1/3 mx-auto mb-4" />
+              <Skeleton className="h-6 w-2/3 mx-auto" />
             </div>
             <LoadingGrid count={6} />
           </div>
