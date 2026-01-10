@@ -32,7 +32,7 @@ export function BlogCard({
       <Card variant="glass" className="overflow-hidden">
         <AspectRatio ratio={isCompact ? 16 / 10 : 16 / 9}>
           <ContentImage
-            src={post.coverImage || "/assets/portfolio/avatar-logo.png"}
+            src={post.coverImage || ""}
             alt={post.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"

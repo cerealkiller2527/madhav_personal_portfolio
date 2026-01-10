@@ -114,7 +114,7 @@ export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: 
     <motion.div data-project-id={project.id}>
       <Card
         variant="glass"
-        className="relative overflow-hidden w-full rounded-2xl flex flex-col group cursor-pointer"
+        className="relative overflow-hidden rounded-2xl flex flex-col group cursor-pointer"
         onClick={handleClick}
       >
         {/* Decorative gradient glow */}
@@ -141,7 +141,7 @@ export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: 
           )}
 
           {/* Footer: Tags (wrapping) with Details button */}
-          <div className="mt-auto pt-4 border-t border-border/50">
+          <div className="mt-auto pt-4 border-t border-border/30">
             <div className="flex items-center gap-3">
               {/* Tags container - max 2 lines with overflow */}
               <div className="flex-1 min-w-0">

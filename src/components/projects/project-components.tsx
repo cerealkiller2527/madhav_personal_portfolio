@@ -228,7 +228,6 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 will-change-transform"
-            placeholderType="project"
           />
         )}
       </AspectRatio>
@@ -273,7 +272,6 @@ export function ProjectHeroMedia({
           sizes={sizes}
           className={className}
           priority={priority}
-          placeholderType="project"
         />
       )}
     </>

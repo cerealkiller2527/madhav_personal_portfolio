@@ -6,6 +6,7 @@ import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Card } from "@/components/ui/card"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { ProjectModalHeader, ProjectHeroMedia, ProjectStats } from "@/components/projects/project-components"
 import { ProjectContentSections } from "@/components/projects/project-content-sections"
@@ -37,16 +38,20 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         <ProjectModalHeader project={project} onClose={onClose} />
 
         <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-0 overflow-hidden">
-          <aside className="hidden md:block md:col-span-1 p-6 border-r">
-            <ScrollArea className="h-full">
-              <TableOfContents sections={sections} containerRef={contentRef} />
-            </ScrollArea>
+          {/* TOC Sidebar */}
+          <aside className="hidden md:block md:col-span-1 p-4">
+            <Card variant="glass-subtle" className="h-full p-4">
+              <ScrollArea className="h-full">
+                <TableOfContents sections={sections} containerRef={contentRef} />
+              </ScrollArea>
+            </Card>
           </aside>
 
+          {/* Main Content */}
           <ScrollArea className="md:col-span-4 h-full">
-            <main className="p-8" ref={contentRef as React.RefObject<HTMLElement>}>
+            <main className="p-6" ref={contentRef as React.RefObject<HTMLElement>}>
               <div id="overview" className="scroll-mt-24">
-                <div className="relative w-full mb-6 rounded-md overflow-hidden glass-subtle">
+                <Card variant="glass-subtle" className="mb-6 overflow-hidden">
                   <AspectRatio ratio={16 / 9}>
                     <ProjectHeroMedia
                       project={project}
@@ -54,29 +59,31 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                       className="object-cover"
                     />
                   </AspectRatio>
-                </div>
+                </Card>
                 
-                {/* Inline stats display for immediate visibility */}
+                {/* Inline stats display */}
                 {project.stats && project.stats.length > 0 && (
                   <ProjectStats stats={project.stats} variant="default" className="mb-6" />
                 )}
                 
                 {/* Render Notion content if available, otherwise use local content */}
-                {hasNotionContent && notionProject?.recordMap ? (
-                  <div className="notion-project-modal">
-                    <NotionRenderer 
-                      recordMap={notionProject.recordMap}
-                      rootPageId={notionProject.id}
-                      className="prose dark:prose-invert max-w-none"
-                      contentType="project"
+                <Card variant="glass-subtle" className="p-6">
+                  {hasNotionContent && notionProject?.recordMap ? (
+                    <div className="notion-project-modal">
+                      <NotionRenderer 
+                        recordMap={notionProject.recordMap}
+                        rootPageId={notionProject.id}
+                        className="prose dark:prose-invert max-w-none"
+                        contentType="project"
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="prose dark:prose-invert max-w-none text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
                     />
-                  </div>
-                ) : (
-                  <div
-                    className="prose dark:prose-invert max-w-none text-muted-foreground"
-                    dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
-                  />
-                )}
+                  )}
+                </Card>
               </div>
 
               <ProjectContentSections 

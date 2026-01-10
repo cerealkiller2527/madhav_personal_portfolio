@@ -42,7 +42,7 @@ function NavigationCard<T extends NavigationItem>({
     : `/projects/${item.id}`
 
   // Use heroImage for projects, coverImage for blogs
-  const imageUrl = item.heroImage || item.coverImage || "/assets/portfolio/avatar-logo.png"
+  const imageUrl = item.heroImage || item.coverImage || ""
 
   return (
     <Link href={href} className="block w-full max-w-sm md:w-96 group">
@@ -197,7 +197,7 @@ interface BackButtonProps {
   sectionId: string
   children: React.ReactNode
   className?: string
-  variant?: "outline" | "default" | "destructive" | "secondary" | "ghost" | "link"
+  variant?: "outline" | "default" | "destructive" | "secondary" | "ghost" | "link" | "glass"
   size?: "sm" | "default" | "lg" | "icon"
 }
 

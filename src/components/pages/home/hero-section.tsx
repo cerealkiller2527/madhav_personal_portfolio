@@ -120,11 +120,7 @@ export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSe
             initial="hidden"
             animate="visible"
           >
-            <div className="relative w-64 h-64 md:w-72 md:h-72 rounded-3xl overflow-hidden glass-strong shadow-2xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/5 to-transparent dark:from-white/30 dark:via-white/10 rounded-3xl" />
-              <div className="absolute inset-0 bg-gradient-to-tl from-primary/10 via-transparent to-white/10 dark:to-white/20 rounded-3xl" />
-              <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/10 dark:from-white/20 to-transparent rounded-t-3xl" />
-
+            <div className="relative w-64 h-64 md:w-72 md:h-72 rounded-3xl overflow-hidden glass-strong">
               <div className="relative w-full h-full flex items-center justify-center p-4">
                 <Image
                   src={siteInfo.avatarTransparent}

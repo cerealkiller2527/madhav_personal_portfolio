@@ -8,8 +8,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Placeholder } from "@/components/common/ui/placeholder"
 import { cn } from "@/lib/core/utils"
 
-type PlaceholderType = "project" | "blog" | "generic"
-
 interface ContentImageProps {
   src: string
   alt: string
@@ -19,7 +17,6 @@ interface ContentImageProps {
   width?: number
   height?: number
   sizes?: string
-  placeholderType?: PlaceholderType
 }
 
 export function ContentImage({ 
@@ -30,17 +27,16 @@ export function ContentImage({
   priority = false,
   width,
   height,
-  sizes,
-  placeholderType = "generic"
+  sizes
 }: ContentImageProps) {
   const [isLoading, setIsLoading] = useState(true)
 
   // Show placeholder if no src provided
   if (!src || src.trim() === '') {
     if (fill) {
-      return <Placeholder type={placeholderType} className="absolute inset-0" />
+      return <Placeholder className="absolute inset-0" />
     }
-    return <Placeholder type={placeholderType} />
+    return <Placeholder />
   }
 
   if (fill) {

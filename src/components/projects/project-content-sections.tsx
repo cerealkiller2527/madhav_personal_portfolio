@@ -90,7 +90,7 @@ export function ProjectContentSections({
               <div key={index} className="rounded-md overflow-hidden glass-subtle">
                 <AspectRatio ratio={isFullPage ? 16 / 10 : 4 / 3}>
                   <ContentImage
-                    src={image.url || "/assets/portfolio/avatar-logo.png"}
+                    src={image.url || ""}
                     alt={image.caption}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"

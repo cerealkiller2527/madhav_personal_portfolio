@@ -47,17 +47,16 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
             <motion.button
               key={exp.id}
               variants={itemVariants}
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setSelected(exp)}
               className="w-full text-left"
             >
               <Card
-                variant="glass"
+                variant={selected.id === exp.id ? "glass" : "glass-subtle"}
                 className={cn(
-                  "shadow-md",
-                  selected.id === exp.id && "bg-primary/10 border-primary/30 shadow-primary/20"
+                  selected.id === exp.id && "ring-2 ring-primary/50"
                 )}
               >
                 <CardContent className="p-4">
@@ -79,7 +78,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
               transition={{ duration: 0.25, ease: "easeInOut" }}
             >
               <Card variant="glass" className="relative overflow-hidden h-full">
-                <div className="absolute -top-1/4 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-80" />
+                <div className="absolute -top-1/4 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-80 pointer-events-none" />
                 <CardContent className="relative z-10 p-6 md:p-8 h-full flex flex-col">
                   <div className="flex flex-col sm:flex-row gap-6 mb-6">
                     <div className="w-24 h-24 flex-shrink-0 rounded-lg glass-subtle flex items-center justify-center">
@@ -104,11 +103,9 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
                   {selected.stats && selected.stats.length > 0 && (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
                       {selected.stats.map((stat) => (
-                        <Card key={stat.label} variant="glass-static" className="text-center">
-                          <CardContent className="p-3">
-                            <p className="text-xl font-bold text-foreground">{stat.value}</p>
-                            <p className="text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</p>
-                          </CardContent>
+                        <Card key={stat.label} variant="glass-subtle" className="text-center p-3">
+                          <p className="text-xl font-bold text-foreground">{stat.value}</p>
+                          <p className="text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</p>
                         </Card>
                       ))}
                     </div>

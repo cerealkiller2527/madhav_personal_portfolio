@@ -2,8 +2,8 @@
 import { useMemo } from "react"
 import type React from "react"
 
-import Image from "next/image"
 import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame, MotionValue } from "framer-motion"
+import { ContentImage } from "@/components/common/content/content-image"
 import { Trophy, ChevronLeft, ChevronRight } from "lucide-react"
 import type { Project } from "@/lib/types"
 import { Card, CardContent } from "@/components/ui/card"
@@ -99,17 +99,16 @@ const InteractiveMarqueeItem = ({
       }}
     >
       <a href={`/projects/${project.id}`} onClick={handleClick} className="block w-full h-full cursor-pointer">
-        <Card variant="glass-subtle" className="w-full h-full shadow-md hover:shadow-lg transition-shadow overflow-hidden">
+        <Card variant="glass-subtle" className="w-full h-full overflow-hidden">
           <CardContent className="p-3 flex flex-col h-full">
             <div className="relative w-full rounded-md overflow-hidden mb-3 flex-shrink-0">
               <AspectRatio ratio={16 / 9}>
-                <Image
-                  src={project.heroImage || "/assets/portfolio/avatar-logo.png"}
+                <ContentImage
+                  src={project.heroImage || ""}
                   alt={project.title}
                   fill
                   sizes="256px"
                   className="object-cover"
-                  style={{ imageRendering: "auto" }}
                 />
               </AspectRatio>
               {project.awardRank && awardVariant && (

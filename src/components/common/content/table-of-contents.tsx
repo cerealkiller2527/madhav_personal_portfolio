@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { cn } from "@/lib/core/utils"
 
 interface TocSection {
   id: string
@@ -59,10 +60,12 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
     setActiveSection(id)
   }
 
+  if (sections.length === 0) return null
+
   return (
     <nav className={className}>
-      <h4 className="font-semibold mb-4 text-foreground">On this page</h4>
-      <ul className="space-y-2">
+      <h4 className="font-semibold mb-4 text-foreground text-sm">On this page</h4>
+      <ul className="space-y-1">
         {sections.map((section) => {
           const isActive = activeSection === section.id
           const level = section.level || 1
@@ -72,11 +75,12 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
               <a
                 href={`#${section.id}`}
                 onClick={(e) => handleLinkClick(e, section.id)}
-                className={`block text-sm transition-colors ${
+                className={cn(
+                  "block text-sm py-1 px-3 rounded-md transition-colors",
                   isActive
-                    ? 'text-primary font-semibold border-l-2 border-primary pl-3 -ml-3'
-                    : 'text-muted-foreground hover:text-foreground hover:font-medium'
-                }`}
+                    ? "glass text-primary font-medium"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                )}
               >
                 {section.label}
               </a>
