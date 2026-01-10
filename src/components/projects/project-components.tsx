@@ -139,7 +139,7 @@ export function ProjectStats({ stats, variant = "default", className }: ProjectS
         {visibleStats.map((stat) => (
           <div
             key={stat.label}
-            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs bg-primary/10 dark:bg-primary/15 border border-primary/20 dark:border-primary/25 flex-shrink-0"
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs glass-subtle flex-shrink-0"
           >
             <span className="font-semibold text-primary">{stat.value}</span>
             <span className="text-muted-foreground whitespace-nowrap">{stat.label}</span>
@@ -236,7 +236,7 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
         )}
       </AspectRatio>
       {/* Project index badge */}
-      <div className="absolute top-4 left-4 bg-black/20 dark:bg-black/40 backdrop-blur-sm w-10 h-10 flex items-center justify-center rounded-lg border border-black/10 dark:border-white/10">
+      <div className="absolute top-4 left-4 glass w-10 h-10 flex items-center justify-center rounded-lg">
         <span className="text-lg font-bold text-white dark:text-primary">
           {formatProjectIndex(index)}
         </span>
@@ -304,31 +304,41 @@ export function ProjectLinks({ project, variant = "default", showLabels = false,
   
   const containerClasses = cn("flex items-center gap-2", className)
   
-  // Base hover classes - primary color works in both light and dark modes
-  const baseHoverClasses = "hover:bg-primary hover:border-primary hover:text-white"
-  
-  const linkClasses = cn(
-    "flex items-center justify-center rounded-lg border",
-    baseHoverClasses,
-    isCompact 
-      ? "w-8 h-8 bg-black/10 dark:bg-white/10 border-black/10 dark:border-white/10 backdrop-blur-sm transition-all duration-200 hover:scale-105 dark:hover:bg-orange-500 dark:hover:border-orange-500"
-      : isHeader
-        ? "w-10 h-10 bg-transparent border-transparent transition-colors duration-200 dark:hover:bg-orange-500 dark:hover:border-orange-500"
-        : "w-11 h-11 bg-black/15 dark:bg-white/10 border-black/10 dark:border-white/10 backdrop-blur-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/25"
-  )
-  
   const iconClasses = cn(
-    isHeader ? "" : "transition-transform duration-200",
     isCompact ? "h-4 w-4" : "h-5 w-5"
   )
 
-  // Labeled link classes for detail page
-  const labeledLinkClasses = cn(
-    "flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200",
-    "bg-black/10 dark:bg-white/10 border-black/10 dark:border-white/10 backdrop-blur-md",
-    baseHoverClasses,
-    "hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/25 text-sm font-medium"
-  )
+  // Determine button variant and size based on context
+  const getButtonProps = () => {
+    if (isHeader) {
+      return {
+        variant: "ghost" as const,
+        size: "icon" as const,
+        className: "w-10 h-10 hover:bg-primary hover:text-white"
+      }
+    }
+    if (isCompact) {
+      return {
+        variant: "icon-glass" as const,
+        size: "icon" as const,
+        className: "w-8 h-8 hover:scale-105"
+      }
+    }
+    if (showLabels) {
+      return {
+        variant: "icon-glass" as const,
+        size: "default" as const,
+        className: "px-4 py-2.5 h-auto rounded-xl hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/25"
+      }
+    }
+    return {
+      variant: "icon-glass" as const,
+      size: "icon" as const,
+      className: "w-11 h-11 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/25"
+    }
+  }
+
+  const buttonProps = getButtonProps()
 
   // Render link content
   const renderLinkContent = (
@@ -337,17 +347,23 @@ export function ProjectLinks({ project, variant = "default", showLabels = false,
     label: string,
     ariaLabel: string
   ) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={showLabels ? labeledLinkClasses : linkClasses}
-      onClick={(e) => e.stopPropagation()}
-      aria-label={ariaLabel}
+    <Button
+      variant={buttonProps.variant}
+      size={buttonProps.size}
+      className={buttonProps.className}
+      asChild
     >
-      {icon}
-      {showLabels && <span>{label}</span>}
-    </a>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => e.stopPropagation()}
+        aria-label={ariaLabel}
+      >
+        {icon}
+        {showLabels && <span>{label}</span>}
+      </a>
+    </Button>
   )
 
   return (
@@ -389,7 +405,7 @@ export function ProjectModalHeader({ project, onClose }: ProjectModalHeaderProps
           asChild
           variant="ghost"
           size="icon"
-          className="flex-shrink-0 hover:bg-primary hover:text-white"
+          className="flex-shrink-0 hover:bg-accent hover:text-accent-foreground"
         >
           <Link
             href={`/projects/${project.id}`}
@@ -403,7 +419,7 @@ export function ProjectModalHeader({ project, onClose }: ProjectModalHeaderProps
         <Button
           variant="ghost"
           size="icon"
-          className="flex-shrink-0 hover:bg-primary hover:text-white"
+          className="flex-shrink-0 hover:bg-accent hover:text-accent-foreground"
           onClick={onClose}
           aria-label="Close modal"
         >

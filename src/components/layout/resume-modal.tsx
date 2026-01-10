@@ -107,7 +107,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
           
           <div className="flex justify-center pt-3 sm:pt-4">
             <Tabs value={activeTab} onValueChange={handleTabChange}>
-              <TabsList className="bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/25 backdrop-blur-md">
+              <TabsList className="glass-subtle">
                 {resumeTypes.map((resume) => (
                   <TabsTrigger
                     key={resume.id}

@@ -13,7 +13,7 @@ interface LoadingGridProps {
 // Loading skeleton for blog cards
 function LoadingCard({ className = "" }: { className?: string }) {
   return (
-    <Card className={className}>
+    <Card variant="glass" className={className}>
       <AspectRatio ratio={16 / 9}>
         <Skeleton className="w-full h-full" />
       </AspectRatio>

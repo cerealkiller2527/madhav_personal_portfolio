@@ -59,7 +59,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="mx-auto max-w-screen-xl px-4 pt-3 md:pt-4">
-        <div className="flex h-14 w-full items-center justify-between rounded-xl border border-white/10 bg-black/30 dark:bg-white/10 px-4 shadow-xl backdrop-blur-lg">
+        <div className="flex h-14 w-full items-center justify-between rounded-xl glass-strong px-4 shadow-xl">
           <Link
             href="/"
             onClick={(e) => handleNavClick(e, navItems[0])}
@@ -79,15 +79,21 @@ export function Header({ onResumeOpen }: HeaderProps) {
 
           <nav className="flex items-center justify-center">
             {navItems.map((item) => (
-              <Link
+              <Button
                 key={item.id}
-                href={item.href}
-                onClick={(e) => handleNavClick(e, item)}
-                className="flex items-center justify-center gap-1.5 rounded-lg px-2 sm:px-3 py-1.5 text-xs font-medium transition-colors duration-200 hover:text-white hover:bg-white/10 cursor-pointer text-white/70"
+                variant="nav"
+                size="sm"
+                asChild
+                className="px-2 sm:px-3 h-8"
               >
-                {item.icon}
-                <span className="hidden sm:inline">{item.name}</span>
-              </Link>
+                <Link
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item)}
+                >
+                  {item.icon}
+                  <span className="hidden sm:inline">{item.name}</span>
+                </Link>
+              </Button>
             ))}
           </nav>
 

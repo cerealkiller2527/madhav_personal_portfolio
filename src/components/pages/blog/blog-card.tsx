@@ -29,7 +29,7 @@ export function BlogCard({
 
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
-      <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
+      <Card variant="glass" className="overflow-hidden">
         <AspectRatio ratio={isCompact ? 16 / 10 : 16 / 9}>
           {post.coverImage ? (
             <ContentImage

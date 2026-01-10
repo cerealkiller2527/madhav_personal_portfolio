@@ -158,8 +158,8 @@ export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: 
               </div>
               <Button
                 onClick={handleDetailsClick}
-                variant="outline"
-                className="border-primary text-primary hover:bg-primary/10 hover:text-primary flex-shrink-0 h-9 px-4 self-center"
+                variant="outline-primary"
+                className="flex-shrink-0 h-9 px-4 self-center"
               >
                 Details <ArrowRight className="ml-2 h-4 w-4" />
               </Button>

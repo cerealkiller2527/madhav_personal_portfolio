@@ -56,12 +56,14 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
               <Card
                 variant="glass"
                 className={cn(
-                  "p-4 shadow-md",
+                  "shadow-md",
                   selected.id === exp.id && "bg-primary/10 border-primary/30 shadow-primary/20"
                 )}
               >
-                <h3 className="font-bold text-foreground">{exp.company}</h3>
-                <p className="text-sm text-muted-foreground truncate">{exp.role}</p>
+                <CardContent className="p-4">
+                  <h3 className="font-bold text-foreground">{exp.company}</h3>
+                  <p className="text-sm text-muted-foreground truncate">{exp.role}</p>
+                </CardContent>
               </Card>
             </motion.button>
           ))}

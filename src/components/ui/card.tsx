@@ -4,13 +4,20 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/core/utils"
 
 const cardVariants = cva(
-  "rounded-lg border text-card-foreground shadow-sm",
+  "rounded-lg border text-card-foreground",
   {
     variants: {
       variant: {
-        default: "bg-card",
+        default: "bg-card shadow-sm",
+        // Interactive glass card with hover effect
         glass:
-          "bg-black/10 dark:bg-white/5 border-white/10 backdrop-blur-lg shadow-lg hover:shadow-xl transition-shadow duration-300",
+          "bg-[hsl(var(--glass-bg))] border-[hsl(var(--glass-border))] backdrop-blur-[var(--glass-blur)] shadow-[var(--glass-shadow)] hover:shadow-xl transition-shadow duration-300",
+        // Static glass card without hover effects (for non-interactive elements)
+        "glass-static":
+          "bg-[hsl(var(--glass-bg))] border-[hsl(var(--glass-border))] backdrop-blur-[var(--glass-blur)] shadow-[var(--glass-shadow)]",
+        // Subtle glass for less prominent elements
+        "glass-subtle":
+          "bg-[hsl(var(--glass-bg-subtle))] border-[hsl(var(--glass-border))] backdrop-blur-[var(--glass-blur-sm)]",
       },
     },
     defaultVariants: {

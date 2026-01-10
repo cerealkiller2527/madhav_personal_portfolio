@@ -127,7 +127,7 @@ export function LogoSpinnerOverlay({
   return (
     <div className={cn(
       "fixed inset-0 z-[100] flex items-center justify-center",
-      "bg-background/80 backdrop-blur-sm",
+      "bg-background/80 backdrop-blur-[var(--glass-blur)]",
       className
     )}>
       <LogoSpinner size="xl" showText text={text} />
