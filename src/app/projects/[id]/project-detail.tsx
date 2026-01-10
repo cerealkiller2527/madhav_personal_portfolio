@@ -28,33 +28,35 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
   const hasNotionContent = Boolean(project.recordMap && Object.keys(project.recordMap).length > 0)
   
   // Use the centralized TOC hook for extracting sections
-  const { sections } = useContentTOC({ 
+  const { sections, showTOC } = useContentTOC({ 
     recordMap: hasNotionContent ? project.recordMap : undefined,
     project: hasNotionContent ? undefined : project
   })
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28">
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <div className={`grid grid-cols-1 gap-8 ${showTOC ? 'lg:grid-cols-5' : ''}`}>
         {/* TOC Sidebar */}
-        <aside className="hidden lg:block lg:col-span-1 py-8">
-          <div className="sticky top-28">
-            <div className="mb-6">
-              <BackButton sectionId="projects" size="sm" variant="glass">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-              </BackButton>
+        {showTOC && (
+          <aside className="hidden lg:block lg:col-span-1 py-8">
+            <div className="sticky top-28">
+              <div className="mb-6">
+                <BackButton sectionId="projects" size="sm" variant="glass">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back
+                </BackButton>
+              </div>
+              <Card variant="glass-subtle" className="p-4">
+                <ScrollArea className="max-h-[calc(100vh-14rem)]">
+                  <TableOfContents sections={sections} containerRef={contentRef} />
+                </ScrollArea>
+              </Card>
             </div>
-            <Card variant="glass-subtle" className="p-4">
-              <ScrollArea className="max-h-[calc(100vh-14rem)]">
-                <TableOfContents sections={sections} containerRef={contentRef} />
-              </ScrollArea>
-            </Card>
-          </div>
-        </aside>
+          </aside>
+        )}
 
         {/* Main Content */}
-        <main className="lg:col-span-4 py-8" ref={contentRef as React.RefObject<HTMLElement>}>
+        <main className={showTOC ? 'lg:col-span-4 py-8' : 'py-8'} ref={contentRef as React.RefObject<HTMLElement>}>
           <div className="lg:hidden mb-8">
             <BackButton sectionId="projects" variant="glass">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -93,20 +95,24 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                 )}
                 
                 {/* Notion content or local description */}
-                {hasNotionContent ? (
-                  <div className="notion-project-full-page">
-                    <NotionRenderer 
-                      recordMap={project.recordMap!}
-                      rootPageId={project.id}
-                      className="prose dark:prose-invert max-w-none"
-                      contentType="project"
-                    />
-                  </div>
-                ) : (
-                  <div
-                    className="prose dark:prose-invert max-w-none text-muted-foreground"
-                    dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
-                  />
+                {(hasNotionContent || project.detailedDescription?.trim()) && (
+                  <>
+                    {hasNotionContent ? (
+                      <div className="notion-project-full-page">
+                        <NotionRenderer 
+                          recordMap={project.recordMap!}
+                          rootPageId={project.id}
+                          className="prose dark:prose-invert max-w-none"
+                          contentType="project"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="prose dark:prose-invert max-w-none text-muted-foreground"
+                        dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
+                      />
+                    )}
+                  </>
                 )}
               </div>
 

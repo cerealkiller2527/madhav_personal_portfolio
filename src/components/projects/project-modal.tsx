@@ -23,9 +23,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   
   const notionProject = project && isNotionProject(project) ? project : null
   const hasNotionContent = notionProject?.recordMap
-  const { sections } = useContentTOC({ 
+  const { sections, showTOC } = useContentTOC({ 
     recordMap: notionProject?.recordMap,
-    project: hasNotionContent ? undefined : project || undefined
+    project: hasNotionContent ? undefined : project
   })
 
   if (!project) {
@@ -37,18 +37,22 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       <DialogContent className="w-[calc(100%-4rem)] max-w-6xl h-[90vh] max-h-[900px] flex flex-col p-0 gap-0 [&>button]:hidden">
         <ProjectModalHeader project={project} onClose={onClose} />
 
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-0 overflow-hidden">
+        <div className={`flex-1 grid grid-cols-1 gap-0 overflow-hidden ${showTOC ? 'md:grid-cols-5' : ''}`}>
           {/* TOC Sidebar */}
-          <aside className="hidden md:block md:col-span-1 p-4">
-            <Card variant="glass-subtle" className="h-full p-4">
-              <ScrollArea className="h-full">
-                <TableOfContents sections={sections} containerRef={contentRef} />
-              </ScrollArea>
-            </Card>
-          </aside>
+          {showTOC && (
+            <aside className="hidden md:block md:col-span-1 p-4">
+              <div className="sticky top-4">
+                <Card variant="glass-subtle" className="p-4">
+                  <ScrollArea className="max-h-[calc(90vh-8rem)]">
+                    <TableOfContents sections={sections} containerRef={contentRef} />
+                  </ScrollArea>
+                </Card>
+              </div>
+            </aside>
+          )}
 
           {/* Main Content */}
-          <ScrollArea className="md:col-span-4 h-full">
+          <ScrollArea className={showTOC ? 'md:col-span-4 h-full' : 'h-full'}>
             <main className="p-6" ref={contentRef as React.RefObject<HTMLElement>}>
               <div id="overview" className="scroll-mt-24">
                 <Card variant="glass-subtle" className="mb-6 overflow-hidden">
@@ -67,23 +71,25 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 )}
                 
                 {/* Render Notion content if available, otherwise use local content */}
-                <Card variant="glass-subtle" className="p-6">
-                  {hasNotionContent && notionProject?.recordMap ? (
-                    <div className="notion-project-modal">
-                      <NotionRenderer 
-                        recordMap={notionProject.recordMap}
-                        rootPageId={notionProject.id}
-                        className="prose dark:prose-invert max-w-none"
-                        contentType="project"
+                {(hasNotionContent || project.detailedDescription?.trim()) && (
+                  <Card variant="glass-subtle" className="p-6">
+                    {hasNotionContent ? (
+                      <div className="notion-project-modal">
+                        <NotionRenderer 
+                          recordMap={notionProject!.recordMap!}
+                          rootPageId={notionProject!.id}
+                          className="prose dark:prose-invert max-w-none"
+                          contentType="project"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="prose dark:prose-invert max-w-none text-muted-foreground"
+                        dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
                       />
-                    </div>
-                  ) : (
-                    <div
-                      className="prose dark:prose-invert max-w-none text-muted-foreground"
-                      dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
-                    />
-                  )}
-                </Card>
+                    )}
+                  </Card>
+                )}
               </div>
 
               <ProjectContentSections 
