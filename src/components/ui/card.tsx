@@ -23,17 +23,37 @@ const cardVariants = cva(
   }
 )
 
+// Glow configuration for different intensities
+const glowStyles = {
+  none: null,
+  subtle: "w-48 h-48 bg-primary/10 opacity-20 group-hover:opacity-40",
+  default: "w-64 h-64 bg-primary/15 opacity-25 group-hover:opacity-60",
+  strong: "w-[32rem] h-[32rem] bg-primary/20 opacity-30 group-hover:opacity-70 group-hover:scale-110",
+} as const
+
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+    VariantProps<typeof cardVariants> {
+  glow?: keyof typeof glowStyles
+}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, ...props }, ref) => (
+  ({ className, variant, glow = "none", children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(cardVariants({ variant, className }))}
+      className={cn(cardVariants({ variant, className }), glow !== "none" && "relative")}
       {...props}
-    />
+    >
+      {glow !== "none" && glowStyles[glow] && (
+        <div 
+          className={cn(
+            "absolute bottom-0 right-0 rounded-full blur-3xl transition-all duration-500 pointer-events-none translate-x-1/3 translate-y-1/3",
+            glowStyles[glow]
+          )} 
+        />
+      )}
+      {children}
+    </div>
   )
 )
 Card.displayName = "Card"

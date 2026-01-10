@@ -114,11 +114,10 @@ export function ProjectGridCard({ project, onViewDetails, index, onCardClick }: 
     <motion.div data-project-id={project.id}>
       <Card
         variant="glass"
-        className="relative overflow-hidden rounded-2xl flex flex-col group cursor-pointer"
+        glow="strong"
+        className="overflow-hidden rounded-2xl flex flex-col group cursor-pointer"
         onClick={handleClick}
       >
-        {/* Decorative gradient glow */}
-        <div className="absolute bottom-0 right-0 w-[32rem] h-[32rem] bg-primary/20 rounded-full blur-3xl opacity-30 group-hover:opacity-70 group-hover:scale-110 transition-all duration-500 pointer-events-none translate-x-1/3 translate-y-1/3" />
         
         <ProjectMedia project={project} index={index} />
         
