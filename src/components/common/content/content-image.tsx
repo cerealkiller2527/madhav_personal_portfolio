@@ -1,11 +1,14 @@
-// Image component with loading states
+// Image component with loading states and placeholder support
 
 "use client"
 
 import Image from "next/image"
 import { useState } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Placeholder } from "@/components/common/ui/placeholder"
 import { cn } from "@/lib/core/utils"
+
+type PlaceholderType = "project" | "blog" | "generic"
 
 interface ContentImageProps {
   src: string
@@ -16,6 +19,7 @@ interface ContentImageProps {
   width?: number
   height?: number
   sizes?: string
+  placeholderType?: PlaceholderType
 }
 
 export function ContentImage({ 
@@ -26,9 +30,18 @@ export function ContentImage({
   priority = false,
   width,
   height,
-  sizes
+  sizes,
+  placeholderType = "generic"
 }: ContentImageProps) {
   const [isLoading, setIsLoading] = useState(true)
+
+  // Show placeholder if no src provided
+  if (!src || src.trim() === '') {
+    if (fill) {
+      return <Placeholder type={placeholderType} className="absolute inset-0" />
+    }
+    return <Placeholder type={placeholderType} />
+  }
 
   if (fill) {
     return (

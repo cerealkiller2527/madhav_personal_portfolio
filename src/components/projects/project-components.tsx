@@ -223,11 +223,12 @@ export function ProjectMedia({ project, index }: ProjectMediaProps) {
           />
         ) : (
           <ContentImage
-            src={project.heroImage || "/assets/portfolio/avatar-logo.png"}
+            src={project.heroImage || ""}
             alt={project.title}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 will-change-transform"
+            placeholderType="project"
           />
         )}
       </AspectRatio>
@@ -266,12 +267,13 @@ export function ProjectHeroMedia({
         />
       ) : (
         <ContentImage
-          src={project.heroImage || "/assets/portfolio/avatar-logo.png"}
+          src={project.heroImage || ""}
           alt={`${project.title} hero image`}
           fill
           sizes={sizes}
           className={className}
           priority={priority}
+          placeholderType="project"
         />
       )}
     </>
