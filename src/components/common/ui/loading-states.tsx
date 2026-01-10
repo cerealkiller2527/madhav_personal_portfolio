@@ -1,5 +1,8 @@
 // Loading skeleton components for blog content
 
+import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent } from "@/components/ui/card"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { ContentGrid, GRID_CONFIGS } from "@/components/common/content/content-grid"
 
 interface LoadingGridProps {
@@ -10,14 +13,16 @@ interface LoadingGridProps {
 // Loading skeleton for blog cards
 function LoadingCard({ className = "" }: { className?: string }) {
   return (
-    <div className={`animate-pulse ${className}`}>
-      <div className="h-48 bg-muted rounded-lg mb-4"></div>
-      <div className="space-y-2">
-        <div className="h-5 bg-muted rounded w-3/4"></div>
-        <div className="h-4 bg-muted rounded w-full"></div>
-        <div className="h-3 bg-muted rounded w-1/2"></div>
-      </div>
-    </div>
+    <Card className={className}>
+      <AspectRatio ratio={16 / 9}>
+        <Skeleton className="w-full h-full" />
+      </AspectRatio>
+      <CardContent className="p-6 space-y-3">
+        <Skeleton className="h-5 w-3/4" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-3 w-1/2" />
+      </CardContent>
+    </Card>
   )
 }
 

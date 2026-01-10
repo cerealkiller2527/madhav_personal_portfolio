@@ -3,9 +3,9 @@ import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import type React from "react"
 import { motion } from "framer-motion"
-import Image from "next/image"
 import { Home, Briefcase, Code, Mail, Eye, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/common/theme/theme-toggle"
 import { smoothScrollToElement } from "@/lib/core/utils"
 
@@ -66,17 +66,14 @@ export function Header({ onResumeOpen }: HeaderProps) {
             aria-label="Go to home page"
             className="cursor-pointer"
           >
-            <div className="relative w-10 h-10 flex-shrink-0 transition-transform hover:scale-110 rounded-full overflow-hidden bg-primary p-1.5">
-              <div className="relative w-full h-full rounded-full overflow-hidden">
-                <Image
+            <div className="flex-shrink-0 transition-transform hover:scale-110 rounded-full bg-primary p-1">
+              <Avatar className="h-8 w-8">
+                <AvatarImage
                   src="/assets/portfolio/avatar-logo.png"
                   alt="Madhav Lodha Avatar"
-                  fill
-                  sizes="32px"
-                  className="object-cover"
-                  priority
                 />
-              </div>
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs">ML</AvatarFallback>
+              </Avatar>
             </div>
           </Link>
 
@@ -97,7 +94,9 @@ export function Header({ onResumeOpen }: HeaderProps) {
           <div className="flex items-center gap-2">
             <Button
               onClick={onResumeOpen}
-              className="glass-effect border-white/20 text-white font-medium text-xs px-3 py-1.5 h-auto hover:bg-white/20 transition-all duration-200"
+              variant="glass"
+              size="sm"
+              className="text-xs"
             >
               <Eye className="mr-0 sm:mr-1.5 h-3 w-3" />
               <span className="hidden sm:inline">View Résumé</span>

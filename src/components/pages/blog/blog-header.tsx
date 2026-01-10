@@ -1,8 +1,9 @@
-import Image from "next/image"
 import { Calendar, Clock, User, Tag } from "lucide-react"
 import { BlogContent } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { ContentImage } from "@/components/common/content/content-image"
 import { formatBlogDate } from "@/lib/utils/blog-utils"
 
@@ -16,20 +17,31 @@ interface BlogHeaderProps {
 }
 
 export function BlogHeader({ post, author, readingTime }: BlogHeaderProps) {
+  // Get initials for avatar fallback
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   return (
     <header className="mb-8">
       {post.coverImage && (
-        <div className="relative h-64 md:h-80 mb-8 -mx-4 md:mx-0 rounded-none md:rounded-lg overflow-hidden">
-          <ContentImage
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            className="object-cover"
-            priority
-            fallbackType="blog"
-            sizes="(max-width: 1200px) 100vw, 800px"
-          />
+        <div className="mb-8 -mx-4 md:mx-0 rounded-none md:rounded-lg overflow-hidden">
+          <AspectRatio ratio={16 / 9}>
+            <ContentImage
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              className="object-cover"
+              priority
+              fallbackType="blog"
+              sizes="(max-width: 1200px) 100vw, 800px"
+            />
+          </AspectRatio>
         </div>
       )}
 
@@ -47,16 +59,14 @@ export function BlogHeader({ post, author, readingTime }: BlogHeaderProps) {
         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           {author && (
             <div className="flex items-center gap-2">
-              {author.avatar && (
-                <Image
-                  src={author.avatar}
-                  alt={author.name}
-                  width={24}
-                  height={24}
-                  className="rounded-full"
-                />
+              {author.avatar ? (
+                <Avatar className="h-6 w-6">
+                  <AvatarImage src={author.avatar} alt={author.name} />
+                  <AvatarFallback className="text-xs">{getInitials(author.name)}</AvatarFallback>
+                </Avatar>
+              ) : (
+                <User className="h-4 w-4" />
               )}
-              <User className="h-4 w-4" />
               <span>{author.name}</span>
             </div>
           )}

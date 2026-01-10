@@ -5,6 +5,8 @@ import type { Project } from "@/lib/types"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { ProjectModalHeader, ProjectHeroMedia, ProjectStats } from "@/components/projects/project-components"
 import { ProjectContentSections } from "@/components/projects/project-content-sections"
 import { isNotionProject } from "@/lib/utils/project-utils"
@@ -36,47 +38,53 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
         <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-0 overflow-hidden">
           <aside className="hidden md:block md:col-span-1 p-6 border-r">
-            <TableOfContents sections={sections} containerRef={contentRef} />
+            <ScrollArea className="h-full">
+              <TableOfContents sections={sections} containerRef={contentRef} />
+            </ScrollArea>
           </aside>
 
-          <main className="md:col-span-4 overflow-y-auto p-8" ref={contentRef as React.RefObject<HTMLElement>}>
-            <div id="overview" className="scroll-mt-24">
-              <div className="relative w-full h-64 md:h-80 mb-6 rounded-md overflow-hidden bg-secondary">
-                <ProjectHeroMedia
-                  project={project}
-                  sizes="(max-width: 1200px) 100vw, 800px"
-                  className="object-cover bg-secondary"
-                />
-              </div>
-              
-              {/* Inline stats display for immediate visibility */}
-              {project.stats && project.stats.length > 0 && (
-                <ProjectStats stats={project.stats} variant="default" className="mb-6" />
-              )}
-              
-              {/* Render Notion content if available, otherwise use local content */}
-              {hasNotionContent && notionProject?.recordMap ? (
-                <div className="notion-project-modal">
-                  <NotionRenderer 
-                    recordMap={notionProject.recordMap}
-                    rootPageId={notionProject.id}
-                    className="prose dark:prose-invert max-w-none"
-                    contentType="project"
-                  />
+          <ScrollArea className="md:col-span-4 h-full">
+            <main className="p-8" ref={contentRef as React.RefObject<HTMLElement>}>
+              <div id="overview" className="scroll-mt-24">
+                <div className="relative w-full mb-6 rounded-md overflow-hidden bg-secondary">
+                  <AspectRatio ratio={16 / 9}>
+                    <ProjectHeroMedia
+                      project={project}
+                      sizes="(max-width: 1200px) 100vw, 800px"
+                      className="object-cover bg-secondary"
+                    />
+                  </AspectRatio>
                 </div>
-              ) : (
-                <div
-                  className="prose dark:prose-invert max-w-none text-muted-foreground"
-                  dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
-                />
-              )}
-            </div>
+                
+                {/* Inline stats display for immediate visibility */}
+                {project.stats && project.stats.length > 0 && (
+                  <ProjectStats stats={project.stats} variant="default" className="mb-6" />
+                )}
+                
+                {/* Render Notion content if available, otherwise use local content */}
+                {hasNotionContent && notionProject?.recordMap ? (
+                  <div className="notion-project-modal">
+                    <NotionRenderer 
+                      recordMap={notionProject.recordMap}
+                      rootPageId={notionProject.id}
+                      className="prose dark:prose-invert max-w-none"
+                      contentType="project"
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className="prose dark:prose-invert max-w-none text-muted-foreground"
+                    dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
+                  />
+                )}
+              </div>
 
-            <ProjectContentSections 
-              project={project} 
-              hasNotionContent={Boolean(hasNotionContent)} 
-            />
-          </main>
+              <ProjectContentSections 
+                project={project} 
+                hasNotionContent={Boolean(hasNotionContent)} 
+              />
+            </main>
+          </ScrollArea>
         </div>
       </DialogContent>
     </Dialog>

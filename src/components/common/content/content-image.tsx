@@ -5,6 +5,7 @@
 import Image from "next/image"
 import { useState } from "react"
 import { FileText, Image as ImageIcon } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/core/utils"
 
 interface ContentImageProps {
@@ -84,7 +85,7 @@ export function ContentImage({
           onLoad={() => setIsLoading(false)}
         />
         {isLoading && (
-          <div className="absolute inset-0 bg-muted animate-pulse" />
+          <Skeleton className="absolute inset-0" />
         )}
       </>
     )
@@ -107,7 +108,7 @@ export function ContentImage({
         onLoad={() => setIsLoading(false)}
       />
       {isLoading && (
-        <div className="absolute inset-0 bg-muted animate-pulse" />
+        <Skeleton className="absolute inset-0" />
       )}
     </div>
   )

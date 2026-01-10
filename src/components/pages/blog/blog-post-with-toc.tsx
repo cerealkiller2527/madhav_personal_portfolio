@@ -8,6 +8,7 @@ import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { BlogHeader } from "@/components/pages/blog/blog-header"
 import { BlogNavigation } from "@/components/common/content/content-navigation"
 import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
 import { Comments } from "@/components/common/comments"
@@ -40,11 +41,13 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
             {/* Table of Contents - Desktop Only */}
             {showTOC && (
               <aside className="hidden lg:block lg:col-span-1 py-8">
-                <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto">
-                  <TableOfContents 
-                    sections={sections}
-                    containerRef={contentRef}
-                  />
+                <div className="sticky top-28">
+                  <ScrollArea className="max-h-[calc(100vh-8rem)]">
+                    <TableOfContents 
+                      sections={sections}
+                      containerRef={contentRef}
+                    />
+                  </ScrollArea>
                 </div>
               </aside>
             )}

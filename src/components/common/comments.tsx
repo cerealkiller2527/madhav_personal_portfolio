@@ -3,6 +3,8 @@
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import Giscus from "@giscus/react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Separator } from "@/components/ui/separator"
 
 const commentsConfig = {
   repo: process.env.NEXT_PUBLIC_GISCUS_REPO as `${string}/${string}`,
@@ -36,7 +38,12 @@ export function Comments({ className = "" }: CommentsProps) {
 
   if (!mounted) {
     return (
-      <div className={`min-h-[200px] animate-pulse bg-muted/30 rounded-lg ${className}`} />
+      <div className={className}>
+        <div className="mt-16">
+          <Separator className="mb-12" />
+          <Skeleton className="h-[200px] w-full rounded-lg" />
+        </div>
+      </div>
     )
   }
 
@@ -51,7 +58,8 @@ export function Comments({ className = "" }: CommentsProps) {
 
   return (
     <div className={`w-full ${className}`}>
-      <div className="mt-16 pt-12 border-t border-white/10">
+      <div className="mt-16">
+        <Separator className="mb-12" />
         <Giscus
           repo={commentsConfig.repo}
           repoId={commentsConfig.repoId}
@@ -70,4 +78,3 @@ export function Comments({ className = "" }: CommentsProps) {
     </div>
   )
 }
-
