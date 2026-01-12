@@ -4,6 +4,11 @@ import { useState, useEffect } from "react"
 import { cn } from "@/lib/core/utils"
 import type { TOCSection } from "@/lib/types"
 
+// Scroll detection and navigation constants
+const SCROLL_DETECTION_OFFSET = 200
+const CONTAINER_SCROLL_OFFSET = 24
+const WINDOW_SCROLL_OFFSET = 100
+
 // Static margin classes for TOC heading levels (avoids JIT purging)
 const LEVEL_MARGIN_CLASSES: Record<number, string> = {
   1: '',
@@ -31,7 +36,7 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
             ? element.offsetTop - (containerRef.current.scrollTop || 0)
             : element.getBoundingClientRect().top + window.pageYOffset
           
-          if (elementTop <= scrollPosition + 200) {
+          if (elementTop <= scrollPosition + SCROLL_DETECTION_OFFSET) {
             setActiveSection(section.id)
           }
         }
@@ -51,11 +56,11 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
     if (!targetElement) return
 
     if (containerRef?.current) {
-      const top = targetElement.offsetTop - 24
+      const top = targetElement.offsetTop - CONTAINER_SCROLL_OFFSET
       containerRef.current.scrollTo({ top, behavior: "smooth" })
     } else {
       const elementPosition = targetElement.getBoundingClientRect().top
-      const offsetPosition = elementPosition + window.pageYOffset - 100
+      const offsetPosition = elementPosition + window.pageYOffset - WINDOW_SCROLL_OFFSET
       window.scrollTo({ top: offsetPosition, behavior: "smooth" })
     }
 

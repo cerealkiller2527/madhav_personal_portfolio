@@ -10,6 +10,10 @@ import { ThemeToggle } from "@/components/common/theme/theme-toggle"
 import { smoothScrollToElement } from "@/lib/core/utils"
 import { navItems, type NavItem } from "@/lib/core/data"
 
+// Animation and scroll constants
+const SCROLL_DURATION_MS = 800
+const HEADER_INITIAL_Y = -100
+
 // Map nav item IDs to their icons
 const NAV_ICONS: Record<string, React.ReactNode> = {
   home: <Home className="h-4 w-4" />,
@@ -45,7 +49,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
     // Handle section navigation
     if (pathname === "/") {
       // We are on the homepage, so just scroll smoothly
-      smoothScrollToElement(item.id, 800)
+      smoothScrollToElement(item.id, SCROLL_DURATION_MS)
     } else {
       // We are on another page, so navigate to home and tell it to scroll
       sessionStorage.setItem("scrollTo", item.id)
@@ -56,7 +60,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
   return (
     <motion.header
       className="fixed top-0 left-0 right-0 z-50"
-      initial={{ y: -100, opacity: 0 }}
+      initial={{ y: HEADER_INITIAL_Y, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
