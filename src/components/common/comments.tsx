@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import Giscus from "@giscus/react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/core/utils"
 
 const commentsConfig = {
   repo: process.env.NEXT_PUBLIC_GISCUS_REPO as `${string}/${string}`,
@@ -57,7 +58,7 @@ export function Comments({ className = "" }: CommentsProps) {
   const giscusTheme = resolvedTheme === "dark" ? "transparent_dark" : "light"
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={cn("w-full", className)}>
       <div className="mt-16">
         <Separator className="mb-12" />
         <Giscus

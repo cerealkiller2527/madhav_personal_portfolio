@@ -26,12 +26,10 @@ export const CursorGlow: React.FC<CursorGlowProps> = ({ isVisible }) => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="pointer-events-none fixed z-30 rounded-full bg-primary/20 blur-3xl"
+          className="pointer-events-none fixed z-30 w-72 h-72 rounded-full bg-primary/20 blur-3xl"
           style={{
             left: smoothX,
             top: smoothY,
-            width: 300,
-            height: 300,
             x: "-50%",
             y: "-50%",
           }}
