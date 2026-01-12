@@ -1,12 +1,9 @@
 import { useMemo } from "react"
 import type { ExtendedRecordMap } from "notion-types"
-import type { Project } from "@/lib/types"
+import type { Project, TOCSection } from "@/lib/types"
 
-export interface TOCSection {
-  id: string
-  label: string
-  level: number
-}
+// Re-export TOCSection for backward compatibility
+export type { TOCSection } from "@/lib/types"
 
 function extractNotionHeadings(recordMap: ExtendedRecordMap | undefined): TOCSection[] {
   if (!recordMap?.block) return []

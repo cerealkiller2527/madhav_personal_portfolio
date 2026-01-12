@@ -2,15 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/core/utils"
-
-interface TocSection {
-  id: string
-  label: string
-  level?: number
-}
+import type { TOCSection } from "@/lib/types"
 
 interface TableOfContentsProps {
-  sections: TocSection[]
+  sections: TOCSection[]
   containerRef?: React.RefObject<HTMLElement | null>
   className?: string
 }
@@ -62,16 +57,23 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
 
   if (sections.length === 0) return null
 
+  // Static margin classes for TOC heading levels (avoids JIT purging)
+  const LEVEL_MARGIN_CLASSES: Record<number, string> = {
+    1: '',
+    2: 'ml-3',
+    3: 'ml-6',
+  }
+
   return (
     <nav className={className}>
       <h4 className="font-semibold mb-4 text-foreground text-sm">On this page</h4>
       <ul className="space-y-1">
         {sections.map((section) => {
           const isActive = activeSection === section.id
-          const level = section.level || 1
+          const level = section.level
           
           return (
-            <li key={section.id} className={level > 1 ? `ml-${(level - 1) * 3}` : ''}>
+            <li key={section.id} className={LEVEL_MARGIN_CLASSES[level] || ''}>
               <a
                 href={`#${section.id}`}
                 onClick={(e) => handleLinkClick(e, section.id)}

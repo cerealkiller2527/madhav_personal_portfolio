@@ -15,38 +15,12 @@ import { Card } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ArrowLeft } from "lucide-react"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
+import { hasTextContent, hasNotionVisibleContent } from "@/lib/utils/content-utils"
 
 interface ProjectDetailPageProps {
   project: Project
   previousProject?: Project
   nextProject?: Project
-}
-
-// Check if HTML has actual text content (not just empty tags)
-function hasTextContent(html: string | undefined): boolean {
-  if (!html) return false
-  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim().length > 0
-}
-
-// Check if Notion recordMap has meaningful visible content (not just empty blocks)
-function hasNotionVisibleContent(recordMap: { block?: Record<string, { value?: { type?: string; properties?: Record<string, unknown> } }> } | undefined): boolean {
-  if (!recordMap?.block) return false
-  const blocks = Object.values(recordMap.block)
-  const contentBlocks = blocks.filter(b => {
-    const type = b?.value?.type
-    return type && type !== 'page'
-  })
-  if (contentBlocks.length === 0) return false
-  return contentBlocks.some(b => {
-    const props = b?.value?.properties
-    if (!props) return false
-    const titleProp = props.title as string[][] | undefined
-    if (titleProp && Array.isArray(titleProp) && titleProp.length > 0) {
-      const text = titleProp.map(t => t[0]).join('').trim()
-      if (text.length > 0) return true
-    }
-    return false
-  })
 }
 
 export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
