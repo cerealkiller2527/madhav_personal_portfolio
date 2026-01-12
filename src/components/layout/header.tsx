@@ -8,14 +8,19 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/common/theme/theme-toggle"
 import { smoothScrollToElement } from "@/lib/core/utils"
+import { navItems, type NavItem, UI_CONSTANTS } from "@/lib/core/data"
 
-const navItems = [
-  { name: "Home", id: "home", icon: <Home className="h-4 w-4" />, href: "/" },
-  { name: "Experience", id: "experience", icon: <Briefcase className="h-4 w-4" />, href: "/#experience" },
-  { name: "Projects", id: "projects", icon: <Code className="h-4 w-4" />, href: "/#projects" },
-  { name: "Blog", id: "blog", icon: <BookOpen className="h-4 w-4" />, href: "/blog" },
-  { name: "Contact", id: "contact", icon: <Mail className="h-4 w-4" />, href: "/#contact" },
-]
+// Animation constants (specific to header)
+const HEADER_INITIAL_Y = -100
+
+// Map nav item IDs to their icons
+const NAV_ICONS: Record<string, React.ReactNode> = {
+  home: <Home className="h-4 w-4" />,
+  experience: <Briefcase className="h-4 w-4" />,
+  projects: <Code className="h-4 w-4" />,
+  blog: <BookOpen className="h-4 w-4" />,
+  contact: <Mail className="h-4 w-4" />,
+}
 
 interface HeaderProps {
   onResumeOpen: () => void
@@ -25,7 +30,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
   const router = useRouter()
   const pathname = usePathname()
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: typeof navItems[0]) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: NavItem) => {
     e.preventDefault()
 
     // Handle blog navigation separately
@@ -43,7 +48,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
     // Handle section navigation
     if (pathname === "/") {
       // We are on the homepage, so just scroll smoothly
-      smoothScrollToElement(item.id, 800)
+      smoothScrollToElement(item.id, UI_CONSTANTS.SCROLL_DURATION_MS)
     } else {
       // We are on another page, so navigate to home and tell it to scroll
       sessionStorage.setItem("scrollTo", item.id)
@@ -54,7 +59,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
   return (
     <motion.header
       className="fixed top-0 left-0 right-0 z-50"
-      initial={{ y: -100, opacity: 0 }}
+      initial={{ y: HEADER_INITIAL_Y, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -90,7 +95,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item)}
                 >
-                  {item.icon}
+                  {NAV_ICONS[item.id]}
                   <span className="hidden lg:inline">{item.name}</span>
                 </Link>
               </Button>

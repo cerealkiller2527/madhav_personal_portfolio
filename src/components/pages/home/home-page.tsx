@@ -10,6 +10,7 @@ import { ProjectModal } from "@/components/projects/project-modal"
 import type { Project, Experience } from "@/lib/types"
 import { CursorGlow } from "@/components/common/cursor-glow"
 import { smoothScrollToElement } from "@/lib/core/utils"
+import { UI_CONSTANTS } from "@/lib/core/data"
 
 interface HomePageProps {
   projects: readonly Project[]
@@ -27,9 +28,9 @@ export default function HomePage({ projects, experiences }: HomePageProps) {
     if (scrollToId) {
       // Use a longer timeout to ensure the page is fully rendered
       setTimeout(() => {
-        smoothScrollToElement(scrollToId, 800)
+        smoothScrollToElement(scrollToId, UI_CONSTANTS.SCROLL_DURATION_MS)
         sessionStorage.removeItem("scrollTo")
-      }, 150)
+      }, UI_CONSTANTS.PAGE_RENDER_DELAY_MS)
     }
   }, [])
 

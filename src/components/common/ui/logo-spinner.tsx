@@ -11,24 +11,29 @@ interface LogoSpinnerProps {
   text?: string
 }
 
+// Size configuration with container classes and image sizes
 const sizeConfig = {
   sm: { 
     container: "w-8 h-8", 
-    text: "text-xs mt-2" 
+    text: "text-xs mt-2",
+    imageSizes: "32px"
   },
   md: { 
     container: "w-12 h-12", 
-    text: "text-sm mt-3" 
+    text: "text-sm mt-3",
+    imageSizes: "48px"
   },
   lg: { 
     container: "w-16 h-16", 
-    text: "text-base mt-4" 
+    text: "text-base mt-4",
+    imageSizes: "64px"
   },
   xl: { 
     container: "w-24 h-24", 
-    text: "text-lg mt-4" 
+    text: "text-lg mt-4",
+    imageSizes: "96px"
   }
-}
+} as const
 
 export function LogoSpinner({ 
   size = "md", 
@@ -86,7 +91,7 @@ export function LogoSpinner({
               src="/assets/portfolio/avatar-logo.png"
               alt="Loading"
               fill
-              sizes={`${parseInt(config.container.split(' ')[0].replace('w-', '')) * 4}px`}
+              sizes={config.imageSizes}
               className="object-cover rounded-full"
               priority
             />

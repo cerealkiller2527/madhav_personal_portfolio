@@ -2,15 +2,22 @@
 
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/core/utils"
+import type { TOCSection } from "@/lib/types"
 
-interface TocSection {
-  id: string
-  label: string
-  level?: number
+// Scroll detection and navigation constants
+const SCROLL_DETECTION_OFFSET = 200
+const CONTAINER_SCROLL_OFFSET = 24
+const WINDOW_SCROLL_OFFSET = 100
+
+// Static margin classes for TOC heading levels (avoids JIT purging)
+const LEVEL_MARGIN_CLASSES: Record<number, string> = {
+  1: '',
+  2: 'ml-3',
+  3: 'ml-6',
 }
 
 interface TableOfContentsProps {
-  sections: TocSection[]
+  sections: TOCSection[]
   containerRef?: React.RefObject<HTMLElement | null>
   className?: string
 }
@@ -29,7 +36,7 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
             ? element.offsetTop - (containerRef.current.scrollTop || 0)
             : element.getBoundingClientRect().top + window.pageYOffset
           
-          if (elementTop <= scrollPosition + 200) {
+          if (elementTop <= scrollPosition + SCROLL_DETECTION_OFFSET) {
             setActiveSection(section.id)
           }
         }
@@ -49,11 +56,11 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
     if (!targetElement) return
 
     if (containerRef?.current) {
-      const top = targetElement.offsetTop - 24
+      const top = targetElement.offsetTop - CONTAINER_SCROLL_OFFSET
       containerRef.current.scrollTo({ top, behavior: "smooth" })
     } else {
       const elementPosition = targetElement.getBoundingClientRect().top
-      const offsetPosition = elementPosition + window.pageYOffset - 100
+      const offsetPosition = elementPosition + window.pageYOffset - WINDOW_SCROLL_OFFSET
       window.scrollTo({ top: offsetPosition, behavior: "smooth" })
     }
 
@@ -68,10 +75,10 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
       <ul className="space-y-1">
         {sections.map((section) => {
           const isActive = activeSection === section.id
-          const level = section.level || 1
+          const level = section.level
           
           return (
-            <li key={section.id} className={level > 1 ? `ml-${(level - 1) * 3}` : ''}>
+            <li key={section.id} className={LEVEL_MARGIN_CLASSES[level] || ''}>
               <a
                 href={`#${section.id}`}
                 onClick={(e) => handleLinkClick(e, section.id)}

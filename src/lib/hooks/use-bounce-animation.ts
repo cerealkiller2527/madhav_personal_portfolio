@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react"
 import { smoothScrollTo } from "@/lib/core/utils"
+import { UI_CONSTANTS } from "@/lib/core/data"
+
+// Animation timing constants (local to bounce animation)
+const BOUNCE_SCROLL_DURATION_MS = 1000
+const BOUNCE_DURATION_MS = 3000
 
 interface UseBounceAnimationProps {
   bounceProjectId: string | null
@@ -24,7 +29,7 @@ export function useBounceAnimation({
     if (!bounceProjectId) return
 
     const projectIndex = filteredProjects.findIndex((p) => p.id === bounceProjectId)
-    const isProjectVisible = projectIndex !== -1 && (projectIndex < 4 || showMore || activeFilter !== "All")
+    const isProjectVisible = projectIndex !== -1 && (projectIndex < UI_CONSTANTS.INITIAL_VISIBLE_PROJECTS || showMore || activeFilter !== "All")
 
     if (!isProjectVisible) {
       setShowMore(true)
@@ -36,15 +41,15 @@ export function useBounceAnimation({
 
     const elementRect = element.getBoundingClientRect()
     const targetPosition = elementRect.top + window.pageYOffset - window.innerHeight / 2 + elementRect.height / 2
-    smoothScrollTo(targetPosition, 1000)
+    smoothScrollTo(targetPosition, BOUNCE_SCROLL_DURATION_MS)
 
     setTimeout(() => {
       setActiveBounceId(bounceProjectId)
       setTimeout(() => {
         setActiveBounceId(null)
         onBounceComplete()
-      }, 3000)
-    }, 1000)
+      }, BOUNCE_DURATION_MS)
+    }, BOUNCE_SCROLL_DURATION_MS)
   }, [bounceProjectId, filteredProjects, showMore, activeFilter, onBounceComplete, setShowMore])
 
   const stopBouncing = (projectId?: string) => {

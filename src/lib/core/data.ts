@@ -20,6 +20,68 @@ export const buttonLabels = {
   viewMyWork: "View My Work",
 }
 
+// --- Navigation Data ---
+
+export interface NavItem {
+  name: string
+  id: string
+  href: string
+}
+
+export const navItems: readonly NavItem[] = [
+  { name: "Home", id: "home", href: "/" },
+  { name: "Experience", id: "experience", href: "/#experience" },
+  { name: "Projects", id: "projects", href: "/#projects" },
+  { name: "Blog", id: "blog", href: "/blog" },
+  { name: "Contact", id: "contact", href: "/#contact" },
+]
+
+// --- Resume Types ---
+
+export interface ResumeType {
+  id: string
+  title: string
+  description: string
+  iconName: "code" | "bot" | "settings" | "zap"
+  filePath: string
+  downloadName: string
+}
+
+export const resumeTypes: readonly ResumeType[] = [
+  {
+    id: "software",
+    title: "Software",
+    description: "Full-stack development & programming",
+    iconName: "code",
+    filePath: "/documents/Software Engineering/Madhav_Lodha_Software_resume.pdf",
+    downloadName: "Madhav_Lodha_Software_Resume.pdf"
+  },
+  {
+    id: "robotics",
+    title: "Robotics",
+    description: "Robotics systems & automation",
+    iconName: "bot",
+    filePath: "/documents/Robotics Engineering/Madhav_Lodha_Robotics_Resume.pdf",
+    downloadName: "Madhav_Lodha_Robotics_Resume.pdf"
+  },
+  {
+    id: "mechanical",
+    title: "Mechanical",
+    description: "Mechanical design & manufacturing",
+    iconName: "settings",
+    filePath: "/documents/Mechanical Engineering/Madhav_Lodha_Mechanical_resume.pdf",
+    downloadName: "Madhav_Lodha_Mechanical_Resume.pdf"
+  },
+  {
+    id: "electrical",
+    title: "Electrical",
+    description: "Electronics & circuit design",
+    iconName: "zap",
+    filePath: "/documents/Electrical Engineering/Madhav_Lodha_Electrical_resume.pdf",
+    downloadName: "Madhav_Lodha_Electrical_Resume.pdf"
+  }
+]
+
 export const footerData = {
   sections: {
     connect: {
@@ -59,6 +121,17 @@ export const footerData = {
 }
 
 export const blogDescription = "Thoughts on software engineering, web development, and technology.";
+
+// --- UI Constants ---
+
+export const UI_CONSTANTS = {
+  // Scroll animation duration in milliseconds
+  SCROLL_DURATION_MS: 800,
+  // Delay before scrolling after page navigation
+  PAGE_RENDER_DELAY_MS: 150,
+  // Number of projects visible before "Show More"
+  INITIAL_VISIBLE_PROJECTS: 4,
+} as const
 
 // --- Project Constants ---
 

@@ -35,7 +35,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
 
   return (
     <Section title="Work Experience" id="experience" hasBackground>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 min-h-[480px]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 md:min-h-96">
         <motion.div
           className="md:col-span-1 flex flex-col gap-4"
           variants={listVariants}

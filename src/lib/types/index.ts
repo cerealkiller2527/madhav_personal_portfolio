@@ -6,6 +6,13 @@ import type { ExtendedRecordMap } from 'notion-types'
 
 export type ProjectCategory = 'Software' | 'Hardware' | 'Hybrid'
 
+// Table of Contents section for navigation
+export interface TOCSection {
+  id: string
+  label: string
+  level: number
+}
+
 export interface Statistic {
   value: string
   label: string
