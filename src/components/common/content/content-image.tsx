@@ -1,10 +1,11 @@
-// Image component with loading states and fallback icons
+// Image component with loading states and placeholder support
 
 "use client"
 
 import Image from "next/image"
 import { useState } from "react"
-import { FileText, Image as ImageIcon } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Placeholder } from "@/components/common/ui/placeholder"
 import { cn } from "@/lib/core/utils"
 
 interface ContentImageProps {
@@ -15,15 +16,8 @@ interface ContentImageProps {
   priority?: boolean
   width?: number
   height?: number
-  fallbackType?: 'blog' | 'project' | 'generic'
   sizes?: string
 }
-
-const FALLBACK_ICONS = {
-  blog: FileText,
-  project: ImageIcon,
-  generic: ImageIcon,
-} as const
 
 export function ContentImage({ 
   src, 
@@ -33,37 +27,16 @@ export function ContentImage({
   priority = false,
   width,
   height,
-  fallbackType = 'generic',
   sizes
 }: ContentImageProps) {
-  const [hasError, setHasError] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Handle empty src - show fallback immediately
+  // Show placeholder if no src provided
   if (!src || src.trim() === '') {
-    const FallbackIcon = FALLBACK_ICONS[fallbackType]
-    return (
-      <div className={cn(
-        "bg-muted flex items-center justify-center",
-        fill && "absolute inset-0",
-        className
-      )}>
-        <FallbackIcon className="h-8 w-8 text-muted-foreground/50" />
-      </div>
-    )
-  }
-
-  if (hasError) {
-    const FallbackIcon = FALLBACK_ICONS[fallbackType]
-    return (
-      <div className={cn(
-        "bg-muted flex items-center justify-center",
-        fill && "absolute inset-0",
-        className
-      )}>
-        <FallbackIcon className="h-8 w-8 text-muted-foreground/50" />
-      </div>
-    )
+    if (fill) {
+      return <Placeholder className="absolute inset-0" />
+    }
+    return <Placeholder />
   }
 
   if (fill) {
@@ -80,11 +53,10 @@ export function ContentImage({
           )}
           priority={priority}
           sizes={sizes}
-          onError={() => setHasError(true)}
           onLoad={() => setIsLoading(false)}
         />
         {isLoading && (
-          <div className="absolute inset-0 bg-muted animate-pulse" />
+          <Skeleton className="absolute inset-0" />
         )}
       </>
     )
@@ -103,11 +75,10 @@ export function ContentImage({
         )}
         priority={priority}
         sizes={sizes}
-        onError={() => setHasError(true)}
         onLoad={() => setIsLoading(false)}
       />
       {isLoading && (
-        <div className="absolute inset-0 bg-muted animate-pulse" />
+        <Skeleton className="absolute inset-0" />
       )}
     </div>
   )

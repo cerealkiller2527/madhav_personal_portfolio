@@ -15,6 +15,20 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
+        // Category variants
+        software:
+          "bg-[hsl(var(--software)/0.1)] text-[hsl(var(--software))] border-[hsl(var(--software)/0.2)] hover:bg-[hsl(var(--software)/0.2)]",
+        hardware:
+          "bg-[hsl(var(--hardware)/0.1)] text-[hsl(var(--hardware))] border-[hsl(var(--hardware)/0.2)] hover:bg-[hsl(var(--hardware)/0.2)]",
+        hybrid:
+          "bg-[hsl(var(--hybrid)/0.1)] text-[hsl(var(--hybrid))] border-[hsl(var(--hybrid)/0.2)] hover:bg-[hsl(var(--hybrid)/0.2)]",
+        // Award variants
+        "award-gold":
+          "bg-[hsl(var(--award-gold)/0.2)] text-[hsl(var(--award-gold-foreground))] dark:text-[hsl(var(--award-gold))] border-[hsl(var(--award-gold)/0.3)] hover:bg-[hsl(var(--award-gold)/0.3)]",
+        "award-silver":
+          "bg-[hsl(var(--award-silver)/0.2)] text-[hsl(var(--award-silver-foreground))] dark:text-[hsl(var(--award-silver))] border-[hsl(var(--award-silver)/0.3)] hover:bg-[hsl(var(--award-silver)/0.3)]",
+        "award-bronze":
+          "bg-[hsl(var(--award-bronze)/0.2)] text-[hsl(var(--award-bronze-foreground))] dark:text-[hsl(var(--award-bronze))] border-[hsl(var(--award-bronze)/0.3)] hover:bg-[hsl(var(--award-bronze)/0.3)]",
       },
     },
     defaultVariants: {
@@ -33,4 +47,31 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   )
 }
 
-export { Badge, badgeVariants }
+// Helper function to get badge variant from category string
+function getCategoryBadgeVariant(category: string): BadgeProps["variant"] {
+  const categoryMap: Record<string, BadgeProps["variant"]> = {
+    "Software": "software",
+    "Hardware": "hardware",
+    "Hybrid": "hybrid",
+  }
+  return categoryMap[category] || "default"
+}
+
+// Helper function to get badge variant from award rank string
+function getAwardBadgeVariant(awardRank: string): BadgeProps["variant"] {
+  const lowerRank = awardRank.toLowerCase()
+  
+  if (lowerRank.includes("1st") || lowerRank.includes("first") || lowerRank.includes("gold")) {
+    return "award-gold"
+  }
+  if (lowerRank.includes("2nd") || lowerRank.includes("second") || lowerRank.includes("silver")) {
+    return "award-silver"
+  }
+  if (lowerRank.includes("3rd") || lowerRank.includes("third") || lowerRank.includes("bronze")) {
+    return "award-bronze"
+  }
+  
+  return "default"
+}
+
+export { Badge, badgeVariants, getCategoryBadgeVariant, getAwardBadgeVariant }

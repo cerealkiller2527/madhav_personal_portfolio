@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 @import '../styles/notion-overrides.css';
-@import '../styles/blog/blog-layout.css';
-@import '../styles/blog/blog-components.css';
 
 @layer utilities {
   .text-balance {
@@ -49,28 +47,25 @@
     display: none;
   }
 
-  .glass-effect {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    background: rgba(255, 138, 76, 0.15);
-    border: 1px solid rgba(255, 138, 76, 0.3);
-    box-shadow: 0 8px 32px rgba(255, 138, 76, 0.1);
+  /* Glass container utilities */
+  .glass {
+    background: hsl(var(--glass-bg));
+    border: 1px solid hsl(var(--glass-border));
+    backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--glass-shadow);
   }
 
-  .dark .glass-effect {
-    background: rgba(255, 138, 76, 0.1);
-    border: 1px solid rgba(255, 138, 76, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  .glass-subtle {
+    background: hsl(var(--glass-bg-subtle));
+    border: 1px solid hsl(var(--glass-border));
+    backdrop-filter: blur(var(--glass-blur-sm));
   }
 
-  .glass-effect:hover {
-    background: rgba(255, 138, 76, 0.2);
-    border: 1px solid rgba(255, 138, 76, 0.4);
-  }
-
-  .dark .glass-effect:hover {
-    background: rgba(255, 138, 76, 0.15);
-    border: 1px solid rgba(255, 138, 76, 0.3);
+  .glass-strong {
+    background: hsl(var(--glass-bg));
+    border: 1px solid hsl(var(--glass-border-strong));
+    backdrop-filter: blur(var(--glass-blur-lg));
+    box-shadow: var(--glass-shadow);
   }
 }
 
@@ -138,6 +133,35 @@
     --input: 25 10% 88%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
+
+    /* Glass effect tokens */
+    --glass-bg: 0 0% 0% / 0.1;
+    --glass-bg-subtle: 0 0% 0% / 0.05;
+    --glass-border: 0 0% 100% / 0.1;
+    --glass-border-strong: 0 0% 100% / 0.2;
+    --glass-blur-sm: 8px;
+    --glass-blur: 12px;
+    --glass-blur-lg: 16px;
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+    /* Interactive glass tokens */
+    --glass-hover-bg: 0 0% 100% / 0.15;
+
+    /* Category color tokens */
+    --software: 217 91% 60%;
+    --software-foreground: 0 0% 100%;
+    --hardware: 142 71% 45%;
+    --hardware-foreground: 0 0% 100%;
+    --hybrid: 271 91% 65%;
+    --hybrid-foreground: 0 0% 100%;
+
+    /* Award color tokens */
+    --award-gold: 48 96% 53%;
+    --award-gold-foreground: 0 0% 15%;
+    --award-silver: 220 9% 46%;
+    --award-silver-foreground: 0 0% 100%;
+    --award-bronze: 33 90% 50%;
+    --award-bronze-foreground: 0 0% 100%;
   }
 
   .dark {
@@ -160,6 +184,26 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 0 0% 83.1%;
+
+    /* Glass effect tokens (dark mode) */
+    --glass-bg: 0 0% 100% / 0.05;
+    --glass-bg-subtle: 0 0% 100% / 0.03;
+    --glass-border: 0 0% 100% / 0.1;
+    --glass-border-strong: 0 0% 100% / 0.15;
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+
+    /* Interactive glass tokens (dark mode) */
+    --glass-hover-bg: 0 0% 100% / 0.1;
+
+    /* Category colors adjusted for dark mode */
+    --software: 217 91% 65%;
+    --hardware: 142 71% 50%;
+    --hybrid: 271 91% 70%;
+
+    /* Award colors adjusted for dark mode */
+    --award-gold: 48 96% 58%;
+    --award-silver: 220 9% 55%;
+    --award-bronze: 33 90% 55%;
   }
 }
 

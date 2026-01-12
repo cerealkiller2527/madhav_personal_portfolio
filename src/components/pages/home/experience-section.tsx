@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import type { Experience } from "@/lib/types"
 import { Section } from "@/components/layout/section"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/core/utils"
 import { MapPin, Building2 } from "lucide-react"
 
@@ -46,19 +47,23 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
             <motion.button
               key={exp.id}
               variants={itemVariants}
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setSelected(exp)}
-              className={cn(
-                "w-full text-left p-4 rounded-xl border shadow-md",
-                selected.id === exp.id
-                  ? "bg-primary/10 border-primary/30 backdrop-blur-lg shadow-primary/20"
-                  : "bg-black/10 dark:bg-white/5 border-white/10 backdrop-blur-lg hover:bg-black/20 dark:hover:bg-white/10",
-              )}
+              className="w-full text-left"
             >
-              <h3 className="font-bold text-foreground">{exp.company}</h3>
-              <p className="text-sm text-muted-foreground truncate">{exp.role}</p>
+              <Card
+                variant={selected.id === exp.id ? "glass" : "glass-subtle"}
+                className={cn(
+                  selected.id === exp.id && "ring-2 ring-primary/50"
+                )}
+              >
+                <CardContent className="p-4">
+                  <h3 className="font-bold text-foreground">{exp.company}</h3>
+                  <p className="text-sm text-muted-foreground truncate">{exp.role}</p>
+                </CardContent>
+              </Card>
             </motion.button>
           ))}
         </motion.div>
@@ -71,49 +76,50 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="relative overflow-hidden bg-black/10 dark:bg-white/5 border border-white/10 rounded-xl p-6 md:p-8 h-full backdrop-blur-lg shadow-lg"
             >
-              <div className="absolute -top-1/4 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-80" />
-              <div className="relative z-10 h-full flex flex-col">
-                <div className="flex flex-col sm:flex-row gap-6 mb-6">
-                  <div className="w-24 h-24 flex-shrink-0 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                    <Building2 className="w-12 h-12 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-foreground">{selected.company}</h3>
-                    <p className="text-md text-primary font-semibold">{selected.role}</p>
-                    <div className="text-sm text-muted-foreground mt-1 flex flex-col sm:flex-row sm:gap-4">
-                      <span>{selected.date}</span>
-                      {selected.location && (
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3" /> {selected.location}
-                        </span>
-                      )}
+              <Card variant="glass" className="relative overflow-hidden h-full">
+                <div className="absolute -top-1/4 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-80 pointer-events-none" />
+                <CardContent className="relative z-10 p-6 md:p-8 h-full flex flex-col">
+                  <div className="flex flex-col sm:flex-row gap-6 mb-6">
+                    <div className="w-24 h-24 flex-shrink-0 rounded-lg glass-subtle flex items-center justify-center">
+                      <Building2 className="w-12 h-12 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-foreground">{selected.company}</h3>
+                      <p className="text-md text-primary font-semibold">{selected.role}</p>
+                      <div className="text-sm text-muted-foreground mt-1 flex flex-col sm:flex-row sm:gap-4">
+                        <span>{selected.date}</span>
+                        {selected.location && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" /> {selected.location}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <p className="text-muted-foreground mb-6">{selected.description}</p>
+                  <p className="text-muted-foreground mb-6">{selected.description}</p>
 
-                {selected.stats && selected.stats.length > 0 && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
-                    {selected.stats.map((stat) => (
-                      <div key={stat.label} className="bg-black/10 dark:bg-white/5 p-3 rounded-md text-center">
-                        <p className="text-xl font-bold text-foreground">{stat.value}</p>
-                        <p className="text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</p>
-                      </div>
+                  {selected.stats && selected.stats.length > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                      {selected.stats.map((stat) => (
+                        <Card key={stat.label} variant="glass-subtle" className="text-center p-3">
+                          <p className="text-xl font-bold text-foreground">{stat.value}</p>
+                          <p className="text-xs uppercase tracking-wider text-muted-foreground">{stat.label}</p>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex flex-wrap gap-2">
+                    {selected.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary">
+                        {tag}
+                      </Badge>
                     ))}
                   </div>
-                )}
-
-                <div className="flex flex-wrap gap-2">
-                  {selected.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </motion.div>
           </AnimatePresence>
         </div>

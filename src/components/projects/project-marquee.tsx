@@ -2,12 +2,14 @@
 import { useMemo } from "react"
 import type React from "react"
 
-import Image from "next/image"
 import { motion, useMotionValue, useTransform, useSpring, useAnimationFrame, MotionValue } from "framer-motion"
-import { Trophy, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react"
+import { ContentImage } from "@/components/common/content/content-image"
+import { Trophy, ChevronLeft, ChevronRight } from "lucide-react"
 import type { Project } from "@/lib/types"
+import { Card, CardContent } from "@/components/ui/card"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { Badge, getAwardBadgeVariant } from "@/components/ui/badge"
 import { cn } from "@/lib/core/utils"
-import { getTrophyStyles } from "@/lib/utils/badge-utils"
 
 interface ProjectMarqueeProps {
   projects: readonly Project[]
@@ -76,7 +78,7 @@ const InteractiveMarqueeItem = ({
   const smoothY = useSpring(y, { mass: 0.6, stiffness: 300, damping: 40 })
   const smoothTranslateZ = useSpring(translateZ, { mass: 0.6, stiffness: 300, damping: 40 })
 
-  const trophyStyles = project.awardRank ? getTrophyStyles(project.awardRank) : null
+  const awardVariant = project.awardRank ? getAwardBadgeVariant(project.awardRank) : null
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -97,33 +99,32 @@ const InteractiveMarqueeItem = ({
       }}
     >
       <a href={`/projects/${project.id}`} onClick={handleClick} className="block w-full h-full cursor-pointer">
-        <div className="w-full h-full bg-secondary/80 dark:bg-secondary/90 border-2 border-border/50 rounded-xl p-3 shadow-md hover:shadow-lg transition-shadow flex flex-col overflow-hidden">
-          <div className="relative h-28 w-full rounded-md overflow-hidden mb-3 flex-shrink-0">
-            {project.heroImage ? (
-              <Image
-                src={project.heroImage}
-                alt={project.title}
-                fill
-                sizes="256px"
-                className="object-cover"
-                style={{ imageRendering: "auto" }}
-              />
-            ) : (
-              <div className="w-full h-full bg-muted flex items-center justify-center">
-                <ImageIcon className="h-8 w-8 text-muted-foreground/50" />
-              </div>
-            )}
-            {project.awardRank && trophyStyles && (
-              <div className={cn("absolute top-2 right-2 rounded-full p-1.5", trophyStyles.containerClasses)}>
-                <Trophy className={cn("w-4 h-4", trophyStyles.iconClasses)} />
-              </div>
-            )}
-          </div>
-          <div className="text-left flex-grow min-h-0 flex flex-col overflow-hidden">
-            <h3 className="font-bold text-foreground text-sm leading-tight mb-1 line-clamp-2">{project.title}</h3>
-            <p className="text-muted-foreground text-xs line-clamp-2 flex-grow">{project.subtitle}</p>
-          </div>
-        </div>
+        <Card variant="glass" className="w-full h-full overflow-hidden">
+          <CardContent className="p-3 flex flex-col h-full">
+            <div className="relative w-full rounded-md overflow-hidden mb-3 flex-shrink-0">
+              <AspectRatio ratio={16 / 9}>
+                <ContentImage
+                  src={project.heroImage || ""}
+                  alt={project.title}
+                  fill
+                  sizes="256px"
+                  className="object-cover"
+                />
+              </AspectRatio>
+              {project.awardRank && awardVariant && (
+                <div className="absolute top-2 right-2">
+                  <Badge variant={awardVariant} className="rounded-full p-1.5">
+                    <Trophy className="w-4 h-4" />
+                  </Badge>
+                </div>
+              )}
+            </div>
+            <div className="text-left flex-grow min-h-0 flex flex-col overflow-hidden">
+              <h3 className="font-bold text-foreground text-sm leading-tight mb-1 line-clamp-2">{project.title}</h3>
+              <p className="text-muted-foreground text-xs line-clamp-2 flex-grow">{project.subtitle}</p>
+            </div>
+          </CardContent>
+        </Card>
       </a>
     </motion.div>
   )

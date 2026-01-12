@@ -6,6 +6,7 @@ import type { Project } from "@/lib/types"
 import { ProjectGridCard } from "@/components/projects/project-grid-card"
 import { Section } from "@/components/layout/section"
 import { Button } from "@/components/ui/button"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { useBounceAnimation } from "@/lib/hooks/use-bounce-animation"
 
@@ -47,16 +48,26 @@ export function ProjectsSection({
 
   return (
     <Section title="Featured Projects" className="pt-10 md:pt-14" id="projects" hasBackground>
-      <div className="flex justify-center gap-2 mb-12">
-        {FILTERS.map((filter) => (
-          <Button
-            key={filter}
-            variant={activeFilter === filter ? "default" : "outline"}
-            onClick={() => setActiveFilter(filter)}
-          >
-            {filter}
-          </Button>
-        ))}
+      <div className="flex justify-center mb-12">
+        <ToggleGroup
+          type="single"
+          value={activeFilter}
+          onValueChange={(value) => {
+            if (value) setActiveFilter(value as FilterType)
+          }}
+          className="gap-2"
+        >
+          {FILTERS.map((filter) => (
+            <ToggleGroupItem
+              key={filter}
+              value={filter}
+              aria-label={`Filter by ${filter}`}
+              className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground px-4 py-2"
+            >
+              {filter}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
       </div>
 
       <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">

@@ -3,9 +3,9 @@ import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import type React from "react"
 import { motion } from "framer-motion"
-import Image from "next/image"
 import { Home, Briefcase, Code, Mail, Eye, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/common/theme/theme-toggle"
 import { smoothScrollToElement } from "@/lib/core/utils"
 
@@ -59,48 +59,53 @@ export function Header({ onResumeOpen }: HeaderProps) {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="mx-auto max-w-screen-xl px-4 pt-3 md:pt-4">
-        <div className="flex h-14 w-full items-center justify-between rounded-xl border border-white/10 bg-black/30 dark:bg-white/10 px-4 shadow-xl backdrop-blur-lg">
+        <div className="flex h-14 w-full items-center justify-between rounded-xl glass-strong px-4 shadow-xl">
           <Link
             href="/"
             onClick={(e) => handleNavClick(e, navItems[0])}
             aria-label="Go to home page"
             className="cursor-pointer"
           >
-            <div className="relative w-10 h-10 flex-shrink-0 transition-transform hover:scale-110 rounded-full overflow-hidden bg-primary p-1.5">
-              <div className="relative w-full h-full rounded-full overflow-hidden">
-                <Image
+            <div className="flex-shrink-0 transition-transform hover:scale-110 rounded-full bg-primary p-1">
+              <Avatar className="h-8 w-8">
+                <AvatarImage
                   src="/assets/portfolio/avatar-logo.png"
                   alt="Madhav Lodha Avatar"
-                  fill
-                  sizes="32px"
-                  className="object-cover"
-                  priority
                 />
-              </div>
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs">ML</AvatarFallback>
+              </Avatar>
             </div>
           </Link>
 
           <nav className="flex items-center justify-center">
             {navItems.map((item) => (
-              <Link
+              <Button
                 key={item.id}
-                href={item.href}
-                onClick={(e) => handleNavClick(e, item)}
-                className="flex items-center justify-center gap-1.5 rounded-lg px-2 sm:px-3 py-1.5 text-xs font-medium transition-colors duration-200 hover:text-white hover:bg-white/10 cursor-pointer text-white/70"
+                variant="nav"
+                size="sm"
+                asChild
+                className="px-2 lg:px-3 h-8"
               >
-                {item.icon}
-                <span className="hidden sm:inline">{item.name}</span>
-              </Link>
+                <Link
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item)}
+                >
+                  {item.icon}
+                  <span className="hidden lg:inline">{item.name}</span>
+                </Link>
+              </Button>
             ))}
           </nav>
 
           <div className="flex items-center gap-2">
             <Button
               onClick={onResumeOpen}
-              className="glass-effect border-white/20 text-white font-medium text-xs px-3 py-1.5 h-auto hover:bg-white/20 transition-all duration-200"
+              variant="glass"
+              size="sm"
+              className="text-xs"
             >
-              <Eye className="mr-0 sm:mr-1.5 h-3 w-3" />
-              <span className="hidden sm:inline">View Résumé</span>
+              <Eye className="mr-0 lg:mr-1.5 h-3 w-3" />
+              <span className="hidden lg:inline">View Résumé</span>
             </Button>
             <ThemeToggle />
           </div>

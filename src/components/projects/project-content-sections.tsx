@@ -2,10 +2,10 @@
 
 import type { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { hasProjectContent } from "@/lib/utils/project-utils"
 import { ContentImage } from "@/components/common/content/content-image"
-import { PROJECT_SECTIONS, PROJECT_IMAGE_HEIGHTS } from "@/lib/core/data"
-import { cn } from "@/lib/core/utils"
+import { PROJECT_SECTIONS } from "@/lib/core/data"
 
 // ============================================================================
 // Types
@@ -39,9 +39,6 @@ export function ProjectContentSections({
   const featureDescClass = isFullPage
     ? "text-muted-foreground"
     : "text-muted-foreground text-sm"
-  const galleryHeight = isFullPage 
-    ? PROJECT_IMAGE_HEIGHTS.fullPage.gallery 
-    : PROJECT_IMAGE_HEIGHTS.modal.gallery
 
   const hasFeatures = !hasNotionContent && hasProjectContent(project, PROJECT_SECTIONS.features)
   const hasTechStack = !hasNotionContent && hasProjectContent(project, PROJECT_SECTIONS.techStack)
@@ -90,15 +87,16 @@ export function ProjectContentSections({
           <h2 className={headingClass}>Gallery</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {project.gallery?.map((image, index) => (
-              <div key={index} className={cn("relative w-full rounded-md overflow-hidden", galleryHeight)}>
-                <ContentImage
-                  src={image.url || ""}
-                  alt={image.caption}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover bg-secondary"
-                  fallbackType="project"
-                />
+              <div key={index} className="rounded-md overflow-hidden glass-subtle">
+                <AspectRatio ratio={isFullPage ? 16 / 10 : 4 / 3}>
+                  <ContentImage
+                    src={image.url || ""}
+                    alt={image.caption}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </AspectRatio>
               </div>
             ))}
           </div>

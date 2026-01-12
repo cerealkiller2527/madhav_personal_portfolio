@@ -6,12 +6,13 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { Trophy, Maximize, X, Github, ExternalLink } from "lucide-react"
 import type { Project, Statistic } from "@/lib/types"
-import { Badge } from "@/components/ui/badge"
+import { Badge, getCategoryBadgeVariant, getAwardBadgeVariant } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { ContentImage } from "@/components/common/content/content-image"
 import { cn } from "@/lib/core/utils"
-import { getCategoryVariant, getCategoryClasses, getTrophyStyles } from "@/lib/utils/badge-utils"
 import { formatProjectIndex } from "@/lib/utils/project-utils"
 
 // --- Project Badges Component ---
@@ -22,32 +23,21 @@ interface ProjectBadgesProps {
 
 // Displays category and award badges with rank-based styling
 export function ProjectBadges({ project }: ProjectBadgesProps) {
-  const awardText = project.award
-  const trophyStyles = project.awardRank ? getTrophyStyles(project.awardRank) : null
-  const categoryVariant = getCategoryVariant(project.category)
-  const categoryClasses = getCategoryClasses(project.category)
+  const categoryVariant = getCategoryBadgeVariant(project.category)
+  const awardVariant = project.awardRank ? getAwardBadgeVariant(project.awardRank) : null
 
   return (
     <div className="flex items-center gap-2 mb-2 flex-wrap -ml-1">
-      {/* Category badge with custom colors - negative left margin aligns with title */}
-      <Badge 
-        variant={categoryVariant}
-        className={categoryClasses}
-      >
+      {/* Category badge with semantic variant */}
+      <Badge variant={categoryVariant}>
         {project.category}
       </Badge>
       
       {/* Award badge with trophy icon and rank-based colors */}
-      {awardText && trophyStyles && (
-        <Badge 
-          className={cn(
-            "border-transparent", 
-            trophyStyles.badgeClasses, 
-            trophyStyles.hoverClasses
-          )}
-        >
-          <Trophy className={cn("mr-1.5 h-3.5 w-3.5", trophyStyles.iconClasses)} />
-          {awardText}
+      {project.award && awardVariant && (
+        <Badge variant={awardVariant}>
+          <Trophy className="mr-1.5 h-3.5 w-3.5" />
+          {project.award}
         </Badge>
       )}
     </div>
@@ -63,9 +53,6 @@ interface ProjectStatsProps {
 }
 
 // Displays project statistics with glass morphism styling
-// - compact: inline pills for cards (subtle, minimal space)
-// - default: small grid for modals/detail views
-// - section: larger grid with heading for dedicated sections
 export function ProjectStats({ stats, variant = "default", className }: ProjectStatsProps) {
   const [visibleStats, setVisibleStats] = useState<Statistic[]>([])
   const [overflowCount, setOverflowCount] = useState(0)
@@ -149,7 +136,7 @@ export function ProjectStats({ stats, variant = "default", className }: ProjectS
         {visibleStats.map((stat) => (
           <div
             key={stat.label}
-            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs bg-primary/10 dark:bg-primary/15 border border-primary/20 dark:border-primary/25 flex-shrink-0"
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs glass-subtle flex-shrink-0"
           >
             <span className="font-semibold text-primary">{stat.value}</span>
             <span className="text-muted-foreground whitespace-nowrap">{stat.label}</span>
@@ -168,12 +155,11 @@ export function ProjectStats({ stats, variant = "default", className }: ProjectS
   return (
     <div className={cn("grid gap-3", gridCols, className)}>
       {stats.map((stat) => (
-        <div
+        <Card
           key={stat.label}
+          variant="glass"
           className={cn(
-            "text-center rounded-lg border transition-colors",
-            "bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10",
-            "hover:bg-black/10 dark:hover:bg-white/10",
+            "text-center",
             isSection ? "p-4" : "p-3"
           )}
         >
@@ -189,7 +175,7 @@ export function ProjectStats({ stats, variant = "default", className }: ProjectS
           )}>
             {stat.label}
           </p>
-        </div>
+        </Card>
       ))}
     </div>
   )
@@ -228,24 +214,25 @@ interface ProjectMediaProps {
 // Displays project media - Sketchfab 3D embed or hero image with index badge
 export function ProjectMedia({ project, index }: ProjectMediaProps) {
   return (
-    <div className={`relative w-full aspect-video overflow-hidden rounded-t-2xl ${project.sketchfabEmbedUrl ? '' : 'bg-secondary/10'}`}>
-      {project.sketchfabEmbedUrl ? (
-        <SketchfabIframe
-          src={project.sketchfabEmbedUrl}
-          title={`${project.title} 3D Model`}
-        />
-      ) : (
-        <ContentImage
-          src={project.heroImage || ""}
-          alt={project.title}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 will-change-transform"
-          fallbackType="project"
-        />
-      )}
+    <div className="relative w-full overflow-hidden rounded-t-2xl">
+      <AspectRatio ratio={16 / 9}>
+        {project.sketchfabEmbedUrl ? (
+          <SketchfabIframe
+            src={project.sketchfabEmbedUrl}
+            title={`${project.title} 3D Model`}
+          />
+        ) : (
+          <ContentImage
+            src={project.heroImage || ""}
+            alt={project.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 will-change-transform"
+          />
+        )}
+      </AspectRatio>
       {/* Project index badge */}
-      <div className="absolute top-4 left-4 bg-black/20 dark:bg-black/40 backdrop-blur-sm w-10 h-10 flex items-center justify-center rounded-lg border border-black/10 dark:border-white/10">
+      <div className="absolute top-4 left-4 glass w-10 h-10 flex items-center justify-center rounded-lg">
         <span className="text-lg font-bold text-white dark:text-primary">
           {formatProjectIndex(index)}
         </span>
@@ -264,7 +251,6 @@ interface ProjectHeroMediaProps {
 }
 
 // Displays hero media following the hierarchy: 3D model (if available) > hero image
-// Used for modal and full-page views without index badge
 export function ProjectHeroMedia({ 
   project, 
   priority = false, 
@@ -285,7 +271,6 @@ export function ProjectHeroMedia({
           fill
           sizes={sizes}
           className={className}
-          fallbackType="project"
           priority={priority}
         />
       )}
@@ -312,32 +297,23 @@ export function ProjectLinks({ project, variant = "default", showLabels = false,
   const isHeader = variant === "header"
   
   const containerClasses = cn("flex items-center gap-2", className)
-  
-  // Base hover classes - primary color works in both light and dark modes
-  const baseHoverClasses = "hover:bg-primary hover:border-primary hover:text-white"
-  
-  const linkClasses = cn(
-    "flex items-center justify-center rounded-lg border",
-    baseHoverClasses,
-    isCompact 
-      ? "w-8 h-8 bg-black/10 dark:bg-white/10 border-black/10 dark:border-white/10 backdrop-blur-sm transition-all duration-200 hover:scale-105 dark:hover:bg-orange-500 dark:hover:border-orange-500"
-      : isHeader
-        ? "w-10 h-10 bg-transparent border-transparent transition-colors duration-200 dark:hover:bg-orange-500 dark:hover:border-orange-500"
-        : "w-11 h-11 bg-black/15 dark:bg-white/10 border-black/10 dark:border-white/10 backdrop-blur-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/25"
-  )
-  
-  const iconClasses = cn(
-    isHeader ? "" : "transition-transform duration-200",
-    isCompact ? "h-4 w-4" : "h-5 w-5"
-  )
+  const iconClasses = cn(isCompact ? "h-4 w-4" : "h-5 w-5")
 
-  // Labeled link classes for detail page
-  const labeledLinkClasses = cn(
-    "flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200",
-    "bg-black/10 dark:bg-white/10 border-black/10 dark:border-white/10 backdrop-blur-md",
-    baseHoverClasses,
-    "hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/25 text-sm font-medium"
-  )
+  // Determine button variant and size based on context
+  const getButtonProps = () => {
+    if (isHeader) {
+      return { variant: "ghost" as const, size: "icon" as const }
+    }
+    if (isCompact) {
+      return { variant: "icon-glass" as const, size: "icon" as const, className: "w-8 h-8" }
+    }
+    if (showLabels) {
+      return { variant: "icon-glass" as const, size: "default" as const }
+    }
+    return { variant: "icon-glass" as const, size: "icon" as const, className: "w-11 h-11" }
+  }
+
+  const buttonProps = getButtonProps()
 
   // Render link content
   const renderLinkContent = (
@@ -346,17 +322,23 @@ export function ProjectLinks({ project, variant = "default", showLabels = false,
     label: string,
     ariaLabel: string
   ) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={showLabels ? labeledLinkClasses : linkClasses}
-      onClick={(e) => e.stopPropagation()}
-      aria-label={ariaLabel}
+    <Button
+      variant={buttonProps.variant}
+      size={buttonProps.size}
+      className={buttonProps.className}
+      asChild
     >
-      {icon}
-      {showLabels && <span>{label}</span>}
-    </a>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => e.stopPropagation()}
+        aria-label={ariaLabel}
+      >
+        {icon}
+        {showLabels && <span>{label}</span>}
+      </a>
+    </Button>
   )
 
   return (
@@ -398,7 +380,6 @@ export function ProjectModalHeader({ project, onClose }: ProjectModalHeaderProps
           asChild
           variant="ghost"
           size="icon"
-          className="flex-shrink-0 hover:bg-primary hover:text-white"
         >
           <Link
             href={`/projects/${project.id}`}
@@ -412,7 +393,6 @@ export function ProjectModalHeader({ project, onClose }: ProjectModalHeaderProps
         <Button
           variant="ghost"
           size="icon"
-          className="flex-shrink-0 hover:bg-primary hover:text-white"
           onClick={onClose}
           aria-label="Close modal"
         >

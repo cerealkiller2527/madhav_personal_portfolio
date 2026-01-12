@@ -11,6 +11,8 @@ import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { Comments } from "@/components/common/comments"
 import { ProjectContentSections } from "@/components/projects/project-content-sections"
 import { ProjectHeroMedia, ProjectLinks, ProjectStats } from "@/components/projects/project-components"
+import { Card } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { ArrowLeft } from "lucide-react"
 import { useContentTOC } from "@/lib/hooks/use-content-toc"
 
@@ -20,99 +22,140 @@ interface ProjectDetailPageProps {
   nextProject?: Project
 }
 
+// Check if HTML has actual text content (not just empty tags)
+function hasTextContent(html: string | undefined): boolean {
+  if (!html) return false
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim().length > 0
+}
+
+// Check if Notion recordMap has meaningful visible content (not just empty blocks)
+function hasNotionVisibleContent(recordMap: { block?: Record<string, { value?: { type?: string; properties?: Record<string, unknown> } }> } | undefined): boolean {
+  if (!recordMap?.block) return false
+  const blocks = Object.values(recordMap.block)
+  const contentBlocks = blocks.filter(b => {
+    const type = b?.value?.type
+    return type && type !== 'page'
+  })
+  if (contentBlocks.length === 0) return false
+  return contentBlocks.some(b => {
+    const props = b?.value?.properties
+    if (!props) return false
+    const titleProp = props.title as string[][] | undefined
+    if (titleProp && Array.isArray(titleProp) && titleProp.length > 0) {
+      const text = titleProp.map(t => t[0]).join('').trim()
+      if (text.length > 0) return true
+    }
+    return false
+  })
+}
+
 export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
   const contentRef = useRef<HTMLElement>(null)
   
-  const hasNotionContent = Boolean(project.recordMap && Object.keys(project.recordMap).length > 0)
+  const hasNotionContent = hasNotionVisibleContent(project.recordMap)
   
   // Use the centralized TOC hook for extracting sections
-  const { sections } = useContentTOC({ 
+  const { sections, showTOC } = useContentTOC({ 
     recordMap: hasNotionContent ? project.recordMap : undefined,
     project: hasNotionContent ? undefined : project
   })
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28">
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-        <aside className="hidden lg:block lg:col-span-1 py-16">
-          <div className="sticky top-28">
-            <div className="mb-8">
-              <BackButton sectionId="projects" size="sm">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-              </BackButton>
+      <div className={`grid grid-cols-1 gap-8 ${showTOC ? 'lg:grid-cols-5' : ''}`}>
+        {/* TOC Sidebar */}
+        {showTOC && (
+          <aside className="hidden lg:block lg:col-span-1 py-8">
+            <div className="sticky top-28">
+              <div className="mb-6">
+                <BackButton sectionId="projects" size="sm" variant="glass">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back
+                </BackButton>
+              </div>
+              <Card variant="glass-subtle" className="p-4">
+                <ScrollArea className="max-h-[calc(100vh-14rem)]">
+                  <TableOfContents sections={sections} containerRef={contentRef} />
+                </ScrollArea>
+              </Card>
             </div>
-            <TableOfContents sections={sections} containerRef={contentRef} />
-          </div>
-        </aside>
+          </aside>
+        )}
 
-        <main className="lg:col-span-4 py-16" ref={contentRef as React.RefObject<HTMLElement>}>
+        {/* Main Content */}
+        <main className={showTOC ? 'lg:col-span-4 py-8' : 'py-8'} ref={contentRef as React.RefObject<HTMLElement>}>
           <div className="lg:hidden mb-8">
-            <BackButton sectionId="projects">
+            <BackButton sectionId="projects" variant="glass">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to All Projects
             </BackButton>
           </div>
 
-          <article>
-            <header className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2 text-balance">
-                {project.title}
-              </h1>
-              <p className="text-xl text-muted-foreground text-balance">
-                {project.subtitle}
-              </p>
-              <ProjectLinks project={project} showLabels className="mt-6" />
-            </header>
+          <Card variant="glass" className="p-6 md:p-8">
+            <article>
+              <header className="mb-8">
+                <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2 text-balance">
+                  {project.title}
+                </h1>
+                <p className="text-xl text-muted-foreground text-balance">
+                  {project.subtitle}
+                </p>
+                <ProjectLinks project={project} showLabels className="mt-6" />
+              </header>
 
-            {/* Hero Media - 3D model or hero image */}
-            <div id="overview" className="scroll-mt-28">
-              <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden shadow-lg bg-secondary">
-                <ProjectHeroMedia
-                  project={project}
-                  sizes="(max-width: 1024px) 100vw, 1024px"
-                  className="object-cover"
-                  priority
-                />
+              {/* Hero Media - 3D model or hero image */}
+              <div id="overview" className="scroll-mt-28">
+                <Card variant="glass-subtle" className="mb-8 overflow-hidden">
+                  <div className="relative w-full h-64 md:h-96">
+                    <ProjectHeroMedia
+                      project={project}
+                      sizes="(max-width: 1024px) 100vw, 1024px"
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                </Card>
+                
+                {/* Inline stats display for immediate visibility */}
+                {project.stats && project.stats.length > 0 && (
+                  <ProjectStats stats={project.stats} variant="section" className="mb-8" />
+                )}
+                
+                {/* Notion content or local description */}
+                {(hasNotionContent || hasTextContent(project.detailedDescription)) && (
+                  hasNotionContent ? (
+                    <div className="notion-project-full-page">
+                      <NotionRenderer 
+                        recordMap={project.recordMap!}
+                        rootPageId={project.id}
+                        className="prose dark:prose-invert max-w-none"
+                        contentType="project"
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="prose dark:prose-invert max-w-none text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
+                    />
+                  )
+                )}
               </div>
-              
-              {/* Inline stats display for immediate visibility */}
-              {project.stats && project.stats.length > 0 && (
-                <ProjectStats stats={project.stats} variant="section" className="mb-8" />
-              )}
-              
-              {/* Notion content or local description */}
-              {hasNotionContent ? (
-                <div className="notion-project-full-page">
-                  <NotionRenderer 
-                    recordMap={project.recordMap!}
-                    rootPageId={project.id}
-                    className="prose dark:prose-invert max-w-none"
-                    contentType="project"
-                  />
-                </div>
-              ) : (
-                <div
-                  className="prose dark:prose-invert max-w-none text-muted-foreground"
-                  dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
-                />
-              )}
-            </div>
 
-            {/* Content sections (features, tech stack, gallery) */}
-            <ProjectContentSections 
-              project={project} 
-              hasNotionContent={hasNotionContent} 
-              variant="full-page"
-            />
+              {/* Content sections (features, tech stack, gallery) */}
+              <ProjectContentSections 
+                project={project} 
+                hasNotionContent={hasNotionContent} 
+                variant="full-page"
+              />
 
-            <ProjectNavigation 
-              previousProject={previousProject}
-              nextProject={nextProject}
-            />
+              <ProjectNavigation 
+                previousProject={previousProject}
+                nextProject={nextProject}
+              />
 
-            <Comments />
-          </article>
+              <Comments />
+            </article>
+          </Card>
         </main>
       </div>
     </div>
