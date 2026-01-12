@@ -38,7 +38,7 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
             </Button>
           </div>
 
-          <div className={`grid gap-8 ${showTOC ? 'lg:grid-cols-5' : ''}`}>
+          <div className={`grid gap-8 min-w-0 ${showTOC ? 'lg:grid-cols-5' : ''}`}>
             {/* Table of Contents - Desktop Only */}
             {showTOC && (
               <aside className="hidden lg:block lg:col-span-1">
@@ -56,8 +56,8 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
             )}
 
             {/* Main Content */}
-            <main className={showTOC ? 'lg:col-span-4' : ''} ref={contentRef}>
-              <Card variant="glass" className="p-6 md:p-8">
+            <main className={`min-w-0 ${showTOC ? 'lg:col-span-4' : ''}`} ref={contentRef}>
+              <Card variant="glass" className="p-6 md:p-8 overflow-hidden">
                 <article>
                   <BlogHeader 
                     post={post}

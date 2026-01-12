@@ -84,14 +84,14 @@ export function Header({ onResumeOpen }: HeaderProps) {
                 variant="nav"
                 size="sm"
                 asChild
-                className="px-2 sm:px-3 h-8"
+                className="px-2 lg:px-3 h-8"
               >
                 <Link
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item)}
                 >
                   {item.icon}
-                  <span className="hidden sm:inline">{item.name}</span>
+                  <span className="hidden lg:inline">{item.name}</span>
                 </Link>
               </Button>
             ))}
@@ -104,8 +104,8 @@ export function Header({ onResumeOpen }: HeaderProps) {
               size="sm"
               className="text-xs"
             >
-              <Eye className="mr-0 sm:mr-1.5 h-3 w-3" />
-              <span className="hidden sm:inline">View Résumé</span>
+              <Eye className="mr-0 lg:mr-1.5 h-3 w-3" />
+              <span className="hidden lg:inline">View Résumé</span>
             </Button>
             <ThemeToggle />
           </div>

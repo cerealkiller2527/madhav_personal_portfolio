@@ -5,7 +5,6 @@ import type { Project } from "@/lib/types"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Card } from "@/components/ui/card"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { ProjectModalHeader, ProjectHeroMedia, ProjectStats } from "@/components/projects/project-components"
@@ -18,14 +17,44 @@ interface ProjectModalProps {
   onClose: () => void
 }
 
+// Check if HTML has actual text content (not just empty tags)
+function hasTextContent(html: string | undefined): boolean {
+  if (!html) return false
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim().length > 0
+}
+
+// Check if Notion recordMap has meaningful visible content (not just empty blocks)
+function hasNotionVisibleContent(recordMap: { block?: Record<string, { value?: { type?: string; properties?: Record<string, unknown> } }> } | undefined): boolean {
+  if (!recordMap?.block) return false
+  const blocks = Object.values(recordMap.block)
+  // Filter out page blocks and check if remaining blocks have content
+  const contentBlocks = blocks.filter(b => {
+    const type = b?.value?.type
+    return type && type !== 'page'
+  })
+  if (contentBlocks.length === 0) return false
+  // Check if any block has actual text properties
+  return contentBlocks.some(b => {
+    const props = b?.value?.properties
+    if (!props) return false
+    // Check title/content properties for text
+    const titleProp = props.title as string[][] | undefined
+    if (titleProp && Array.isArray(titleProp) && titleProp.length > 0) {
+      const text = titleProp.map(t => t[0]).join('').trim()
+      if (text.length > 0) return true
+    }
+    return false
+  })
+}
+
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const contentRef = useRef<HTMLElement>(null)
   
   const notionProject = project && isNotionProject(project) ? project : null
-  const hasNotionContent = notionProject?.recordMap
+  const hasNotionContent = hasNotionVisibleContent(notionProject?.recordMap)
   const { sections, showTOC } = useContentTOC({ 
     recordMap: notionProject?.recordMap,
-    project: hasNotionContent ? undefined : project
+    project: hasNotionContent ? undefined : project ?? undefined
   })
 
   if (!project) {
@@ -34,26 +63,22 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
   return (
     <Dialog open={!!project} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="w-[calc(100%-4rem)] max-w-6xl h-[90vh] max-h-[900px] flex flex-col p-0 gap-0 [&>button]:hidden">
+      <DialogContent className="w-[95vw] sm:w-[90vw] max-w-6xl h-[calc(100dvh-2rem)] sm:h-[calc(100dvh-4rem)] max-h-[900px] flex flex-col p-0 gap-0 overflow-hidden [&>button]:hidden">
         <ProjectModalHeader project={project} onClose={onClose} />
 
-        <div className={`flex-1 grid grid-cols-1 gap-0 overflow-hidden ${showTOC ? 'md:grid-cols-5' : ''}`}>
+        <div className={`flex-1 min-h-0 grid grid-cols-1 gap-0 overflow-hidden ${showTOC ? 'md:grid-cols-5' : ''}`}>
           {/* TOC Sidebar */}
           {showTOC && (
-            <aside className="hidden md:block md:col-span-1 p-4">
-              <div className="sticky top-4">
-                <Card variant="glass-subtle" className="p-4">
-                  <ScrollArea className="max-h-[calc(90vh-8rem)]">
-                    <TableOfContents sections={sections} containerRef={contentRef} />
-                  </ScrollArea>
-                </Card>
-              </div>
+            <aside className="hidden md:block md:col-span-1 p-4 overflow-auto">
+              <Card variant="glass-subtle" className="p-4">
+                <TableOfContents sections={sections} containerRef={contentRef} />
+              </Card>
             </aside>
           )}
 
           {/* Main Content */}
-          <ScrollArea className={showTOC ? 'md:col-span-4 h-full' : 'h-full'}>
-            <main className="p-6" ref={contentRef as React.RefObject<HTMLElement>}>
+          <div className={`overflow-y-auto overflow-x-hidden ${showTOC ? 'md:col-span-4' : ''}`}>
+            <main className="p-4 sm:p-6" ref={contentRef as React.RefObject<HTMLElement>}>
               <div id="overview" className="scroll-mt-24">
                 <Card variant="glass-subtle" className="mb-6 overflow-hidden">
                   <AspectRatio ratio={16 / 9}>
@@ -71,7 +96,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 )}
                 
                 {/* Render Notion content if available, otherwise use local content */}
-                {(hasNotionContent || project.detailedDescription?.trim()) && (
+                {(hasNotionContent || hasTextContent(project.detailedDescription)) && (
                   <Card variant="glass-subtle" className="p-6">
                     {hasNotionContent ? (
                       <div className="notion-project-modal">
@@ -97,7 +122,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 hasNotionContent={Boolean(hasNotionContent)} 
               />
             </main>
-          </ScrollArea>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

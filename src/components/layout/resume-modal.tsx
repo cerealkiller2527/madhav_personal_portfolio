@@ -20,7 +20,7 @@ interface ResumeType {
 const resumeTypes: ResumeType[] = [
   {
     id: "software",
-    title: "Software Engineering",
+    title: "Software",
     description: "Full-stack development & programming",
     icon: <Code className="h-4 w-4" />,
     filePath: "/documents/Software Engineering/Madhav_Lodha_Software_resume.pdf",
@@ -28,7 +28,7 @@ const resumeTypes: ResumeType[] = [
   },
   {
     id: "robotics",
-    title: "Robotics Engineering",
+    title: "Robotics",
     description: "Robotics systems & automation",
     icon: <Bot className="h-4 w-4" />,
     filePath: "/documents/Robotics Engineering/Madhav_Lodha_Robotics_Resume.pdf",
@@ -36,7 +36,7 @@ const resumeTypes: ResumeType[] = [
   },
   {
     id: "mechanical",
-    title: "Mechanical Engineering",
+    title: "Mechanical",
     description: "Mechanical design & manufacturing",
     icon: <Settings className="h-4 w-4" />,
     filePath: "/documents/Mechanical Engineering/Madhav_Lodha_Mechanical_resume.pdf",
@@ -44,7 +44,7 @@ const resumeTypes: ResumeType[] = [
   },
   {
     id: "electrical",
-    title: "Electrical Engineering",
+    title: "Electrical",
     description: "Electronics & circuit design",
     icon: <Zap className="h-4 w-4" />,
     filePath: "/documents/Electrical Engineering/Madhav_Lodha_Electrical_resume.pdf",
@@ -112,10 +112,9 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                   <TabsTrigger
                     key={resume.id}
                     value={resume.id}
-                    className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-white"
+                    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-white"
                   >
                     {resume.icon}
-                    <span className="hidden xs:inline sm:hidden">{resume.title.split(' ')[0]}</span>
                     <span className="hidden sm:inline">{resume.title}</span>
                   </TabsTrigger>
                 ))}

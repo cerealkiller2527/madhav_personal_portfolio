@@ -22,10 +22,37 @@ interface ProjectDetailPageProps {
   nextProject?: Project
 }
 
+// Check if HTML has actual text content (not just empty tags)
+function hasTextContent(html: string | undefined): boolean {
+  if (!html) return false
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim().length > 0
+}
+
+// Check if Notion recordMap has meaningful visible content (not just empty blocks)
+function hasNotionVisibleContent(recordMap: { block?: Record<string, { value?: { type?: string; properties?: Record<string, unknown> } }> } | undefined): boolean {
+  if (!recordMap?.block) return false
+  const blocks = Object.values(recordMap.block)
+  const contentBlocks = blocks.filter(b => {
+    const type = b?.value?.type
+    return type && type !== 'page'
+  })
+  if (contentBlocks.length === 0) return false
+  return contentBlocks.some(b => {
+    const props = b?.value?.properties
+    if (!props) return false
+    const titleProp = props.title as string[][] | undefined
+    if (titleProp && Array.isArray(titleProp) && titleProp.length > 0) {
+      const text = titleProp.map(t => t[0]).join('').trim()
+      if (text.length > 0) return true
+    }
+    return false
+  })
+}
+
 export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
   const contentRef = useRef<HTMLElement>(null)
   
-  const hasNotionContent = Boolean(project.recordMap && Object.keys(project.recordMap).length > 0)
+  const hasNotionContent = hasNotionVisibleContent(project.recordMap)
   
   // Use the centralized TOC hook for extracting sections
   const { sections, showTOC } = useContentTOC({ 
@@ -95,24 +122,22 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                 )}
                 
                 {/* Notion content or local description */}
-                {(hasNotionContent || project.detailedDescription?.trim()) && (
-                  <>
-                    {hasNotionContent ? (
-                      <div className="notion-project-full-page">
-                        <NotionRenderer 
-                          recordMap={project.recordMap!}
-                          rootPageId={project.id}
-                          className="prose dark:prose-invert max-w-none"
-                          contentType="project"
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className="prose dark:prose-invert max-w-none text-muted-foreground"
-                        dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
+                {(hasNotionContent || hasTextContent(project.detailedDescription)) && (
+                  hasNotionContent ? (
+                    <div className="notion-project-full-page">
+                      <NotionRenderer 
+                        recordMap={project.recordMap!}
+                        rootPageId={project.id}
+                        className="prose dark:prose-invert max-w-none"
+                        contentType="project"
                       />
-                    )}
-                  </>
+                    </div>
+                  ) : (
+                    <div
+                      className="prose dark:prose-invert max-w-none text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: project.detailedDescription }}
+                    />
+                  )
                 )}
               </div>
 

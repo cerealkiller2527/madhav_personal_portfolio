@@ -99,7 +99,7 @@ const InteractiveMarqueeItem = ({
       }}
     >
       <a href={`/projects/${project.id}`} onClick={handleClick} className="block w-full h-full cursor-pointer">
-        <Card variant="glass-subtle" className="w-full h-full overflow-hidden">
+        <Card variant="glass" className="w-full h-full overflow-hidden">
           <CardContent className="p-3 flex flex-col h-full">
             <div className="relative w-full rounded-md overflow-hidden mb-3 flex-shrink-0">
               <AspectRatio ratio={16 / 9}>

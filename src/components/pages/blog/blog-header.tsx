@@ -45,7 +45,7 @@ export function BlogHeader({ post, author, readingTime }: BlogHeaderProps) {
       )}
 
       <div className="space-y-4">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight break-words">
           {post.title}
         </h1>
 

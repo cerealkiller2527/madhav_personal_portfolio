@@ -45,7 +45,7 @@ function NavigationCard<T extends NavigationItem>({
   const imageUrl = item.heroImage || item.coverImage || ""
 
   return (
-    <Link href={href} className="block w-full max-w-sm md:w-96 group">
+    <Link href={href} className="block w-full max-w-sm lg:w-72 xl:w-96 group">
       <Card variant="glass" className="p-6">
         <div className="flex items-center gap-6">
           {direction === "left" ? (
@@ -129,12 +129,12 @@ export function ContentNavigation<T extends NavigationItem>({
   return (
     <div className="mt-24 pt-12">
       <Separator className="mb-12" />
-      <div className="flex flex-col md:flex-row justify-between items-center w-full gap-8">
-        <div className="w-full md:w-auto flex justify-center md:justify-start">
+      <div className="flex flex-col lg:flex-row justify-between items-center w-full gap-8">
+        <div className="w-full lg:w-auto flex justify-center lg:justify-start">
           {previousItem ? (
             <NavigationCard item={previousItem} direction="left" contentType={contentType} />
           ) : (
-            <div className="hidden md:block w-96 h-1" />
+            <div className="hidden lg:block lg:w-72 xl:w-96 h-1" />
           )}
         </div>
 
@@ -148,11 +148,11 @@ export function ContentNavigation<T extends NavigationItem>({
           </div>
         )}
 
-        <div className="w-full md:w-auto flex justify-center md:justify-end">
+        <div className="w-full lg:w-auto flex justify-center lg:justify-end">
           {nextItem ? (
             <NavigationCard item={nextItem} direction="right" contentType={contentType} />
           ) : (
-            <div className="hidden md:block w-96 h-1" />
+            <div className="hidden lg:block lg:w-72 xl:w-96 h-1" />
           )}
         </div>
       </div>
