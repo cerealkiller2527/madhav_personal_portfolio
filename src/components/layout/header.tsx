@@ -8,14 +8,16 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/common/theme/theme-toggle"
 import { smoothScrollToElement } from "@/lib/core/utils"
+import { navItems, type NavItem } from "@/lib/core/data"
 
-const navItems = [
-  { name: "Home", id: "home", icon: <Home className="h-4 w-4" />, href: "/" },
-  { name: "Experience", id: "experience", icon: <Briefcase className="h-4 w-4" />, href: "/#experience" },
-  { name: "Projects", id: "projects", icon: <Code className="h-4 w-4" />, href: "/#projects" },
-  { name: "Blog", id: "blog", icon: <BookOpen className="h-4 w-4" />, href: "/blog" },
-  { name: "Contact", id: "contact", icon: <Mail className="h-4 w-4" />, href: "/#contact" },
-]
+// Map nav item IDs to their icons
+const NAV_ICONS: Record<string, React.ReactNode> = {
+  home: <Home className="h-4 w-4" />,
+  experience: <Briefcase className="h-4 w-4" />,
+  projects: <Code className="h-4 w-4" />,
+  blog: <BookOpen className="h-4 w-4" />,
+  contact: <Mail className="h-4 w-4" />,
+}
 
 interface HeaderProps {
   onResumeOpen: () => void
@@ -25,7 +27,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
   const router = useRouter()
   const pathname = usePathname()
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: typeof navItems[0]) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: NavItem) => {
     e.preventDefault()
 
     // Handle blog navigation separately
@@ -90,7 +92,7 @@ export function Header({ onResumeOpen }: HeaderProps) {
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item)}
                 >
-                  {item.icon}
+                  {NAV_ICONS[item.id]}
                   <span className="hidden lg:inline">{item.name}</span>
                 </Link>
               </Button>

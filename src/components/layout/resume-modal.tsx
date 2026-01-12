@@ -7,50 +7,15 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { LogoSpinnerInline } from "@/components/common/ui/logo-spinner"
 import { Download, X, Code, Bot, Settings, Zap } from "lucide-react"
+import { resumeTypes } from "@/lib/core/data"
 
-interface ResumeType {
-  id: string
-  title: string
-  description: string
-  icon: React.ReactNode
-  filePath: string
-  downloadName: string
+// Map icon names to components
+const RESUME_ICONS: Record<string, React.ReactNode> = {
+  code: <Code className="h-4 w-4" />,
+  bot: <Bot className="h-4 w-4" />,
+  settings: <Settings className="h-4 w-4" />,
+  zap: <Zap className="h-4 w-4" />,
 }
-
-const resumeTypes: ResumeType[] = [
-  {
-    id: "software",
-    title: "Software",
-    description: "Full-stack development & programming",
-    icon: <Code className="h-4 w-4" />,
-    filePath: "/documents/Software Engineering/Madhav_Lodha_Software_resume.pdf",
-    downloadName: "Madhav_Lodha_Software_Resume.pdf"
-  },
-  {
-    id: "robotics",
-    title: "Robotics",
-    description: "Robotics systems & automation",
-    icon: <Bot className="h-4 w-4" />,
-    filePath: "/documents/Robotics Engineering/Madhav_Lodha_Robotics_Resume.pdf",
-    downloadName: "Madhav_Lodha_Robotics_Resume.pdf"
-  },
-  {
-    id: "mechanical",
-    title: "Mechanical",
-    description: "Mechanical design & manufacturing",
-    icon: <Settings className="h-4 w-4" />,
-    filePath: "/documents/Mechanical Engineering/Madhav_Lodha_Mechanical_resume.pdf",
-    downloadName: "Madhav_Lodha_Mechanical_Resume.pdf"
-  },
-  {
-    id: "electrical",
-    title: "Electrical",
-    description: "Electronics & circuit design",
-    icon: <Zap className="h-4 w-4" />,
-    filePath: "/documents/Electrical Engineering/Madhav_Lodha_Electrical_resume.pdf",
-    downloadName: "Madhav_Lodha_Electrical_Resume.pdf"
-  }
-]
 
 interface ResumeModalProps {
   isOpen: boolean
@@ -114,7 +79,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                     value={resume.id}
                     className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-white"
                   >
-                    {resume.icon}
+                    {RESUME_ICONS[resume.iconName]}
                     <span className="hidden sm:inline">{resume.title}</span>
                   </TabsTrigger>
                 ))}
@@ -133,7 +98,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
           <ScrollArea className="w-full h-full">
             <div className="p-2 sm:p-4">
               <div className="flex justify-center items-start min-h-full">
-                <div className="w-full max-w-[90vw] xs:max-w-[85vw] sm:max-w-[800px] shadow-xl rounded-lg overflow-hidden bg-white">
+                <div className="w-full max-w-[85vw] sm:max-w-3xl shadow-xl rounded-lg overflow-hidden bg-white">
                   <div className="relative w-full" style={{ paddingBottom: '141.4%' /* A4 ratio */ }}>
                     <iframe
                       ref={iframeRef}
