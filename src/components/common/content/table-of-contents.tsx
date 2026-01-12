@@ -4,6 +4,13 @@ import { useState, useEffect } from "react"
 import { cn } from "@/lib/core/utils"
 import type { TOCSection } from "@/lib/types"
 
+// Static margin classes for TOC heading levels (avoids JIT purging)
+const LEVEL_MARGIN_CLASSES: Record<number, string> = {
+  1: '',
+  2: 'ml-3',
+  3: 'ml-6',
+}
+
 interface TableOfContentsProps {
   sections: TOCSection[]
   containerRef?: React.RefObject<HTMLElement | null>
@@ -56,13 +63,6 @@ export function TableOfContents({ sections, containerRef, className }: TableOfCo
   }
 
   if (sections.length === 0) return null
-
-  // Static margin classes for TOC heading levels (avoids JIT purging)
-  const LEVEL_MARGIN_CLASSES: Record<number, string> = {
-    1: '',
-    2: 'ml-3',
-    3: 'ml-6',
-  }
 
   return (
     <nav className={className}>
