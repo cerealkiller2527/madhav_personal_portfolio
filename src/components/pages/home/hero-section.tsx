@@ -8,7 +8,7 @@ import { ArrowDown } from "lucide-react"
 import { ProjectMarquee } from "@/components/projects/project-marquee"
 import type { Project } from "@/lib/types"
 import { smoothScrollToElement } from "@/lib/core/utils"
-import { siteInfo, buttonLabels } from "@/lib/core/data"
+import { siteInfo, buttonLabels, UI_CONSTANTS } from "@/lib/core/data"
 
 interface HeroSectionProps {
   projects: readonly Project[]
@@ -63,7 +63,7 @@ export function HeroSection({ projects, onHoverChange, onProjectSelect }: HeroSe
 
   const handleViewWorkClick = (e: React.MouseEvent) => {
     e.preventDefault()
-    smoothScrollToElement("projects", 800)
+    smoothScrollToElement("projects", UI_CONSTANTS.SCROLL_DURATION_MS)
   }
 
   return (

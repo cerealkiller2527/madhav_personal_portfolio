@@ -122,6 +122,17 @@ export const footerData = {
 
 export const blogDescription = "Thoughts on software engineering, web development, and technology.";
 
+// --- UI Constants ---
+
+export const UI_CONSTANTS = {
+  // Scroll animation duration in milliseconds
+  SCROLL_DURATION_MS: 800,
+  // Delay before scrolling after page navigation
+  PAGE_RENDER_DELAY_MS: 150,
+  // Number of projects visible before "Show More"
+  INITIAL_VISIBLE_PROJECTS: 4,
+} as const
+
 // --- Project Constants ---
 
 export const PROJECT_SECTIONS = {

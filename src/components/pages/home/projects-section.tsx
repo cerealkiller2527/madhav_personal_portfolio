@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { useBounceAnimation } from "@/lib/hooks/use-bounce-animation"
+import { UI_CONSTANTS } from "@/lib/core/data"
 
 const FILTERS = ["All", "Software", "Hardware", "Hybrid"] as const
 type FilterType = (typeof FILTERS)[number]
@@ -34,7 +35,7 @@ export function ProjectsSection({
     [projects, activeFilter],
   )
 
-  const projectsToShow = showMore || activeFilter !== "All" ? filteredProjects : filteredProjects.slice(0, 4)
+  const projectsToShow = showMore || activeFilter !== "All" ? filteredProjects : filteredProjects.slice(0, UI_CONSTANTS.INITIAL_VISIBLE_PROJECTS)
   
   const { activeBounceId, stopBouncing } = useBounceAnimation({
     bounceProjectId,
@@ -112,7 +113,7 @@ export function ProjectsSection({
         </AnimatePresence>
       </motion.div>
 
-      {activeFilter === "All" && projects.length > 4 && (
+      {activeFilter === "All" && projects.length > UI_CONSTANTS.INITIAL_VISIBLE_PROJECTS && (
         <div className="mt-12 text-center">
           <Button onClick={() => setShowMore(!showMore)} size="lg">
             {showMore ? "Show Less Projects" : "Show More Projects"}
