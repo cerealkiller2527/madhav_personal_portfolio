@@ -45,3 +45,14 @@ export function smoothScrollToElement(elementId: string, duration = 800, offset 
     smoothScrollTo(offsetPosition, duration)
   }
 }
+
+// Find a Notion heading element by its text content
+export function findHeadingByText(text: string): HTMLElement | null {
+  const headings = document.querySelectorAll('.notion-h1, .notion-h2, .notion-h3, h1, h2, h3')
+  for (const heading of headings) {
+    if (heading.textContent?.trim() === text.trim()) {
+      return heading as HTMLElement
+    }
+  }
+  return null
+}

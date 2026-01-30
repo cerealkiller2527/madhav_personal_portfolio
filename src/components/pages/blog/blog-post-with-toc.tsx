@@ -1,6 +1,5 @@
 "use client"
 
-import { useRef } from "react"  
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import type { BlogContent } from "@/lib/types"
@@ -20,8 +19,7 @@ interface BlogContentWithTOCProps {
 }
 
 export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContentWithTOCProps) {
-  const contentRef = useRef<HTMLElement>(null)
-  const { sections, showTOC } = useContentTOC({ recordMap: post.recordMap })
+  const { nestedSections, sectionIds, showTOC } = useContentTOC({ recordMap: post.recordMap })
 
   return (
     <div className="min-h-screen bg-background pt-20">
@@ -42,15 +40,15 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
               <aside className="hidden lg:block lg:col-span-1 py-8">
                 <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto">
                   <TableOfContents 
-                    sections={sections}
-                    containerRef={contentRef}
+                    sections={nestedSections}
+                    sectionIds={sectionIds}
                   />
                 </div>
               </aside>
             )}
 
             {/* Main Content */}
-            <main className={`${showTOC ? 'lg:col-span-4' : ''}`} ref={contentRef}>
+            <main className={`${showTOC ? 'lg:col-span-4' : ''}`}>
               <article>
                 <BlogHeader 
                   post={post}

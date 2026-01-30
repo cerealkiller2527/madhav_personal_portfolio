@@ -8,12 +8,43 @@ export interface TOCSection {
   level: number
 }
 
+export interface TOCNode extends TOCSection {
+  children: TOCNode[]
+}
+
+function buildNestedTOC(sections: TOCSection[]): TOCNode[] {
+  const result: TOCNode[] = []
+  const stack: TOCNode[] = []
+
+  for (const section of sections) {
+    const node: TOCNode = { ...section, children: [] }
+
+    while (stack.length > 0 && stack[stack.length - 1].level >= section.level) {
+      stack.pop()
+    }
+
+    if (stack.length === 0) {
+      result.push(node)
+    } else {
+      stack[stack.length - 1].children.push(node)
+    }
+
+    stack.push(node)
+  }
+
+  return result
+}
+
 function extractNotionHeadings(recordMap: ExtendedRecordMap | undefined): TOCSection[] {
   if (!recordMap?.block) return []
 
-  const headings: TOCSection[] = []
+  const headings: { blockId: string; title: string; level: number; index: number }[] = []
 
-  for (const [blockId, block] of Object.entries(recordMap.block)) {
+  const blockIds = Object.keys(recordMap.block)
+  
+  for (let i = 0; i < blockIds.length; i++) {
+    const blockId = blockIds[i]
+    const block = recordMap.block[blockId]
     const blockValue = (block as { value?: { type?: string; properties?: { title?: string[][] } } })?.value
     if (!blockValue) continue
 
@@ -22,25 +53,18 @@ function extractNotionHeadings(recordMap: ExtendedRecordMap | undefined): TOCSec
     if (type === 'header' || type === 'sub_header' || type === 'sub_sub_header') {
       const title = properties?.title?.[0]?.[0] || ''
       if (title) {
-        const id = title
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '')
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-        
         const level = type === 'header' ? 1 : type === 'sub_header' ? 2 : 3
-        
-        headings.push({
-          id: id || blockId,
-          label: title,
-          level
-        })
+        headings.push({ blockId, title, level, index: i })
       }
     }
   }
 
-  return headings
+  headings.sort((a, b) => a.index - b.index)
+
+  return headings.map(({ blockId, title, level }) => {
+    const id = blockId.replace(/-/g, '')
+    return { id, label: title, level }
+  })
 }
 
 function generateProjectSections(project: Project): TOCSection[] {
@@ -66,6 +90,8 @@ export function useContentTOC(content: {
   project?: Project
 }): {
   sections: TOCSection[]
+  nestedSections: TOCNode[]
+  sectionIds: string[]
   showTOC: boolean
 } {
   const sections = useMemo(() => {
@@ -80,7 +106,9 @@ export function useContentTOC(content: {
     return []
   }, [content.recordMap, content.project])
 
+  const nestedSections = useMemo(() => buildNestedTOC(sections), [sections])
+  const sectionIds = useMemo(() => sections.map((s) => s.id), [sections])
   const showTOC = sections.length >= 2
 
-  return { sections, showTOC }
+  return { sections, nestedSections, sectionIds, showTOC }
 }

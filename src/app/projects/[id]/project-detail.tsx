@@ -2,7 +2,6 @@
 
 "use client"
 
-import { useRef } from "react"
 import type { Project } from "@/lib/types"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
 import { ProjectNavigation } from "@/components/common/content/content-navigation"
@@ -21,12 +20,9 @@ interface ProjectDetailPageProps {
 }
 
 export default function ProjectDetailPage({ project, previousProject, nextProject }: ProjectDetailPageProps) {
-  const contentRef = useRef<HTMLElement>(null)
-  
   const hasNotionContent = Boolean(project.recordMap && Object.keys(project.recordMap).length > 0)
   
-  // Use the centralized TOC hook for extracting sections
-  const { sections } = useContentTOC({ 
+  const { nestedSections, sectionIds } = useContentTOC({ 
     recordMap: hasNotionContent ? project.recordMap : undefined,
     project: hasNotionContent ? undefined : project
   })
@@ -42,11 +38,11 @@ export default function ProjectDetailPage({ project, previousProject, nextProjec
                 Back
               </BackButton>
             </div>
-            <TableOfContents sections={sections} containerRef={contentRef} />
+            <TableOfContents sections={nestedSections} sectionIds={sectionIds} />
           </div>
         </aside>
 
-        <main className="lg:col-span-4 py-16" ref={contentRef as React.RefObject<HTMLElement>}>
+        <main className="lg:col-span-4 py-16">
           <div className="lg:hidden mb-8">
             <BackButton sectionId="projects">
               <ArrowLeft className="mr-2 h-4 w-4" />
