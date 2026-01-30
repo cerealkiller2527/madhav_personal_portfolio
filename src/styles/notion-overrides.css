@@ -78,18 +78,36 @@
 }
 
 .notion-code-block {
-  background: hsl(var(--muted));
-  border: 1px solid hsl(var(--border));
   border-radius: 0.5rem;
   margin: 1rem 0;
   overflow: hidden;
+  border: 1px solid hsl(var(--border));
 }
 
 .notion-code-block pre {
+  margin: 0;
   padding: 1rem;
   overflow-x: auto;
   font-size: 0.875rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  border-radius: 0.5rem;
+  background: hsl(var(--muted)) !important;
+}
+
+.notion-code-block pre code {
+  background: transparent !important;
+  border: none;
+  padding: 0;
+}
+
+.notion-code-block .shiki {
+  background: transparent !important;
+}
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: transparent !important;
 }
 
 .notion-list {

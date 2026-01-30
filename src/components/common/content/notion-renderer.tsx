@@ -1,9 +1,13 @@
-// Notion content renderer with custom block type handling
-
 'use client'
 
+import dynamic from "next/dynamic"
 import { NotionRenderer as ReactNotionRenderer } from "react-notion-x"
 import { ExtendedRecordMap } from "notion-types"
+
+const Code = dynamic(
+  () => import("react-notion-x-code-block").then((m) => m.Code),
+  { ssr: false }
+)
 
 interface NotionRendererProps {
   recordMap: ExtendedRecordMap
@@ -12,19 +16,12 @@ interface NotionRendererProps {
   contentType?: 'blog' | 'project'
 }
 
-// No-op component for unsupported Notion block types
-const NoOpBlock = () => null
-
 export function NotionRenderer({ 
   recordMap, 
   rootPageId, 
   className,
   contentType = 'blog'
 }: NotionRendererProps) {
-  const pageIcon = contentType === 'blog' ? "📄" : "🚀"
-  const pageClassName = `notion-${contentType}-page`
-  const bodyClassName = `notion-${contentType}-body`
-
   return (
     <div className={className}>
       <ReactNotionRenderer
@@ -33,17 +30,10 @@ export function NotionRenderer({
         darkMode={false}
         rootPageId={rootPageId}
         previewImages
-        showCollectionViewDropdown={false}
         showTableOfContents={false}
-        minTableOfContentsItems={3}
-        defaultPageIcon={pageIcon}
-        defaultPageCover=""
-        defaultPageCoverPosition={0.5}
-        className={pageClassName}
-        bodyClassName={bodyClassName}
+        className={`notion-${contentType}-page`}
         components={{
-          // Suppress warnings for Collection/database views
-          Collection: NoOpBlock,
+          Code,
         }}
       />
     </div>

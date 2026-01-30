@@ -80,6 +80,9 @@ importers:
       react-notion-x:
         specifier: ^7.4.2
         version: 7.7.3(@babel/runtime@7.27.6)(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-notion-x-code-block:
+        specifier: ^0.4.1
+        version: 0.4.1(react-notion-x@7.7.3(@babel/runtime@7.27.6)(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       tailwind-merge:
         specifier: ^2.5.5
         version: 2.6.0
@@ -2373,6 +2376,12 @@ packages:
     peerDependencies:
       react: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18 || ^19
       react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18 || ^19
+
+  react-notion-x-code-block@0.4.1:
+    resolution: {integrity: sha512-mhT5YR4/4Z4F4K07CzTNeVDfrZzrfxsMnqgjnjjn6wgdLGvughzECprJHMqoUS2Z0RedVEQ8dRLebdGQI9wqnQ==}
+    peerDependencies:
+      react: ^18.2.0
+      react-notion-x: ^6.16.0
 
   react-notion-x@7.7.3:
     resolution: {integrity: sha512-3VmReYPXaB4X3LYfo4oBQab/2MJ4GjhY1cExwLDq3MKjInmNdp4CtIONzZkXE4/JYqIujKN+nM1uF25xE5MJMw==}
@@ -5156,6 +5165,12 @@ snapshots:
       react-dom: 19.1.0(react@19.1.0)
       react-lifecycles-compat: 3.0.4
       warning: 4.0.3
+
+  react-notion-x-code-block@0.4.1(react-notion-x@7.7.3(@babel/runtime@7.27.6)(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
+    dependencies:
+      '@babel/runtime': 7.27.6
+      react: 19.1.0
+      react-notion-x: 7.7.3(@babel/runtime@7.27.6)(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
 
   react-notion-x@7.7.3(@babel/runtime@7.27.6)(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
