@@ -84,6 +84,12 @@
   border: 1px solid hsl(var(--border));
 }
 
+.notion-code-block.language-mermaid,
+.notion-code-block:has(pre.language-mermaid),
+.notion-code-block:has(code.language-mermaid) {
+  display: none;
+}
+
 .notion-code-block pre {
   margin: 0;
   padding: 1rem;
