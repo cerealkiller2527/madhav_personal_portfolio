@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { smoothScrollTo, findHeadingByText } from "@/lib/core/utils"
 import type { TOCNode } from "@/lib/hooks/use-content-toc"
@@ -74,7 +74,9 @@ export function TableOfContents({ sections, sectionIds, className }: TableOfCont
     return () => window.removeEventListener('scroll', handleScroll)
   }, [sectionIds, allSections, activeId])
 
-  const scrollExpandedIds = activeId ? new Set(getAllParentIds(sections, activeId)) : new Set<string>()
+  const scrollExpandedIds = useMemo(() => 
+    activeId ? new Set(getAllParentIds(sections, activeId)) : new Set<string>()
+  , [activeId, sections])
 
   const scrollToSection = useCallback((label: string, id: string) => {
     const element = findHeadingByText(label)
