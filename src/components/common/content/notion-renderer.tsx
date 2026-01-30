@@ -2,12 +2,18 @@
 
 import dynamic from "next/dynamic"
 import { NotionRenderer as ReactNotionRenderer } from "react-notion-x"
-import { ExtendedRecordMap } from "notion-types"
+import { ExtendedRecordMap, CodeBlock } from "notion-types"
 
-const Code = dynamic(
+const ShikiCode = dynamic(
   () => import("react-notion-x-code-block").then((m) => m.Code),
   { ssr: false }
 )
+
+function Code({ block }: { block: CodeBlock }) {
+  const language = block.properties?.language?.[0]?.[0]?.toLowerCase()
+  if (language === 'mermaid') return null
+  return <ShikiCode block={block} />
+}
 
 interface NotionRendererProps {
   recordMap: ExtendedRecordMap
