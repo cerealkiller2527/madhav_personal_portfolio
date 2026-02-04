@@ -1,5 +1,6 @@
 "use client"
 
+import { useRef } from "react"
 import type { Project } from "@/lib/types"
 import { NotionRenderer } from "@/components/common/content/notion-renderer"
 import { TableOfContents } from "@/components/common/content/table-of-contents"
@@ -15,6 +16,7 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
+  const contentRef = useRef<HTMLElement>(null)
   const notionProject = project && isNotionProject(project) ? project : null
   const hasNotionContent = notionProject?.recordMap
   const { nestedSections, sectionIds } = useContentTOC({ 
@@ -33,10 +35,10 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
         <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-0 overflow-hidden">
           <aside className="hidden md:block md:col-span-1 p-6 border-r">
-            <TableOfContents sections={nestedSections} sectionIds={sectionIds} />
+            <TableOfContents sections={nestedSections} sectionIds={sectionIds} containerRef={contentRef} />
           </aside>
 
-          <main className="md:col-span-4 overflow-y-auto p-8">
+          <main ref={contentRef} className="md:col-span-4 overflow-y-auto p-8">
             <div id="overview" className="scroll-mt-24">
               <div className="relative w-full h-64 md:h-80 mb-6 rounded-md overflow-hidden bg-secondary">
                 <ProjectHeroMedia

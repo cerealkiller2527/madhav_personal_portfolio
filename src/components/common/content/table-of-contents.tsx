@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { smoothScrollTo, findHeadingByText } from "@/lib/core/utils"
+import { smoothScrollTo } from "@/lib/core/utils"
 import type { TOCNode } from "@/lib/hooks/use-content-toc"
 
 interface TableOfContentsProps {
   sections: TOCNode[]
   sectionIds: string[]
   className?: string
+  containerRef?: React.RefObject<HTMLElement | null>
 }
 
 function getAllParentIds(nodes: TOCNode[], targetId: string, path: string[] = []): string[] {
@@ -26,7 +27,7 @@ function flattenSections(nodes: TOCNode[]): TOCNode[] {
   return nodes.flatMap(n => [n, ...flattenSections(n.children)])
 }
 
-export function TableOfContents({ sections, sectionIds, className }: TableOfContentsProps) {
+export function TableOfContents({ sections, sectionIds, className, containerRef }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("")
   const [hoveredIds, setHoveredIds] = useState<Set<string>>(new Set())
   const isScrollingRef = useRef(false)
@@ -38,17 +39,24 @@ export function TableOfContents({ sections, sectionIds, className }: TableOfCont
   useEffect(() => {
     if (sectionIds.length === 0) return
 
+    const container = containerRef?.current
     let ticking = false
 
     const updateActiveSection = () => {
       if (isScrollingRef.current) return
       
-      const headings = document.querySelectorAll('.notion-h1, .notion-h2, .notion-h3')
+      const searchRoot = container || document
+      const headings = searchRoot.querySelectorAll('.notion-h1, .notion-h2, .notion-h3')
       let lastVisible = ""
+      
+      const threshold = container ? 100 : 150
       
       for (const heading of headings) {
         const rect = heading.getBoundingClientRect()
-        if (rect.top <= 150) {
+        const containerTop = container ? container.getBoundingClientRect().top : 0
+        const relativeTop = rect.top - containerTop
+        
+        if (relativeTop <= threshold) {
           const text = heading.textContent?.trim() || ""
           const section = allSections.find(s => s.label === text)
           if (section) lastVisible = section.id
@@ -68,31 +76,50 @@ export function TableOfContents({ sections, sectionIds, className }: TableOfCont
       }
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    const scrollTarget = container || window
+    scrollTarget.addEventListener('scroll', handleScroll, { passive: true })
     updateActiveSection()
 
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [sectionIds, allSections, activeId])
+    return () => scrollTarget.removeEventListener('scroll', handleScroll)
+  }, [sectionIds, allSections, activeId, containerRef])
 
   const scrollExpandedIds = useMemo(() => 
     activeId ? new Set(getAllParentIds(sections, activeId)) : new Set<string>()
   , [activeId, sections])
 
   const scrollToSection = useCallback((label: string, id: string) => {
-    const element = findHeadingByText(label)
+    const container = containerRef?.current
+    const searchRoot = container || document
+    
+    const headings = searchRoot.querySelectorAll('.notion-h1, .notion-h2, .notion-h3')
+    let element: HTMLElement | null = null
+    for (const heading of headings) {
+      if (heading.textContent?.trim() === label.trim()) {
+        element = heading as HTMLElement
+        break
+      }
+    }
+    
     if (!element) return
 
     isScrollingRef.current = true
     setActiveId(id)
 
-    const y = element.getBoundingClientRect().top + window.scrollY - 120
-    smoothScrollTo(y, 600)
+    if (container) {
+      const containerRect = container.getBoundingClientRect()
+      const elementRect = element.getBoundingClientRect()
+      const scrollTop = container.scrollTop + (elementRect.top - containerRect.top) - 80
+      container.scrollTo({ top: scrollTop, behavior: 'smooth' })
+    } else {
+      const y = element.getBoundingClientRect().top + window.scrollY - 120
+      smoothScrollTo(y, 600)
+    }
 
     if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current)
     scrollTimeoutRef.current = setTimeout(() => {
       isScrollingRef.current = false
     }, 700)
-  }, [])
+  }, [containerRef])
 
   const handleMouseEnter = useCallback((id: string) => {
     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current)
