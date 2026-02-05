@@ -24,6 +24,7 @@ export interface Experience {
   stats?: Statistic[]
   tags: string[]
   liveLink?: string
+  logo?: string
 }
 
 // --- Project Types ---

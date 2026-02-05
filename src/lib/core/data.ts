@@ -92,6 +92,7 @@ export const experiences: readonly Experience[] = [
   {
     id: "01",
     company: "Liger Mobility",
+    logo: "/assets/logos/liger-mobility.png",
     role: "Embedded Systems & Software Intern",
     date: "May 2024 – July 2024",
     location: "Mumbai, India",
@@ -107,6 +108,7 @@ export const experiences: readonly Experience[] = [
   {
     id: "02",
     company: "HCLTech",
+    logo: "/assets/logos/hcltech.png",
     role: "Robotics Engineering Intern",
     date: "Jan 2024 – Apr 2024",
     location: "Boston, MA",
@@ -121,6 +123,7 @@ export const experiences: readonly Experience[] = [
   {
     id: "03",
     company: "Ayurythm",
+    logo: "/assets/logos/ayurythm.png",
     role: "Test Design Engineer Intern",
     date: "April 2022 – July 2022",
     location: "Bangalore, India",
@@ -135,6 +138,7 @@ export const experiences: readonly Experience[] = [
   {
     id: "04",
     company: "Design Flyover",
+    logo: "/assets/logos/design-flyover.png",
     role: "Product Design Engineer Intern",
     date: "September 2021 – October 2021",
     location: "Mumbai, India",
