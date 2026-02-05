@@ -162,8 +162,15 @@ export function ProjectStats({ stats, variant = "default", className }: ProjectS
     )
   }
 
-  // Grid display for default and section variants - always 4 columns
-  const gridCols = "grid-cols-2 sm:grid-cols-4"
+  // Grid display for default and section variants - columns based on stat count
+  const statCount = stats.length
+  const gridCols = statCount === 1
+    ? "grid-cols-1"
+    : statCount === 2
+      ? "grid-cols-2"
+      : statCount === 3
+        ? "grid-cols-3"
+        : "grid-cols-2 sm:grid-cols-4"
 
   return (
     <div className={cn("grid gap-3", gridCols, className)}>
