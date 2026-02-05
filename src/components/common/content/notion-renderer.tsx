@@ -15,6 +15,10 @@ function Code({ block }: { block: CodeBlock }) {
   return <ShikiCode block={block} />
 }
 
+function Collection() {
+  return null
+}
+
 interface NotionRendererProps {
   recordMap: ExtendedRecordMap
   rootPageId?: string
@@ -40,6 +44,7 @@ export function NotionRenderer({
         className={`notion-${contentType}-page`}
         components={{
           Code,
+          Collection,
         }}
       />
     </div>
