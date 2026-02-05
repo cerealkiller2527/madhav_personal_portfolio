@@ -107,7 +107,7 @@ export const experiences: readonly Experience[] = [
   },
   {
     id: "02",
-    company: "HCLTech",
+    company: "HCL Tech",
     logo: "/assets/logos/hcltech.png",
     role: "Robotics Engineering Intern",
     date: "Jan 2024 – Apr 2024",
