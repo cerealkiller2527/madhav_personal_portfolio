@@ -114,6 +114,7 @@
 .notion-list {
   margin: 0.25rem 0;
   padding-left: 1.5rem;
+  list-style-position: inside;
 }
 
 .notion-list-item {
@@ -487,6 +488,7 @@ figcaption {
 .notion-project-page .notion-list {
   margin: 0.2rem 0;
   padding-left: 1.25rem;
+  list-style-position: inside;
 }
 
 .notion-project-page .notion-list-item {
