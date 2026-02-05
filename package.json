@@ -29,7 +29,7 @@
     "dotenv": "^17.2.1",
     "framer-motion": "latest",
     "lucide-react": "^0.454.0",
-    "next": "15.2.4",
+    "next": "15.2.8",
     "next-themes": "latest",
     "notion-client": "^7.4.2",
     "notion-types": "^7.4.2",
