@@ -47,7 +47,7 @@ export function BlogCard({
         )}
       </div>
       
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <div className={`flex items-center ${isCompact ? "gap-3" : "gap-4"} text-sm text-muted-foreground mb-3`}>
           <div className="flex items-center gap-1">
             <Calendar className="h-4 w-4" />

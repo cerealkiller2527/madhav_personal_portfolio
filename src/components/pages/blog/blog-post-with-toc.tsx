@@ -23,9 +23,9 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
 
   return (
     <div className="min-h-screen bg-background pt-20">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <Button asChild variant="outline" size="sm">
               <Link href="/blog">
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -34,7 +34,7 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
             </Button>
           </div>
 
-          <div className={`grid gap-12 ${showTOC ? 'lg:grid-cols-5' : ''}`}>
+          <div className={`grid gap-8 lg:gap-12 ${showTOC ? 'lg:grid-cols-5' : ''}`}>
             {/* Table of Contents - Desktop Only */}
             {showTOC && (
               <aside className="hidden lg:block lg:col-span-1 py-8">
@@ -48,8 +48,8 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
             )}
 
             {/* Main Content */}
-            <main className={`${showTOC ? 'lg:col-span-4' : ''}`}>
-              <article>
+            <main className={`min-w-0 overflow-hidden ${showTOC ? 'lg:col-span-4' : ''}`}>
+              <article className="overflow-hidden">
                 <BlogHeader 
                   post={post}
                   author={{
@@ -59,7 +59,7 @@ export function BlogContentWithTOC({ post, previousPost, nextPost }: BlogContent
                   readingTime={post.readingTime}
                 />
 
-                <div className="prose prose-lg max-w-none dark:prose-invert">
+                <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none dark:prose-invert overflow-x-auto">
                   {post.recordMap && <NotionRenderer recordMap={post.recordMap} contentType="blog" />}
                 </div>
               </article>

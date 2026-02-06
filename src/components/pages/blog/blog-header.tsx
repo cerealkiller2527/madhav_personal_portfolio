@@ -18,9 +18,9 @@ interface BlogHeaderProps {
 export function BlogHeader({ post, author, readingTime }: BlogHeaderProps) {
 
   return (
-    <header className="mb-8">
+    <header className="mb-6 sm:mb-8">
       {post.coverImage && (
-        <div className="relative h-64 md:h-80 mb-8 -mx-4 md:mx-0 rounded-none md:rounded-lg overflow-hidden">
+        <div className="relative h-48 sm:h-64 md:h-80 mb-6 sm:mb-8 -mx-3 sm:-mx-4 md:mx-0 rounded-none md:rounded-lg overflow-hidden">
           <ContentImage
             src={post.coverImage}
             alt={post.title}
@@ -33,13 +33,13 @@ export function BlogHeader({ post, author, readingTime }: BlogHeaderProps) {
         </div>
       )}
 
-      <div className="space-y-4">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+      <div className="space-y-3 sm:space-y-4">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight break-words">
           {post.title}
         </h1>
 
         {post.description && (
-          <p className="text-xl text-muted-foreground leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed">
             {post.description}
           </p>
         )}

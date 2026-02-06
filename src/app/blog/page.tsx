@@ -18,11 +18,11 @@ async function BlogContent() {
 
     return (
       <div className="min-h-screen bg-background pt-20">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <div className="text-center mb-8 sm:mb-12">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">Blog</h1>
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-2">
                 {blogDescription}
               </p>
             </div>
@@ -45,7 +45,7 @@ async function BlogContent() {
   } catch {
     return (
       <div className="min-h-screen bg-background pt-20">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8">
           <div className="max-w-6xl mx-auto">
             <div className="text-center py-12">
               <h3 className="text-lg font-semibold mb-2">Unable to load blog posts</h3>
@@ -62,11 +62,11 @@ export default function BlogPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-background pt-20">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="h-12 bg-muted rounded w-1/3 mx-auto mb-4"></div>
-              <div className="h-6 bg-muted rounded w-2/3 mx-auto"></div>
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="h-10 sm:h-12 bg-muted rounded w-1/3 mx-auto mb-3 sm:mb-4"></div>
+              <div className="h-5 sm:h-6 bg-muted rounded w-2/3 mx-auto"></div>
             </div>
             <LoadingGrid count={6} />
           </div>
