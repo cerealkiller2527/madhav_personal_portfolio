@@ -1,4 +1,4 @@
-
+/* Blog Layout */
 .blog-container {
   max-width: 72rem;
   margin: 0 auto;
@@ -10,6 +10,7 @@
   margin: 0 auto;
 }
 
+/* Blog List */
 .blog-list {
   display: flex;
   flex-direction: column;
@@ -44,6 +45,7 @@
   min-width: 0;
 }
 
+/* Blog Navigation */
 .blog-nav {
   display: flex;
   justify-content: space-between;
@@ -63,6 +65,7 @@
   flex: 0;
 }
 
+/* Blog Header */
 .blog-header {
   text-align: left;
   margin-bottom: 2rem;
@@ -97,22 +100,7 @@
   margin: 1rem 0;
 }
 
-.blog-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: hsl(var(--muted));
-  z-index: 50;
-}
-
-.blog-progress-bar {
-  height: 100%;
-  background: hsl(var(--primary));
-  transition: width 0.1s ease;
-}
-
+/* Blog Sidebar & TOC */
 .blog-sidebar {
   position: sticky;
   top: 2rem;
@@ -156,6 +144,24 @@
   color: hsl(var(--primary));
 }
 
+/* Reading Progress */
+.blog-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: hsl(var(--muted));
+  z-index: 50;
+}
+
+.blog-progress-bar {
+  height: 100%;
+  background: hsl(var(--primary));
+  transition: width 0.1s ease;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .blog-container {
     padding: 0 0.75rem;
@@ -163,7 +169,6 @@
   
   .blog-nav {
     flex-direction: column;
-    gap: 1rem;
   }
   
   .blog-nav-item {
@@ -183,6 +188,5 @@
   .blog-list-thumbnail {
     width: 100%;
     height: 12rem;
-    align-self: stretch;
   }
 }

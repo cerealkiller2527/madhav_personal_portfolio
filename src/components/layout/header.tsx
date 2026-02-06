@@ -2,6 +2,7 @@
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import type React from "react"
+import { useState, useEffect, useRef, useLayoutEffect } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { Home, Briefcase, Code, Mail, Eye, BookOpen } from "lucide-react"
@@ -27,6 +28,75 @@ export function Header({ onResumeOpen }: HeaderProps) {
   const router = useRouter()
   const pathname = usePathname()
   const { projects, blogPosts, onProjectSelect } = useSearch()
+  const [activeSection, setActiveSection] = useState("home")
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
+  const navRef = useRef<HTMLElement>(null)
+  const itemRefs = useRef<Map<string, HTMLAnchorElement>>(new Map())
+
+  const updateIndicator = (id: string) => {
+    const item = itemRefs.current.get(id)
+    const nav = navRef.current
+    if (item && nav) {
+      const navRect = nav.getBoundingClientRect()
+      const itemRect = item.getBoundingClientRect()
+      setIndicatorStyle({
+        left: itemRect.left - navRect.left,
+        width: itemRect.width,
+      })
+    }
+  }
+
+  useLayoutEffect(() => {
+    if (activeSection) {
+      updateIndicator(activeSection)
+    }
+  }, [activeSection])
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (activeSection) updateIndicator(activeSection)
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [activeSection])
+
+  useEffect(() => {
+    if (pathname !== "/") {
+      if (pathname.startsWith("/blog")) {
+        setActiveSection("blog")
+      } else if (pathname.startsWith("/projects")) {
+        setActiveSection("projects")
+      } else {
+        setActiveSection("")
+      }
+      return
+    }
+
+    const sectionIds = ["contact", "projects", "experience", "home"]
+    
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 150
+
+      for (const id of sectionIds) {
+        const element = document.getElementById(id)
+        if (element) {
+          const { offsetTop, offsetHeight } = element
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(id)
+            return
+          }
+        }
+      }
+      
+      if (window.scrollY < 100) {
+        setActiveSection("home")
+      }
+    }
+
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [pathname])
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: typeof navItems[0]) => {
     e.preventDefault()
@@ -83,21 +153,39 @@ export function Header({ onResumeOpen }: HeaderProps) {
             </div>
           </Link>
 
-          <nav className="flex items-center justify-center">
+          <nav ref={navRef} className="flex items-center justify-center relative">
+            {activeSection && indicatorStyle.width > 0 && (
+              <motion.div
+                className="absolute top-0 h-full rounded-lg bg-white/15 border border-white/20"
+                initial={false}
+                animate={{
+                  left: indicatorStyle.left,
+                  width: indicatorStyle.width,
+                }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            )}
             {navItems.map((item) => (
               <Link
                 key={item.id}
+                ref={(el) => { if (el) itemRefs.current.set(item.id, el) }}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item)}
-                className="flex items-center justify-center gap-1.5 rounded-lg px-2 sm:px-3 py-1.5 text-xs font-medium transition-colors duration-200 hover:text-white hover:bg-white/10 cursor-pointer text-white/70"
+                className={`relative flex items-center justify-center gap-1.5 rounded-lg px-2 sm:px-3 py-1.5 text-xs font-medium transition-colors duration-200 cursor-pointer ${
+                  activeSection === item.id 
+                    ? "text-white" 
+                    : "text-white/60 hover:text-white hover:bg-white/10"
+                }`}
               >
-                {item.icon}
-                <span className="hidden sm:inline">{item.name}</span>
+                <span className="relative z-10 flex items-center gap-1.5">
+                  {item.icon}
+                  <span className="hidden sm:inline">{item.name}</span>
+                </span>
               </Link>
             ))}
           </nav>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
             <GlobalSearch
               projects={projects}
               blogPosts={blogPosts}
@@ -105,12 +193,12 @@ export function Header({ onResumeOpen }: HeaderProps) {
             />
             <Button
               variant="glass"
-              size="sm"
+              size="icon"
               onClick={onResumeOpen}
-              className="text-xs px-3 h-8"
+              className="h-8 w-8 lg:w-auto lg:px-3 bg-primary/20 border-primary/30 hover:bg-primary/30 hover:border-primary/40 text-white"
             >
-              <Eye className="mr-0 sm:mr-1.5 h-3 w-3" />
-              <span className="hidden sm:inline">View Résumé</span>
+              <Eye className="h-4 w-4 lg:mr-1.5" />
+              <span className="hidden lg:inline text-xs">Résumé</span>
             </Button>
             <ThemeToggle />
           </div>

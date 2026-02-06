@@ -109,14 +109,15 @@ export function GlobalSearch({ projects, blogPosts, onProjectSelect, className }
         variant="glass"
         onClick={() => setOpen(true)}
         className={cn(
-          "relative h-8 justify-start gap-2 text-white/60 hover:text-white",
-          "w-8 p-0 sm:w-40 sm:px-3 sm:pr-10 lg:w-48",
+          "relative h-8 text-white/60 hover:text-white",
+          "w-8 p-0 flex items-center justify-center",
+          "lg:w-40 lg:px-3 lg:pr-10 lg:justify-start lg:gap-2",
           className
         )}
       >
         <Search className="h-4 w-4 shrink-0" />
-        <span className="hidden sm:inline-flex text-xs">Search...</span>
-        <kbd className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 hidden sm:inline-flex h-5 select-none items-center gap-0.5 rounded border border-white/20 bg-white/5 px-1.5 font-mono text-[10px] text-white/40">
+        <span className="hidden lg:inline-flex text-xs">Search...</span>
+        <kbd className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 hidden lg:inline-flex h-5 select-none items-center gap-0.5 rounded border border-white/20 bg-white/5 px-1.5 font-mono text-[10px] text-white/40">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>
