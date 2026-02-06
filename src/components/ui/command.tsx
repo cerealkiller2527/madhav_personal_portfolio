@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { type DialogProps } from "@radix-ui/react-dialog"
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
 import { Command as CommandPrimitive } from "cmdk"
 import { Search } from "lucide-react"
 
@@ -28,10 +27,8 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent hideClose className="overflow-hidden p-0 shadow-2xl border-white/10 bg-background/95 backdrop-blur-xl sm:rounded-xl">
-        <VisuallyHidden.Root>
-          <DialogTitle>Search</DialogTitle>
-          <DialogDescription>Search for projects and blog posts</DialogDescription>
-        </VisuallyHidden.Root>
+        <DialogTitle className="sr-only">Search</DialogTitle>
+        <DialogDescription className="sr-only">Search for projects and blog posts</DialogDescription>
         <Command className="[&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
         </Command>
