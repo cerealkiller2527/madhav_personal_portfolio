@@ -7,6 +7,8 @@ import Image from "next/image"
 import { Home, Briefcase, Code, Mail, Eye, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/common/theme/theme-toggle"
+import { GlobalSearch } from "@/components/common/global-search"
+import { useSearch } from "@/lib/context/search-context"
 import { smoothScrollToElement } from "@/lib/core/utils"
 
 const navItems = [
@@ -24,6 +26,7 @@ interface HeaderProps {
 export function Header({ onResumeOpen }: HeaderProps) {
   const router = useRouter()
   const pathname = usePathname()
+  const { projects, blogPosts, onProjectSelect } = useSearch()
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: typeof navItems[0]) => {
     e.preventDefault()
@@ -94,10 +97,17 @@ export function Header({ onResumeOpen }: HeaderProps) {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <GlobalSearch
+              projects={projects}
+              blogPosts={blogPosts}
+              onProjectSelect={onProjectSelect || undefined}
+            />
             <Button
+              variant="glass"
+              size="sm"
               onClick={onResumeOpen}
-              className="glass-effect border-white/20 text-white font-medium text-xs px-3 py-1.5 h-auto hover:bg-white/20 transition-all duration-200"
+              className="text-xs px-3 h-8"
             >
               <Eye className="mr-0 sm:mr-1.5 h-3 w-3" />
               <span className="hidden sm:inline">View Résumé</span>

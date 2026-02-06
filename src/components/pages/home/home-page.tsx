@@ -7,25 +7,43 @@ import { HeroSection } from "@/components/pages/home/hero-section"
 import { ExperienceSection } from "@/components/pages/home/experience-section"
 import { ProjectsSection } from "@/components/pages/home/projects-section"
 import { ProjectModal } from "@/components/projects/project-modal"
-import type { Project, Experience } from "@/lib/types"
+import type { Project, Experience, BlogPreview } from "@/lib/types"
 import { CursorGlow } from "@/components/common/cursor-glow"
 import { smoothScrollToElement } from "@/lib/core/utils"
+import { useSearch } from "@/lib/context/search-context"
 
 interface HomePageProps {
   projects: readonly Project[]
   experiences: readonly Experience[]
+  blogPosts: readonly BlogPreview[]
 }
 
-export default function HomePage({ projects, experiences }: HomePageProps) {
+export default function HomePage({ projects, experiences, blogPosts }: HomePageProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isGlowVisible, setIsGlowVisible] = useState(false)
   const [bounceTarget, setBounceTarget] = useState<string | null>(null)
+  const { setProjects, setBlogPosts, setOnProjectSelect } = useSearch()
 
-  // Effect to handle scrolling from sessionStorage (e.g., after navigating back)
+  useEffect(() => {
+    setProjects(projects)
+    setBlogPosts(blogPosts)
+  }, [projects, blogPosts, setProjects, setBlogPosts])
+
+  const handleSearchProjectSelect = useCallback((projectId: string) => {
+    const project = projects.find((p) => p.id === projectId)
+    if (project) {
+      setSelectedProject(project)
+    }
+  }, [projects])
+
+  useEffect(() => {
+    setOnProjectSelect(handleSearchProjectSelect)
+    return () => setOnProjectSelect(null)
+  }, [handleSearchProjectSelect, setOnProjectSelect])
+
   useEffect(() => {
     const scrollToId = sessionStorage.getItem("scrollTo")
     if (scrollToId) {
-      // Use a longer timeout to ensure the page is fully rendered
       setTimeout(() => {
         smoothScrollToElement(scrollToId, 800)
         sessionStorage.removeItem("scrollTo")
