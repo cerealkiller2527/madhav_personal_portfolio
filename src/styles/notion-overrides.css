@@ -112,24 +112,19 @@
 }
 
 .notion-list {
-  margin: 0.15rem 0;
-  padding-left: 1.5rem;
-  list-style-position: inside;
+  margin: 0.25rem 0 !important;
+  padding-left: 1.5rem !important;
 }
 
 .notion-list-item {
   margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1.5;
+  padding: 0.05rem 0 !important;
+  line-height: 1.4 !important;
   color: hsl(var(--foreground));
 }
 
-.notion-list-item + .notion-list-item {
-  margin-top: 0.1rem !important;
-}
-
 .notion-list .notion-list {
-  margin: 0.05rem 0;
+  margin: 0 0 0 0.25rem !important;
 }
 
 .notion-quote {
@@ -289,92 +284,92 @@ figcaption {
 
 .notion-pink_background,
 .notion-pink_background_co {
-  background: rgba(219, 112, 147, 0.35);
+  background: rgba(255, 100, 150, 0.25) !important;
 }
 
 .notion-red_background,
 .notion-red_background_co {
-  background: rgba(220, 85, 85, 0.3);
+  background: rgba(255, 80, 80, 0.25) !important;
 }
 
 .notion-blue_background,
 .notion-blue_background_co {
-  background: rgba(100, 149, 237, 0.3);
+  background: rgba(80, 140, 255, 0.25) !important;
 }
 
 [class*="green_background"],
 [class*="teal_background"] {
-  background: rgba(34, 180, 100, 0.35);
+  background: rgba(60, 200, 140, 0.3) !important;
 }
 
 .notion-yellow_background,
 .notion-yellow_background_co {
-  background: rgba(255, 193, 7, 0.35);
+  background: rgba(255, 200, 50, 0.35) !important;
 }
 
 .notion-orange_background,
 .notion-orange_background_co {
-  background: rgba(255, 152, 0, 0.3);
+  background: rgba(255, 160, 40, 0.3) !important;
 }
 
 .notion-purple_background,
 .notion-purple_background_co {
-  background: rgba(156, 39, 176, 0.3);
+  background: rgba(160, 80, 200, 0.25) !important;
 }
 
 .notion-brown_background,
 .notion-brown_background_co {
-  background: rgba(141, 110, 99, 0.3);
+  background: rgba(160, 120, 100, 0.25) !important;
 }
 
 [class*="gray_background"] {
-  background: rgba(120, 120, 120, 0.25);
+  background: rgba(140, 140, 140, 0.2) !important;
 }
 
 .dark .notion-pink_background,
 .dark .notion-pink_background_co {
-  background: rgba(255, 140, 180, 0.25);
+  background: rgba(255, 130, 170, 0.3) !important;
 }
 
 .dark .notion-red_background,
 .dark .notion-red_background_co {
-  background: rgba(255, 100, 100, 0.25);
+  background: rgba(255, 110, 110, 0.3) !important;
 }
 
 .dark .notion-blue_background,
 .dark .notion-blue_background_co {
-  background: rgba(120, 170, 255, 0.25);
+  background: rgba(100, 160, 255, 0.3) !important;
 }
 
 .dark [class*="green_background"],
 .dark [class*="teal_background"] {
-  background: rgba(80, 200, 130, 0.3) !important;
+  background: rgba(70, 200, 140, 0.35) !important;
 }
 
 .dark .notion-yellow_background,
 .dark .notion-yellow_background_co {
-  background: rgba(255, 210, 50, 0.25);
+  background: rgba(255, 200, 60, 0.3) !important;
 }
 
 .dark .notion-orange_background,
 .dark .notion-orange_background_co {
-  background: rgba(255, 170, 50, 0.25);
+  background: rgba(255, 160, 60, 0.3) !important;
 }
 
 .dark .notion-purple_background,
 .dark .notion-purple_background_co {
-  background: rgba(180, 100, 220, 0.25);
+  background: rgba(170, 100, 220, 0.3) !important;
 }
 
 .dark .notion-brown_background,
 .dark .notion-brown_background_co {
-  background: rgba(180, 140, 120, 0.25);
+  background: rgba(180, 140, 115, 0.3) !important;
 }
 
 .dark .notion-gray_background,
 .dark .notion-gray_background_co,
 .dark [class*="gray_background"] {
-  background: rgba(200, 200, 200, 0.2) !important;
+  background: rgba(180, 180, 180, 0.2) !important;
 }
 
 @media (max-width: 768px) {
@@ -491,24 +486,19 @@ figcaption {
 }
 
 .notion-project-page .notion-list {
-  margin: 0.15rem 0;
-  padding-left: 1.25rem;
-  list-style-position: inside;
+  margin: 0.25rem 0 !important;
+  padding-left: 1.25rem !important;
 }
 
 .notion-project-page .notion-list-item {
   margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1.5;
+  padding: 0.05rem 0 !important;
+  line-height: 1.4 !important;
   color: hsl(var(--foreground));
 }
 
-.notion-project-page .notion-list-item + .notion-list-item {
-  margin-top: 0.1rem !important;
-}
-
 .notion-project-page .notion-list .notion-list {
-  margin: 0.05rem 0;
+  margin: 0 0 0 0.25rem !important;
 }
 
 .notion-project-page .notion-quote {
