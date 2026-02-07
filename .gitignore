@@ -30,3 +30,6 @@ next-env.d.ts
 # claude
 CLAUDE.md
 .claude*
+
+# Tomo game source (ported to src/components/tomo)
+/Tomo

@@ -6,6 +6,12 @@
 @import '../styles/blog/blog-layout.css';
 @import '../styles/blog/blog-components.css';
 
+@font-face {
+  font-family: NothingFont;
+  src: url('/assets/fonts/nothing-font-5x7.ttf') format('truetype');
+  font-display: block;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
