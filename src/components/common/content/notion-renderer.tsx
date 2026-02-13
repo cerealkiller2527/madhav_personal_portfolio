@@ -1,6 +1,7 @@
 'use client'
 
-import { useRef, useEffect, useMemo } from "react"
+import { useRef, useEffect, useMemo, useState } from "react"
+import { createPortal } from "react-dom"
 import dynamic from "next/dynamic"
 import { NotionRenderer as ReactNotionRenderer } from "react-notion-x"
 import { ExtendedRecordMap, CodeBlock } from "notion-types"
@@ -41,6 +42,8 @@ export function NotionRenderer({
   contentType = 'blog'
 }: NotionRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const portalRef = useRef<HTMLElement | null>(null)
+  const [portalReady, setPortalReady] = useState(false)
 
   const hasTomoBookmark = useMemo(() => {
     if (!recordMap?.block) return false
@@ -57,16 +60,33 @@ export function NotionRenderer({
     if (!hasTomoBookmark) return
     const container = containerRef.current
     if (!container) return
+
+    // Already set up from a previous render — just make sure it's still in the DOM
+    if (portalRef.current && container.contains(portalRef.current)) {
+      setPortalReady(true)
+      return
+    }
+
     const bookmarks = container.querySelectorAll<HTMLAnchorElement>("a.notion-bookmark")
-    bookmarks.forEach((anchor) => {
+    for (const anchor of Array.from(bookmarks)) {
       const href = anchor.getAttribute("href") || ""
       if (href.includes(TOMO_BOOKMARK_URL)) {
         const wrapper = anchor.closest(".notion-row") || anchor.parentElement
-        if (wrapper) {
+        if (wrapper && wrapper.parentNode) {
+          // Hide the bookmark (keep it in the DOM so React's reconciliation stays stable)
           ;(wrapper as HTMLElement).style.display = "none"
+
+          // Insert our portal container right before the hidden bookmark
+          const div = document.createElement("div")
+          div.setAttribute("data-tomo-embed", "true")
+          wrapper.parentNode.insertBefore(div, wrapper)
+
+          portalRef.current = div
+          setPortalReady(true)
+          return
         }
       }
-    })
+    }
   }, [recordMap, hasTomoBookmark])
 
   return (
@@ -84,7 +104,7 @@ export function NotionRenderer({
           Collection,
         }}
       />
-      {hasTomoBookmark && <TomoGame />}
+      {portalReady && portalRef.current && createPortal(<TomoGame />, portalRef.current)}
     </div>
   )
 }
