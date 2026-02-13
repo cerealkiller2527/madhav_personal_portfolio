@@ -6,10 +6,10 @@ import type { Experience } from "@/lib/types"
 
 export const siteInfo = {
   name: "Madhav Lodha",
-  description: "Robotics Engineering & Computer Science Major at WPI.",
-  tagline: "Innovating at the Intersection of Hardware and Code",
+  description: "Robotics Engineering & Computer Science Major at Worcester Polytechnic Institute.",
+  tagline: "Studying Robotics Engineering & Computer Science at Worcester Polytechnic Institute.",
   heroTitle: "Hey, I'm Madhav Lodha",
-  bio: "I bring intelligent machines to life, crafting both the code and the hardware that powers them.",
+  bio: "I spend most of my time building interesting things just to see if I can. This is where I keep track of the results.",
   copyright: `© ${new Date().getFullYear()} Madhav Lodha. All Rights Reserved.`,
   avatarLogo: "/assets/portfolio/avatar-logo.png",
   avatarTransparent: "/assets/portfolio/avatar-transparent.png",
