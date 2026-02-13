@@ -183,6 +183,17 @@
   color: hsl(var(--foreground));
 }
 
+/* Disable medium-zoom (replaced by custom lightbox) */
+.medium-zoom-overlay {
+  display: none !important;
+}
+
+.medium-zoom-image--opened {
+  transform: none !important;
+  position: static !important;
+  z-index: auto !important;
+}
+
 /* Media */
 .notion-image,
 .notion-asset-wrapper,
@@ -193,6 +204,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.notion-image img,
+.notion-asset-wrapper img {
+  cursor: zoom-in;
 }
 
 .notion-image img {
