@@ -9,7 +9,7 @@ export const siteInfo = {
   description: "Robotics Engineering & Computer Science Major at Worcester Polytechnic Institute.",
   tagline: "Studying Robotics Engineering & Computer Science at Worcester Polytechnic Institute.",
   heroTitle: "Hey, I'm Madhav Lodha",
-  bio: "I spend most of my time building interesting things just to see if I can. This is where I keep track of the results.",
+  bio: "I spend most of my time building things just to see if I can. This is where I keep a log of the results.",
   copyright: `© ${new Date().getFullYear()} Madhav Lodha. All Rights Reserved.`,
   avatarLogo: "/assets/portfolio/avatar-logo.png",
   avatarTransparent: "/assets/portfolio/avatar-transparent.png",
