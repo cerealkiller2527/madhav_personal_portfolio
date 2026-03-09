@@ -13,22 +13,34 @@ import {
   transformToProjectPreview,
   transformToProjectContent
 } from "./notion-transforms"
+import { cacheNotionImage, processRecordMapImages } from "./notion-image-cache"
+
+async function cachePreviewImages<T extends { coverImage?: string; heroImage?: string }>(
+  preview: T
+): Promise<T> {
+  const [coverImage, heroImage] = await Promise.all([
+    preview.coverImage ? cacheNotionImage(preview.coverImage) : Promise.resolve(preview.coverImage),
+    'heroImage' in preview && preview.heroImage
+      ? cacheNotionImage(preview.heroImage)
+      : Promise.resolve((preview as { heroImage?: string }).heroImage),
+  ])
+  return { ...preview, coverImage, heroImage }
+}
 
 // --- Blog Posts ---
 
-// Fetches all published blog posts from Notion
 export async function getAllBlogPosts(): Promise<BlogPreview[]> {
   try {
     if (!notionClient.isBlogConfigured()) return []
     const pages = await notionClient.getBlogContents()
-    return pages.map(page => transformToBlogPreview(page)).filter(Boolean) as BlogPreview[]
+    const previews = pages.map(page => transformToBlogPreview(page)).filter(Boolean) as BlogPreview[]
+    return Promise.all(previews.map(cachePreviewImages))
   } catch (error) {
     console.error('Failed to fetch blog posts:', error)
     return []
   }
 }
 
-// Fetches a single blog post by slug with full content
 export async function getBlogPostBySlug(slug: string): Promise<BlogContent | null> {
   try {
     if (!notionClient.isBlogConfigured()) return null
@@ -38,7 +50,8 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogContent | nul
     if (!matchingPost) return null
 
     const recordMap = await notionClient.getPage(matchingPost.id)
-    return await transformToBlogContent(matchingPost, recordMap)
+    const cachedRecordMap = await processRecordMapImages(recordMap)
+    return await transformToBlogContent(matchingPost, cachedRecordMap)
   } catch (error) {
     console.error('Failed to fetch blog post:', error)
     return null
@@ -47,19 +60,18 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogContent | nul
 
 // --- Projects ---
 
-// Fetches all published projects from Notion
 export async function getAllProjects(): Promise<NotionProjectPreview[]> {
   try {
     if (!notionClient.isProjectsConfigured()) return []
     const pages = await notionClient.getProjects()
-    return pages.map(page => transformToProjectPreview(page)).filter(Boolean) as NotionProjectPreview[]
+    const previews = pages.map(page => transformToProjectPreview(page)).filter(Boolean) as NotionProjectPreview[]
+    return Promise.all(previews.map(cachePreviewImages))
   } catch (error) {
     console.error('Failed to fetch projects:', error)
     return []
   }
 }
 
-// Fetches a single project by ID with full content
 export async function getProjectById(id: string): Promise<ProjectContent | null> {
   try {
     if (!notionClient.isProjectsConfigured()) return null
@@ -69,7 +81,8 @@ export async function getProjectById(id: string): Promise<ProjectContent | null>
     if (!matchingProject) return null
 
     const recordMap = await notionClient.getPage(matchingProject.id)
-    return await transformToProjectContent(matchingProject, recordMap)
+    const cachedRecordMap = await processRecordMapImages(recordMap)
+    return await transformToProjectContent(matchingProject, cachedRecordMap)
   } catch (error) {
     console.error('Failed to fetch project:', error)
     return null

@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: BlogContentPageProps): Promis
       type: "article",
       publishedTime: post.publishedAt,
       authors: ["Madhav Lodha"],
-      ...(post.coverImage && { images: [post.coverImage] }),
+      ...(post.coverImage?.startsWith("http") && { images: [post.coverImage] }),
     },
   }
 }
