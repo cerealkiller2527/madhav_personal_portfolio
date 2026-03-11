@@ -1,4 +1,5 @@
 import { ExtendedRecordMap, Block } from "notion-types"
+import { getBlockValue } from "notion-utils"
 import { 
   NotionPage, 
   NotionPropertyValue,
@@ -322,7 +323,7 @@ function extractTextFromRecordMap(recordMap: ExtendedRecordMap): string {
   
   try {
     const textParts = Object.values(recordMap.block)
-      .map(wrapper => extractBlockText(wrapper?.value))
+      .map(entry => extractBlockText(getBlockValue(entry)))
       .filter(text => text.length > 0)
     
     return textParts.join(' ').trim()
