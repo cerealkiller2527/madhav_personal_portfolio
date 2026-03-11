@@ -33,6 +33,3 @@ CLAUDE.md
 
 # Tomo game source (ported to src/components/tomo)
 /Tomo
-
-# Notion images cached at build time (regenerated each build)
-/public/notion-images/

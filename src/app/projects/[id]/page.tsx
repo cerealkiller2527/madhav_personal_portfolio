@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
       title: project.title,
       description: project.description || project.subtitle || "Project by Madhav Lodha",
       type: "article",
-      ...(project.heroImage?.startsWith("http") && { images: [project.heroImage] }),
+      ...(project.heroImage && { images: [project.heroImage] }),
     },
   }
 }
