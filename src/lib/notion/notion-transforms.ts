@@ -86,9 +86,33 @@ function createSlug(title: string): string {
     .replace(/\s+/g, "-")
 }
 
-function normalizeImageUrl(url: string): string {
+function isNotionS3Url(url: string): boolean {
+  try {
+    const u = new URL(url)
+    return (
+      u.hostname.endsWith('.amazonaws.com') ||
+      u.hostname === 'file.notion.so' ||
+      u.hostname.includes('notion-static.com')
+    )
+  } catch {
+    return false
+  }
+}
+
+function toNotionImageProxy(url: string, pageId: string): string {
+  const u = new URL(url)
+  const baseUrl = `${u.origin}${u.pathname}`
+  return `https://www.notion.so/image/${encodeURIComponent(baseUrl)}?table=block&id=${pageId}&cache=v2`
+}
+
+function normalizeImageUrl(url: string, pageId?: string): string {
   if (!url || url.startsWith('data:')) return ''
-  if (url.startsWith('http://') || url.startsWith('https://')) return url
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    if (pageId && isNotionS3Url(url)) {
+      return toNotionImageProxy(url, pageId)
+    }
+    return url
+  }
   if (url.startsWith('/')) return `https://www.notion.so${url}`
   if (!url.includes('://')) return `https://www.notion.so/${url}`
   return url
@@ -150,18 +174,18 @@ function normalizeSketchfabUrl(url: string | null | undefined): string | undefin
   }
 }
 
-function getCoverImageUrl(cover: unknown): string | undefined {
+function getCoverImageUrl(cover: unknown, pageId?: string): string | undefined {
   if (!isNotionCover(cover)) return undefined
   
   const url = cover.external?.url || cover.file?.url
-  return url ? normalizeImageUrl(url) : undefined
+  return url ? normalizeImageUrl(url, pageId) : undefined
 }
 
-function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: unknown, imageProperty: string): string | undefined {
+function getImageUrl(properties: Record<string, NotionPropertyValue>, cover: unknown, imageProperty: string, pageId?: string): string | undefined {
   const imageUrl = getProperty(properties, imageProperty) as string
-  if (imageUrl) return normalizeImageUrl(imageUrl)
+  if (imageUrl) return normalizeImageUrl(imageUrl, pageId)
   
-  return getCoverImageUrl(cover)
+  return getCoverImageUrl(cover, pageId)
 }
 
 
@@ -190,7 +214,7 @@ export function transformToBlogPreview(page: NotionPage): BlogPreview | null {
     updatedAt: publishedAt,
     tags: getProperty(properties, "Tags") as string[] || [],
     category: getProperty(properties, "Category") as string,
-    coverImage: getImageUrl(properties, cover, "Cover"),
+    coverImage: getImageUrl(properties, cover, "Cover", page.id),
     published: true,
     readingTime,
   }
@@ -224,7 +248,7 @@ export function transformToProjectPreview(page: NotionPage): NotionProjectPrevie
   const category = getProperty(properties, "Category") as string
   const validCategory = ['Software', 'Hardware', 'Hybrid'].includes(category) ? category : 'Software'
   
-  const heroImage = getImageUrl(properties, cover, "Hero Image")
+  const heroImage = getImageUrl(properties, cover, "Hero Image", page.id)
   const statistics = getProperty(properties, "Statistics") as string
   
   return {
